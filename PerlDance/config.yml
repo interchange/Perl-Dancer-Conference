@@ -18,14 +18,50 @@ charset: "UTF-8"
 # simple: default and very basic template engine
 # template_toolkit: TT
 
-template: "simple"
+template: "template_flute"
 
-# template: "template_toolkit"
-# engines:
-#   template_toolkit:
-#     start_tag: '[%'
-#     end_tag:   '%]'
+engines:
+  template_flute:
+    filters:
+      currency:
+        int_curr_symbol: "€"
 
-# For session support enable the following line and see Dancer::Session
-# session: "YAML"
-
+plugins:
+  Auth::Extensible:
+    disable_roles: 0
+    no_login_handler: 1
+    login_page: /login
+    logout_page: /logout
+    denied_page: /login/denied
+    no_default_pages: 1
+    no_api_change_warning: 1
+    realms:
+      users:
+        provider: 'DBIC'
+        db_connection_name: 'default'
+        users_resultset: User
+        roles_relationship: roles
+        role_column: name
+        username_column: username
+        password_column: password
+        password_check: check_password
+  DBIC:
+    default:
+      dsn: dbi:Pg:dbname=perldance
+      schema_class: PerlDance::Schema
+      options:
+        RaiseError: 1
+        PrintError: 1
+        on_connect_do: 'SET client_min_messages=WARNING;'
+        pg_enable_utf8: 1
+  Interchange6::Routes:
+    navigation:
+      template: product-listing
+      default_view: list
+      records: 10
+    product:
+      template: product-page
+    account:
+      login:
+        template: sign-in
+checkout_type: multi
