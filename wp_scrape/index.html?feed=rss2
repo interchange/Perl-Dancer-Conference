@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Perl Dancer Conference 2015</title>
+	<atom:link href="http://perl.dance/?feed=rss2" rel="self" type="application/rss+xml" />
+	<link>http://perl.dance</link>
+	<description>Vienna Austria October 2015</description>
+	<lastBuildDate>Thu, 04 Jun 2015 09:23:09 +0000</lastBuildDate>
+	<language>en-US</language>
+	<sy:updatePeriod>hourly</sy:updatePeriod>
+	<sy:updateFrequency>1</sy:updateFrequency>
+	<generator>http://wordpress.org/?v=4.2.2</generator>
+	<item>
+		<title>Hello world!</title>
+		<link>http://perl.dance/?p=1</link>
+		<comments>http://perl.dance/?p=1#comments</comments>
+		<pubDate>Wed, 03 Jun 2015 05:37:52 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Uncategorized]]></category>
+
+		<guid isPermaLink="false">http://perl.dance/?p=1</guid>
+		<description><![CDATA[Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!]]></description>
+				<content:encoded><![CDATA[<p>Welcome to WordPress. This is your first post. Edit or delete it, then start blogging!</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=1</wfw:commentRss>
+		<slash:comments>1</slash:comments>
+		</item>
+		<item>
+		<title>Sem Porta Mollis Parturient</title>
+		<link>http://perl.dance/?p=2255</link>
+		<comments>http://perl.dance/?p=2255#comments</comments>
+		<pubDate>Fri, 21 Mar 2014 07:45:35 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Post Slider]]></category>
+		<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/mediso/corporate/?p=2255</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=2255" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<blockquote class="gdlr-align-center" ><p>Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<table class="style-2">
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=2255</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Nullam Lorem Mattis Purus</title>
+		<link>http://perl.dance/?p=2254</link>
+		<comments>http://perl.dance/?p=2254#comments</comments>
+		<pubDate>Fri, 21 Mar 2014 07:45:14 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Post Slider]]></category>
+		<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/mediso/corporate/?p=2254</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=2254" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<blockquote class="gdlr-align-center" ><p>Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<table class="style-2">
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=2254</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Nibh Sem Sit Ullamcorper</title>
+		<link>http://perl.dance/?p=2249</link>
+		<comments>http://perl.dance/?p=2249#comments</comments>
+		<pubDate>Fri, 21 Mar 2014 07:44:14 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Post Slider]]></category>
+		<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/mediso/corporate/?p=2249</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=2249" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<blockquote class="gdlr-align-center" ><p>Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<table class="style-2">
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=2249</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Donec luctus imperdiet</title>
+		<link>http://perl.dance/?p=852</link>
+		<comments>http://perl.dance/?p=852#comments</comments>
+		<pubDate>Tue, 03 Dec 2013 16:23:23 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Fit Row]]></category>
+		<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=852</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=852" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+</p>
+<p>
+<blockquote class="gdlr-align-center" >Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+</p>
+<table class="style-2">
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=852</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>Magna pars studiorum</title>
+		<link>http://perl.dance/?p=862</link>
+		<comments>http://perl.dance/?p=862#comments</comments>
+		<pubDate>Tue, 03 Dec 2013 15:12:06 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Fit Row]]></category>
+		<category><![CDATA[Link]]></category>
+		<category><![CDATA[News]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=862</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=862" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+</p>
+<p>
+<blockquote class="gdlr-align-center" >Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+</p>
+<table>
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+</p>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=862</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>Sedial eiusmod tempor</title>
+		<link>http://perl.dance/?p=859</link>
+		<comments>http://perl.dance/?p=859#comments</comments>
+		<pubDate>Tue, 03 Dec 2013 13:56:37 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Fit Row]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=859</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=859" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<blockquote class="gdlr-align-center" ><p>Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<table>
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=859</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+		</item>
+		<item>
+		<title>Eiusmod tempor incidunt</title>
+		<link>http://perl.dance/?p=858</link>
+		<comments>http://perl.dance/?p=858#comments</comments>
+		<pubDate>Tue, 03 Dec 2013 12:13:12 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Fit Row]]></category>
+		<category><![CDATA[Life Style]]></category>
+		<category><![CDATA[Animal]]></category>
+		<category><![CDATA[Safari]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=858</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=858" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<blockquote class="gdlr-align-center" ><p>Cum sociis natoque penatus etaed pnis dis parturient montes, scettr aieo ridus mus. Etiam portaem mleyo.</p></blockquote>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 30px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<table>
+<tbody>
+<tr>
+<th>Pharetra</th>
+<th>Malesuada</th>
+<th>Cursus</th>
+<th>Euismod</th>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+<tr>
+<td>Ipsum</td>
+<td>Portalion</td>
+<td>Elitesimo</td>
+<td>Aenean</td>
+</tr>
+</tbody>
+</table>
+<div class="clear"></div>
+<div class="gdlr-space" style="margin-top: 40px;"></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=858</wfw:commentRss>
+		<slash:comments>3</slash:comments>
+		</item>
+		<item>
+		<title>Gallery Post Format Title</title>
+		<link>http://perl.dance/?p=2211</link>
+		<comments>http://perl.dance/?p=2211#comments</comments>
+		<pubDate>Wed, 13 Nov 2013 14:19:56 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+		<category><![CDATA[News Article]]></category>
+		<category><![CDATA[Gallery Thumbnail]]></category>
+		<category><![CDATA[News]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=10</guid>
+		<description><![CDATA[Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus. Nihilne te nocturnum... <div class="clear"></div><a href="http://perl.dance/?p=2211" class="gdlr-info-font excerpt-read-more">Read More</a>]]></description>
+				<content:encoded><![CDATA[<div class="gdlr-shortcode-wrapper"><div class="gdlr-gallery-item gdlr-item" ><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="clear"></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="clear"></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="gallery-column four columns"><div class="gallery-item"><span class="gallery-caption">Array</span></div></div><div class="clear"></div></div></div>
+<p>Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Idque Caesaris facere voluntate liceret: sese habere. Magna pars studiorum, prodita quaerimus. Magna pars studiorum, prodita quaerimus. Fabio vel iudice vincam, sunt in culpa qui officia. Vivamus sagittis lacus vel augue laoreet rutrum faucibus.</p>
+<p>Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Non equidem invideo, miror magis posuere velit aliquet. Qui ipsorum lingua Celtae, nostra Galli appellantur. Prima luce, cum quibus mons aliud consensu ab eo. Petierunt uti sibi concilium totius Galliae in diem certam indicere.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=2211</wfw:commentRss>
+		<slash:comments>2</slash:comments>
+		</item>
+		<item>
+		<title>Audio Post Format</title>
+		<link>http://perl.dance/?p=37</link>
+		<comments>http://perl.dance/?p=37#comments</comments>
+		<pubDate>Tue, 12 Nov 2013 08:57:45 +0000</pubDate>
+		<dc:creator><![CDATA[jure]]></dc:creator>
+				<category><![CDATA[Audio]]></category>
+		<category><![CDATA[Blog]]></category>
+		<category><![CDATA[Life Style]]></category>
+		<category><![CDATA[Post format]]></category>
+
+		<guid isPermaLink="false">http://themes.goodlayers2.com/flawless/?p=37</guid>
+		<description><![CDATA[Cras justo odio, dapibus ac facilisis in, egestas eget quam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla vitae elit libero, a pharetra augue. Vestibulum id ligula porta felis euismod semper. Sed posuere consectetur est at lobortis. Sed posuere consectetur Sed posuere consectetur est at lobortis. est at lobortis.]]></description>
+				<content:encoded><![CDATA[<!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+<audio class="wp-audio-shortcode" id="audio-37-1" preload="none" style="width: 100%; visibility: hidden;" controls="controls"><source type="audio/mpeg" src="http://themes.goodlayers2.com/flawless/wp-content/uploads/2013/11/wm_sticks_and_chains.mp3?_=1" /><a href="http://themes.goodlayers2.com/flawless/wp-content/uploads/2013/11/wm_sticks_and_chains.mp3">http://themes.goodlayers2.com/flawless/wp-content/uploads/2013/11/wm_sticks_and_chains.mp3</a></audio>
+<p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nulla vitae elit libero, a pharetra augue. Vestibulum id ligula porta felis euismod semper. Sed posuere consectetur est at lobortis. Sed posuere consectetur Sed posuere consectetur est at lobortis. est at lobortis.</p>
+]]></content:encoded>
+			<wfw:commentRss>http://perl.dance/?feed=rss2&#038;p=37</wfw:commentRss>
+		<slash:comments>0</slash:comments>
+<enclosure url="http://themes.goodlayers2.com/flawless/wp-content/uploads/2013/11/wm_sticks_and_chains.mp3" length="3580656" type="audio/mpeg" />
+		</item>
+	</channel>
+</rss>
