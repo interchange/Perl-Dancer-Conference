@@ -1,0 +1,70 @@
+body {
+  font-family: "Montserrat";
+  min-height: 2000px;
+  padding-top: 70px;
+}
+.navbar-nav {
+  font-family: "Raleway";
+  text-transform: uppercase;
+}
+.navbar-nav > ul > li > a {
+  color: #8e8e8e;
+}
+.normal {
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+  background-color: #ffffff;
+  border-width: 0;
+}
+.normal .navbar-right {
+  padding-top: 12px;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+.normal .navbar-right > li:hover > a,
+.normal .navbar-right > li:current > a{
+  color: #0749bc;
+  opacity: 1
+}
+.navbar-brand {
+  padding: 0px !important;
+}
+.navbar-brand img {
+  max-height: 75px;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+}
+.shrink {
+  height: 40px;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+  background-color: #f8f8f8;
+}
+.shrink .navbar-right {
+  padding-top: 0px;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+}
+.shrink .navbar-brand img {
+  max-height: 44px;
+  -webkit-transition: 0.5s;
+  -moz-transition: 0.5s;
+  -ms-transition: 0.5s;
+  transition: 0.5s;
+}
+body {
+  min-height: 2000px;
+}
