@@ -1,32 +1,28 @@
-	<div class="container">
+	
+		<!-- is search -->	<div class="content-wrapper">
+	<div class="gdlr-content">
 
-    <div>
-      <img src="/img/perl-dancer-homepage-logo.png" class="center-block img-responsive">
-    </div>
-
-    <div class="gdlr-session-counter-item gdlr-item" style="margin-bottom: 10px;">
-      <div class="session-counter-block gdlr-block-day">
-        <span class="gdlr-time gdlr-day"></span>
-        <span class="gdlr-unit">Days</span>
-      </div>
-      <div class="session-counter-block gdlr-block-hrs">
-        <span class="gdlr-time gdlr-hrs"></span>
-        <span class="gdlr-unit">Hours</span>
-      </div>
-      <div class="session-counter-block gdlr-block-min">
-        <span class="gdlr-time gdlr-min"></span>
-        <span class="gdlr-unit">Mins</span>
-      </div>
-      <div class="session-counter-block gdlr-block-sec">
-        <span class="gdlr-time gdlr-sec"></span>
-        <span class="gdlr-unit">Secs</span>
-      </div>
-      <div class="clear">
-    </div>
-
-  </div><!--main container-->
-        
-        
+		<!-- Above Sidebar Section-->
+						
+		<!-- Sidebar With Content Section-->
+		<div class="with-sidebar-wrapper gdlr-type-no-sidebar"><section id="content-section-1" ><div class="section-container container"><div class="gdlr-image-frame-item gdlr-item"  ><div class="gdlr-frame frame-type-none"  ><div class="gdlr-image-link-shortcode" ><img src="http://perl.dance/wp-content/uploads/2014/12/Untitled-2.png" alt="" width="851" height="200" /></div></div></div><div class="clear"></div><div class="clear"></div><div class="gdlr-session-counter-item gdlr-item"  style="margin-bottom: 10px;"  ><div class="session-counter-block gdlr-block-day" ><span class="gdlr-time gdlr-day"></span><span class="gdlr-unit">Days</span></div><div class="session-counter-block gdlr-block-hrs" ><span class="gdlr-time gdlr-hrs"></span><span class="gdlr-unit">Hours</span></div><div class="session-counter-block gdlr-block-min" ><span class="gdlr-time gdlr-min"></span><span class="gdlr-unit">Mins</span></div><div class="session-counter-block gdlr-block-sec" ><span class="gdlr-time gdlr-sec"></span><span class="gdlr-unit">Secs</span></div><div class="clear"></div></div><div class="clear"></div><div class="clear"></div><div class="gdlr-subscribe-item gdlr-item"  style="margin-bottom: 10px;" ><h4 class="gdlr-subscribe-title">Subscribe for updates</h4><div class="gdlr-newsletter-subscribe"><script type="text/javascript">
+//<![CDATA[
+if (typeof newsletter_check !== "function") {
+	window.newsletter_check = function (f) {
+		var re = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-]{1,})+\.)+([a-zA-Z0-9]{2,})+$/;
+		if (!re.test(f.elements["ne"].value)) {
+			alert("The email is not correct");
+			return false;
+		}
+		if (f.elements["ny"] && !f.elements["ny"].checked) {
+			alert("You must accept the privacy statement");
+			return false;
+		}
+		return true;
+	}
+}
+//]]>
+</script>
 <div class="newsletter newsletter-subscription">
 	<form method="post" action="http://perl.dance/wp-content/plugins/newsletter/do/subscribe.php" onsubmit="return newsletter_check(this)">
 		<input class="newsletter-email" type="email" name="ne" size="30" required placeholder="Please fill your email" />

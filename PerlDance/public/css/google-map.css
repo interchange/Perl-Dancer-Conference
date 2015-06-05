@@ -1,0 +1,237 @@
+#wgmpmap div {
+-moz-box-sizing: content-box;
+-webkit-box-sizing: content-box;
+box-sizing: content-box;
+}
+
+.map_table label
+
+{
+
+ float:left;
+
+ width:220px;
+
+ font-size: 13px; 
+
+ font-weight:bold;
+
+}
+
+
+
+.map_table fieldset
+
+{
+
+ border: 1px solid #ddd;
+
+ border-radius: 10px;
+
+ padding:10px;
+
+ margin-bottom:15px;
+ 
+ font-family:"Helvetica Neue";
+
+}
+
+
+
+.map_table fieldset legend {
+font-size: 16px;
+color: #ccc;
+}
+
+
+
+.map_table .create_map
+
+{
+
+ width:250px;
+
+ padding: 6px 10px;
+
+ border: 2px #cccccc solid;
+
+ border-radius: 10px;	
+
+}
+
+.map_table .style_map
+
+{
+
+ width:100px;
+
+ padding: 6px 10px;
+
+ border: 2px #cccccc solid;
+
+ border-radius: 10px;	
+
+}
+
+
+.map_table .style_table label
+{
+	width:175px;
+}
+
+.map_table .description
+
+{
+
+ margin-left:230px;
+
+ padding:3px 0px 8px 0px;
+
+ font-size:12px;	
+
+}
+
+
+
+.map_table select
+
+{
+
+ border: 1px #cccccc solid;
+
+ border-radius: 5px;
+
+ font-size: 12px;
+
+ width: 250px;
+
+}
+
+.map_table .style_select_map
+
+{
+
+ border: 2px #cccccc solid;
+
+ border-radius: 10px;
+
+ font-size: 12px;
+
+ width: 150px;
+
+ padding:4px 8px;
+
+ height:30px;
+
+}
+
+.map_table option
+
+{
+
+ height: 15px;
+
+ padding: 5px 4px;
+
+}
+
+
+
+.map_table ul
+
+{
+
+ padding:0px;
+
+ margin:0px;
+
+ float:left;
+
+}
+
+
+
+.map_table li
+
+{
+
+
+ list-style:none;
+
+
+
+}
+
+div#media-upload-header, div#plugin-information-header {
+	background-color: #F9F9F9;
+	border-bottom-color: #DFDFDF;
+}
+
+div#media-upload-header {
+	margin: 0;
+	padding: 5px 5px 0;
+	font-weight: bold;
+	position: relative;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+body#media-upload ul#sidemenu {
+	font-weight: normal;
+	margin: 0 5px;
+	left: 0;
+	bottom: -1px;
+	float: none;
+	overflow: hidden;
+}
+
+#sidemenu{
+	margin: -30px 15px 0 315px;
+	list-style: none;
+	position: relative;
+	float: right;
+	padding-left: 10px;
+	font-size: 12px;
+}
+
+#sidemenu li {
+	display: inline;
+	line-height: 200%;
+	list-style: none;
+	text-align: center;
+	white-space: nowrap;
+	margin: 0;
+	padding: 0;
+}
+
+#sidemenu a {
+	background-color: #F9F9F9;
+	border-color: #F9F9F9;
+	border-bottom-color: #DFDFDF;
+}
+
+#sidemenu a {
+	padding: 0 7px;
+	display: block;
+	float: left;
+	line-height: 28px;
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+#select_icons .active img{
+	border:3px solid #000000;
+	width:26px;
+}
+
+#groupmap{
+	background:url(../images/map-bottom.png);
+	text-align:center;
+}
+
+div.updated, div.error {
+padding: 0 .6em;
+margin: 5px 12px 15px !important;
+}

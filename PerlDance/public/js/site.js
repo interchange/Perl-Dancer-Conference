@@ -1,12 +1,4 @@
 $(document).ready(function() {
-  /* shrink navbar */
-  $(window).scroll(function() {
-    if ($(document).scrollTop() > 150) {
-      $('.navbar').addClass('shrink');
-    }
-    else {
-      $('.navbar').removeClass('shrink'); }
-  });
   $('.gdlr-session-counter-item').each(function(){
       this.finalDate = new Date("2015-10-19T09:00:00+01:00");
       this.now = new Date();
