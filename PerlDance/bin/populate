@@ -13,61 +13,88 @@ my $schema = shop_schema;
 
 shop_schema->deploy( { add_drop_table => 1 } );
 
+my $rset_media_types = $schema->resultset('MediaType');
+
+$rset_media_types->populate( [ { type => 'image' }, { type => 'video' }, ] );
+
+my $media_type_image = $rset_media_types->find( { type => 'image' } );
+
+my @displays = (
+    {
+        type => 'people',
+        path => '/img/people/',
+    },
+);
+
+foreach my $display ( @displays ) {
+    $media_type_image->add_to_media_displays($display);
+}
+
 # username/email, forename, surname, nick, pause id, company, city, state iso,
-# country iso, bio
+# country iso, bio, photo
 my @users = (
     [
         'xsawyerx@gmail.com', 'Sawyer', 'X', 'SawyerX', 'XSAWYERX',
         'Booking.com', 'Amsterdam', undef, 'NL',
-"One of the Dancer authors and a great speaker, SawyerX is joining us this year in Vienna. Along with Andrew Solomon he is giving a Dancer training on the first day of the conference, along with a talk on one of the conference days. Sawyer is very easy to listen to, and this is an exceptional opportunity to attend training from the guy who not only wrote Dancer, but is also really good at explaining things."
+"One of the Dancer authors and a great speaker, SawyerX is joining us this year in Vienna. Along with Andrew Solomon he is giving a Dancer training on the first day of the conference, along with a talk on one of the conference days. Sawyer is very easy to listen to, and this is an exceptional opportunity to attend training from the guy who not only wrote Dancer, but is also really good at explaining things.",
+        'sawyerx.png',
     ],
     [
         'andrew@geekuni.com', 'Andrew', 'Solomon', 'illy', 'ILLY',
         'Geekuni',            'London', undef,     'GB',
 "Software developer and project leader with over 15 years experience. Applications include algebraic and optimisation algorithms, web services and virtual machines in Perl, Java and C within a Unix environment. Managing projects using both in-house and contract developers.
 
-        Specialties:Perl, E-Learning, Optimization, Mathematics, Computer Science, mod_perl, lecturer, linux, dbi, javascript, OO Design, MySQL, PostgreSQL "
+        Specialties:Perl, E-Learning, Optimization, Mathematics, Computer Science, mod_perl, lecturer, linux, dbi, javascript, OO Design, MySQL, PostgreSQL ",
+        'andrew-solomon.jpg',
     ],
     [
         'andrew@pullingshots.ca', 'Andrew', 'Baerg', undef, 'BAERGAJ',
         'SOLE.com', 'Vancouver', 'BC', 'CA',
-        "Andrew graduated from the University of Calgary in 2001 with a Comp Sci degree.He was short after hired on to develop a webstore for Edge Marketing (dba SOLE) in 2001 and went on to open source all of their internal systems. He is currently serving as their CHO (chief hackining officer)."
+        "Andrew graduated from the University of Calgary in 2001 with a Comp Sci degree.He was short after hired on to develop a webstore for Edge Marketing (dba SOLE) in 2001 and went on to open source all of their internal systems. He is currently serving as their CHO (chief hackining officer).",
+        'andrew-baerg.jpg',
     ],
     [
         'racke@linuxia.de', 'Stefan',   'Hornburg', 'Racke', 'HORNBURG',
         'Linuxia',          'Hannover', undef,      'DE',
-        "Stefan is doing E-Commerce and web app development for more than 15 years. He is also volunteering as Debian maintainer. He has written a bunch of Perl modules and as a true open source enthusiast often commits to community."
+        "Stefan is doing E-Commerce and web app development for more than 15 years. He is also volunteering as Debian maintainer. He has written a bunch of Perl modules and as a true open source enthusiast often commits to community.",
+        'stefan-hornburg.jpg',
     ],
     [
         'peter@sysnix.com', 'Peter', 'Mottram', 'SysPete', 'SYSPETE',
         'Sysnix',           'Qormi', undef,     'MT',
-        "e-commerce and Perl developer, Linux, network, firewall and security consultant, Peter has lived and worked in several coutries across Europe since his first IT job as sysadmin at Nokia some 25 years ago. Has since worked for mobile and fixed telcos and spent the last 15 years building Internet-connected platforms for the oil and gas industry, truck telematics, massive online games and many other applications"
+        "e-commerce and Perl developer, Linux, network, firewall and security consultant, Peter has lived and worked in several coutries across Europe since his first IT job as sysadmin at Nokia some 25 years ago. Has since worked for mobile and fixed telcos and spent the last 15 years building Internet-connected platforms for the oil and gas industry, truck telematics, massive online games and many other applications",
+        'peter-mottram.jpg',
     ],
     [
         'jure.kodzoman@informastudio.com', 'Jure',
         'Kodzoman',                        undef, undef,
         'Informa Studio Ltd.',             'Split',
         undef,                             'HR',
-        "Jure works as Head of Development at Informa Studio. He has more than 10 years of active experience in E-Commerce working with different types of clients, from small webshops to large corporations. Strong interest in improving usability and effectiveness of online shopping."
+        "Jure works as Head of Development at Informa Studio. He has more than 10 years of active experience in E-Commerce working with different types of clients, from small webshops to large corporations. Strong interest in improving usability and effectiveness of online shopping.",
+        'jure-kodzoman.jpg'
     ],
     [
         'grega.pompe@informa.si', 'Grega',
         'Pompe',                  undef, undef,
         'Informa Studio Ltd.',    'Ljubljana',
         undef,                    'SI',
-        "Grega started out as a Python developer but due to circumstances moved to Perl. He is one of the major contributors to TableEditor and Storemail projects as well as a huge DBIx::Class fan."
+        "Grega started out as a Python developer but due to circumstances moved to Perl. He is one of the major contributors to TableEditor and Storemail projects as well as a huge DBIx::Class fan.",
+        'grega-pompe.jpg',
     ],
     [
         'sbatschelet@mac.com', 'Sam',
         'Batschelet',          'hexfusion', undef,
         'West Branch Angler',  'New York',
         'NY',                  'US',
-        "Sam is CTO of West Branch Angler fishing resort, taking care of tech department of the resort as well as running their fly fishing gear online store."
+        "Sam is CTO of West Branch Angler fishing resort, taking care of tech department of the resort as well as running their fly fishing gear online store.",
+        'sam-batschelet.jpg',
     ],
 );
-# username/email, forename, surname, nick, pause id, company, city, state, country, bio
 foreach my $row (@users) {
     my $state = shop_state( { state_iso_code => $row->[7] } );
+    my $mime_type = $row->[10];
+    $mime_type =~ s/^.+\./image\//;
+
     my $user = shop_user->create(
         {
             username   => $row->[0],
@@ -85,6 +112,12 @@ foreach my $row (@users) {
                     country_iso_code => $row->[8],
                 }
             ],
+            photo => {
+                file           => "img/people/" . $row->[10],
+                uri            => $row->[10],
+                mime_type      => $mime_type,
+                media_types_id => $media_type_image->id,
+            },
         }
     );
 }
