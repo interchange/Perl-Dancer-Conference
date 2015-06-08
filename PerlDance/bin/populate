@@ -144,3 +144,25 @@ shop_product->create(
     }
 );
 
+my $nav = shop_navigation->populate(
+    [
+        [qw/uri type scope name priority description/],
+        [ '', 'nav', 'menu-main', 'Home', 100, '' ],
+        [
+            'speakers', 'nav', 'menu-main', 'Speakers', 80,
+            'Meet Our Speakers!'
+        ],
+        [
+            'talks', 'nav', 'menu-main', 'Schedule', 60,
+            'Schedule draft. Contains talks confirmed so far.'
+        ],
+        [
+            'tickets', 'nav', 'menu-main', 'Tickets', 40,
+            "Get Your Seat Before It's Too Late"
+        ],
+        [
+            'talks/submit', 'nav', 'menu-main', 'Submit Talk Proposal',
+            20, 'Requirement and guidance for submitting talks'
+        ],
+    ]
+);
