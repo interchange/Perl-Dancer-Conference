@@ -1,3 +1,12 @@
 <specification>
+  <!--list name="menu-mobile" iterator="nav-menu-main">
+    <param name="name" class="link"/>
+    <param name="uri" class="link" target="href" op="append"/>
+  </list-->
+  <list name="menu-normal" iterator="nav-menu-main">
+    <param name="name" class="link"/>
+    <param name="uri" class="link" target="href" op="append"/>
+    <param name="class" class="link" target="class"/>
+  </list>
   <value name="content" class="content" op="hook"/>
 </specification>

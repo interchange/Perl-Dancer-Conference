@@ -1,3 +1,5 @@
 <specification>
   <value name="speaker-item-wrapper" op="hook" include="fragments/speakers.html"/>
+  <value name="title" class="gdlr-page-title"/>
+  <value name="description" class="gdlr-page-caption"/>
 </specification>

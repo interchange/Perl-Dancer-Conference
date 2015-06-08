@@ -9,6 +9,30 @@ our $VERSION = '0.1';
 set session => 'DBIC';
 set session_options => { schema => schema };
 
+hook 'before_layout_render' => sub {
+    my $tokens = shift;
+
+    my @nav = shop_navigation->search(
+        {
+            'me.active'    => 1,
+            'me.type'      => 'nav',
+            'me.parent_id' => undef,
+        },
+        {
+            order_by => [ { -desc => 'me.priority' }, 'me.name', ],
+        }
+    )->hri->all;
+
+    foreach my $record (@nav) {
+        my $path = request->path;
+        $path =~ s/^\///;
+        if ( $path eq $record->{uri} ) {
+            $record->{class} = "current-page";
+        }
+        push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;
+    }
+};
+
 get '/' => sub {
     my $tokens = {};
 
@@ -19,6 +43,10 @@ get '/' => sub {
 
 get '/speakers' => sub {
     my $tokens = {};
+
+    my $nav = shop_navigation->find( { uri => 'speakers' } );
+    $tokens->{title}       = $nav->name;
+    $tokens->{description} = $nav->description;
 
     add_speakers_tokens($tokens);
 
@@ -39,7 +67,6 @@ sub add_speakers_tokens {
         },
         {
             prefetch => [ { addresses => 'country', }, 'photo' ],
-            join => { photo => 'displays' }
         }
     )->all;
 
