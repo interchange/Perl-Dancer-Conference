@@ -19,22 +19,11 @@ $rset_media_types->populate( [ { type => 'image' }, { type => 'video' }, ] );
 
 my $media_type_image = $rset_media_types->find( { type => 'image' } );
 
-my @displays = (
-    {
-        type => 'people',
-        path => '/img/people/',
-    },
-);
-
-foreach my $display ( @displays ) {
-    $media_type_image->add_to_media_displays($display);
-}
-
 # username/email, forename, surname, nick, pause id, company, city, state iso,
 # country iso, bio, photo
 my @users = (
     [
-        'xsawyerx@gmail.com', 'Sawyer', 'X', 'SawyerX', 'XSAWYERX',
+        'xsawyerx@gmail.com', 'SawyerX', '', 'SawyerX', 'XSAWYERX',
         'Booking.com', 'Amsterdam', undef, 'NL',
 "One of the Dancer authors and a great speaker, SawyerX is joining us this year in Vienna. Along with Andrew Solomon he is giving a Dancer training on the first day of the conference, along with a talk on one of the conference days. Sawyer is very easy to listen to, and this is an exceptional opportunity to attend training from the guy who not only wrote Dancer, but is also really good at explaining things.",
         'sawyerx.png',
@@ -114,7 +103,7 @@ foreach my $row (@users) {
             ],
             photo => {
                 file           => "img/people/" . $row->[10],
-                uri            => $row->[10],
+                uri            => "/img/people/" . $row->[10],
                 mime_type      => $mime_type,
                 media_types_id => $media_type_image->id,
             },
