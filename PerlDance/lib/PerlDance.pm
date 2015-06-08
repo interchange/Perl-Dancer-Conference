@@ -58,6 +58,51 @@ get '/speakers/:id' => sub {
     template 'speaker_detail';
 };
 
+get '/talks' => sub {
+    my $tokens = {};
+
+    my $talks = shop_schema->resultset('Talk')->search(
+        {
+            accepted => 1,
+        },
+        {
+            order_by => 'start_time',
+            prefetch => 'author',
+        }
+    );
+    my %days;
+    while ( my $talk = $talks->next ) {
+        my $day_zero = 18;
+        my $day_number = 0;
+        if ( defined $talk->start_time ) {
+            $day_number = $talk->start_time->day - $day_zero;
+        }
+        push @{ $days{$day_number} }, $talk;
+    };
+    my $unscheduled;
+    while ( my ( $day, $value ) = each %days ) {
+        my $date = $value->[0]->start_time;
+        if ( $day > 0 ) {
+            push @{ $tokens->{talks} },
+              {
+                day   => "Day $day",
+                date  => $date,
+                talks => $value,
+              };
+        }
+        else {
+            $unscheduled = {
+                day   => 'Unscheduled',
+                date  => undef,
+                talks => $value,
+            };
+        }
+    }
+    push @{ $tokens->{talks} }, $unscheduled if $unscheduled;
+
+    template 'talks', $tokens;
+};
+
 sub add_speakers_tokens {
     my $tokens = shift;
 

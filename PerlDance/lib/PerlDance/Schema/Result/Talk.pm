@@ -112,6 +112,34 @@ column accepted => {
     size      => 0,
 };
 
+=head2 start_time
+
+L<DateTime> object representing start time of talk.
+
+Is nullable.
+
+=cut
+
+column start_time => {
+    data_type => "datetime",
+    is_nullable => 1,
+};
+
+=head2 METHODS
+
+=head2 end_time
+
+L<DateTime> object representing end time of talk calculated from L</start_time>
+and L</duration>.
+
+=cut
+
+sub end_time {
+    my $self = shift;
+    return undef unless defined $self->start_time;
+    return $self->start_time->clone->add( minutes => $self->duration );
+}
+
 =head1 RELATIONS
 
 =head2 author

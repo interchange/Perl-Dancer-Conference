@@ -1,0 +1,16 @@
+<specification>
+  <list name="gdlr-tab-session-item" iterator="talks">
+    <param name="gdlr-session-head-day" field="day"/>
+    <param name="gdlr-session-head-date" field="date" filter="date_only"/>
+    <list name="talks" iterator="talks" class="scheduled-talk">
+      <param name="start_time" filter="time_only"/>
+      <param name="end_time" filter="time_only"/>
+      <param name="speaker-name" class="speaker-link" field="author.name"/>
+      <param name="speaker-link" target="href" op="append" field="author.id"/>
+      <param name="talk-title" class="talk-link" field="title"/>
+      <param name="talk-link" target="href" op="append" field="id"/>
+    </list>
+  </list>
+  <list name="unscheduled" iterator="unscheduled">
+  </list>
+</specification>

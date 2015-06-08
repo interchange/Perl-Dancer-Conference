@@ -25,7 +25,18 @@ engines:
     filters:
       currency:
         int_curr_symbol: "€"
-
+      date_only:
+        class: "Template::Flute::Filter::Date"
+        options:
+          format: '%x'
+          strict:
+            empty: 0
+      time_only:
+        class: "Template::Flute::Filter::Date"
+        options:
+          format: '%R'
+          strict:
+            empty: 0
 plugins:
   Auth::Extensible:
     disable_roles: 0
@@ -54,6 +65,7 @@ plugins:
         PrintError: 1
         on_connect_do: 'SET client_min_messages=WARNING;'
         pg_enable_utf8: 1
+        quote_names: 1
   Interchange6::Routes:
     navigation:
       template: product-listing
