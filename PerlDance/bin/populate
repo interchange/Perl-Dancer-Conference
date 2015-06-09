@@ -163,7 +163,7 @@ my $nav = shop_navigation->populate(
             "Get Your Seat Before It's Too Late"
         ],
         [
-            'talks/submit', 'nav', 'menu-main', 'Submit Talk Proposal',
+            'talks/submit', 'nav', 'menu-main', 'Call For Papers',
             20, 'Requirement and guidance for submitting talks'
         ],
     ]
