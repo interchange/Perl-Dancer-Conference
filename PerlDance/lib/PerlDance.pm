@@ -64,11 +64,12 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     $tokens->{user} = shop_user->search(
         {
-            'me.users_id' => $users_id,
+            'me.users_id'    => $users_id,
             'addresses.type' => 'primary',
         },
         {
-            prefetch => [ { addresses => 'country', }, 'photo' ],
+            prefetch =>
+              [ { addresses => 'country', }, 'photo', 'talks_authored' ],
         }
     )->first;
 
