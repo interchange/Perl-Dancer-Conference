@@ -30,6 +30,7 @@ WriteMakefile(
         'Interchange6'                     => '0.080',
         'Interchange6::Schema'             => '0.084',
         'Template::Flute'                  => '0.0180',
+        'Text::Markdown'                   => 0,
         'URI::Escape'                      => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
