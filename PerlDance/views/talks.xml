@@ -8,7 +8,8 @@
       <param name="speaker-name" class="speaker-link" field="author.name"/>
       <param name="speaker-link" target="href" op="append" field="author.uri"/>
       <param name="talk-title" class="talk-link" field="title"/>
-      <param name="talk-link" target="href" op="append" field="id"/>
+      <param name="talk-link" target="href" op="append" field="seo_uri"/>
+      <param name="gdlr-session-item-excerpt" field="short_abstract"/>
     </list>
   </list>
   <list name="unscheduled" iterator="unscheduled">
