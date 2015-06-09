@@ -39,6 +39,8 @@ get '/' => sub {
 
     add_speakers_tokens($tokens);
 
+    $tokens->{body_class} = "home page";
+
     template 'index', $tokens;
 };
 
@@ -50,6 +52,8 @@ get '/speakers' => sub {
     $tokens->{description} = $nav->description;
 
     add_speakers_tokens($tokens);
+
+    $tokens->{body_class} = "page";
 
     template 'speakers', $tokens;
 };
@@ -72,6 +76,8 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         status 'not_found';
         return "Speaker not found";
     }
+
+    $tokens->{body_class} = "single single-speaker";
 
     template 'speaker', $tokens;
 };
@@ -117,6 +123,8 @@ get '/talks' => sub {
         }
     }
     push @{ $tokens->{talks} }, $unscheduled if $unscheduled;
+
+    $tokens->{body_class} = "page";
 
     template 'talks', $tokens;
 };

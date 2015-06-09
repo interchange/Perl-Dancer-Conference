@@ -1,4 +1,5 @@
 <specification>
+  <value name="body_class" class="_body_" op="append" joiner=" " target="class"/>
   <!--list name="menu-mobile" iterator="nav-menu-main">
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href" op="append"/>
