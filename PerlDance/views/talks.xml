@@ -6,7 +6,7 @@
       <param name="start_time" filter="time_only"/>
       <param name="end_time" filter="time_only"/>
       <param name="speaker-name" class="speaker-link" field="author.name"/>
-      <param name="speaker-link" target="href" op="append" field="author.id"/>
+      <param name="speaker-link" target="href" op="append" field="author.uri"/>
       <param name="talk-title" class="talk-link" field="title"/>
       <param name="talk-link" target="href" op="append" field="id"/>
     </list>
