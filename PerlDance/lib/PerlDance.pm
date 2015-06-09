@@ -132,6 +132,22 @@ get '/talks' => sub {
     template 'talks', $tokens;
 };
 
+get qr{/talks/(?<id>\d+).*} => sub {
+    my $talks_id = captures->{id};
+    my $tokens = {};
+
+    $tokens->{talk} = shop_schema->resultset('Talk')->search(
+        {
+            'me.talks_id' => $talks_id,
+        },
+        {
+            prefetch => [ 'author', { attendee_talks => 'user' } ],
+        }
+    )->first;
+
+    template 'talk', $tokens;
+};
+
 sub add_speakers_tokens {
     my $tokens = shift;
 
