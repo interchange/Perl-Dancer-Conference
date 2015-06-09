@@ -9,16 +9,28 @@ use URI::Escape;
 
 =head2 ACCESSORS
 
+=head3 bio
+
+Biography. Defaults to empty string.
+
 =head3 media_id
 
 FK on  L<Interchange6::Schema::Result::Media/media_id>.
 
 Is nullable.
 
+=head3 pause_id
+
+PAUSE id. Defaults to empty string.
+
 =cut
 
-__PACKAGE__->add_columns( media_id =>
-      { data_type => "integer", is_foreign_key => 1, is_nullable => 1 } );
+__PACKAGE__->add_columns(
+    bio => { data_type => "text", default_value => '' },
+    media_id =>
+      { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    pause_id => { data_type => "varchar", length => 128, default_value => '' },
+);
 
 =head2 METHODS
 

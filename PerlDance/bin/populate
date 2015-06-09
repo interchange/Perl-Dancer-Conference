@@ -56,7 +56,7 @@ my @users = (
     ],
     [
         'jure.kodzoman@informastudio.com', 'Jure',
-        'Kodzoman',                        undef, undef,
+        'Kodzoman',                        undef, '',
         'Informa Studio Ltd.',             'Split',
         undef,                             'HR',
         "Jure works as Head of Development at Informa Studio. He has more than 10 years of active experience in E-Commerce working with different types of clients, from small webshops to large corporations. Strong interest in improving usability and effectiveness of online shopping.",
@@ -64,7 +64,7 @@ my @users = (
     ],
     [
         'grega.pompe@informa.si', 'Grega',
-        'Pompe',                  undef, undef,
+        'Pompe',                  undef, '',
         'Informa Studio Ltd.',    'Ljubljana',
         undef,                    'SI',
         "Grega started out as a Python developer but due to circumstances moved to Perl. He is one of the major contributors to TableEditor and Storemail projects as well as a huge DBIx::Class fan.",
@@ -72,7 +72,7 @@ my @users = (
     ],
     [
         'sbatschelet@mac.com', 'Sam',
-        'Batschelet',          'hexfusion', undef,
+        'Batschelet',          'hexfusion', '',
         'West Branch Angler',  'New York',
         'NY',                  'US',
         "Sam is CTO of West Branch Angler fishing resort, taking care of tech department of the resort as well as running their fly fishing gear online store.",
@@ -91,6 +91,8 @@ foreach my $row (@users) {
             first_name => $row->[1],
             last_name  => $row->[2],
             nickname   => $row->[3],
+            pause_id   => $row->[4],
+            bio        => $row->[9],
             password   => 'ietoYoo9Ue',
             addresses  => [
                 {
