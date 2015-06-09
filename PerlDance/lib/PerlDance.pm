@@ -23,6 +23,7 @@ hook 'before_layout_render' => sub {
         }
     )->hri->all;
 
+    # add class to highlight current page in menu
     foreach my $record (@nav) {
         my $path = request->path;
         $path =~ s/^\///;
@@ -53,9 +54,10 @@ get '/speakers' => sub {
     template 'speakers', $tokens;
 };
 
-get '/speakers/:id' => sub {
-    my $users_id = param 'id';
-    template 'speaker_detail';
+get qr{/speakers/(?<id>\d+).*} => sub {
+    my $users_id = captures->{id};
+
+    template 'speaker';
 };
 
 get '/talks' => sub {
