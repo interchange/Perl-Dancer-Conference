@@ -78,6 +78,8 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         return "Speaker not found";
     }
 
+    $tokens->{has_talks} = 1 if $tokens->{user}->talks_authored->has_rows;
+
     $tokens->{body_class} = "single single-speaker";
 
     template 'speaker', $tokens;

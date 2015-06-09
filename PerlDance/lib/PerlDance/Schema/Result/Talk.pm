@@ -127,6 +127,30 @@ column start_time => {
 
 =head2 METHODS
 
+=head2 duration_display
+
+If L</start_time> is defined returns a string with start and end times such as:
+
+  09:00 - 13:00
+
+Otherwise returns a duration string such as:
+
+  40 minutes
+
+=cut
+
+sub duration_display {
+    my $self = shift;
+    if ( defined $self->start_time ) {
+        return join( " - ",
+            $self->start_time->strftime("%R"),
+            $self->end_time->strftime("%R") );
+    }
+    else {
+        return join(" ", $self->duration, "minutes");
+    }
+}
+
 =head2 end_time
 
 L<DateTime> object representing end time of talk calculated from L</start_time>
