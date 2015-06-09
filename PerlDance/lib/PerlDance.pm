@@ -58,7 +58,15 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
 
-    $tokens->{user} = shop_user($users_id);
+    $tokens->{user} = shop_user->search(
+        {
+            'me.users_id' => $users_id,
+            'addresses.type' => 'primary',
+        },
+        {
+            prefetch => [ { addresses => 'country', }, 'photo' ],
+        }
+    )->first;
 
     if ( !$tokens->{user} ) {
         status 'not_found';
