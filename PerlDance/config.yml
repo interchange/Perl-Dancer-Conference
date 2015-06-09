@@ -31,6 +31,8 @@ engines:
           format: '%x'
           strict:
             empty: 0
+      markdown:
+        class: "PerlDance::Filter::Markdown"
       time_only:
         class: "Template::Flute::Filter::Date"
         options:

@@ -145,6 +145,8 @@ get qr{/talks/(?<id>\d+).*} => sub {
         }
     )->first;
 
+    $tokens->{body_class} = "single single-session";
+
     template 'talk', $tokens;
 };
 
