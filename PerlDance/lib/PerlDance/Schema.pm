@@ -3,6 +3,7 @@ package PerlDance::Schema;
 use Interchange6::Schema::Result::User;
 
 package Interchange6::Schema::Result::User;
+use URI::Escape;
 
 =head1 L<Interchange6::Schema::Result::User>
 
@@ -18,6 +19,23 @@ Is nullable.
 
 __PACKAGE__->add_columns( media_id =>
       { data_type => "integer", is_foreign_key => 1, is_nullable => 1 } );
+
+=head2 METHODS
+
+=head3 uri
+
+uri component for user constructed from users_id and lower case name. We 
+don't need this but it makes for seo-friendly uris.
+
+=cut
+
+sub uri {
+    my $self = shift;
+    my $name = lc($self->name);
+    $name =~ s/^\s+|\s+$//g;
+    $name =~ s/\s+/-/g;
+    return join('-', $self->id, uri_escape($name));
+}
 
 =head2 RELATIONS
 
