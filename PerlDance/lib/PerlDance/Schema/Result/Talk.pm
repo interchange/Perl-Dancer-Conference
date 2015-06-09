@@ -10,6 +10,7 @@ PerlDance::Schema::Result::Talk - conference/event talks
 
 use Interchange6::Schema::Candy -components =>
   [qw(InflateColumn::DateTime TimeStamp)];
+use URI::Escape;
 
 =head1 ACCESSORS
 
@@ -162,6 +163,38 @@ sub end_time {
     my $self = shift;
     return undef unless defined $self->start_time;
     return $self->start_time->clone->add( minutes => $self->duration );
+}
+
+=head2 seo_uri
+
+Returns a short uri comprised of L</talks_id> and L</title> such as:
+
+    45-web-development-using-dancer
+
+=cut
+
+sub seo_uri {
+    my $self  = shift;
+    my $title = lc( $self->title );
+    $title =~ s/^\s+|\s+$//g;
+    $title =~ s/\s+/-/g;
+    return join( '-', $self->id, uri_escape($title) );
+}
+
+=head2 short_abstract
+
+Returns a shortened (<= 200 char) version of L</abstract>.
+
+=cut
+
+sub short_abstract {
+    my $self = shift;
+    my $abstract = $self->abstract;
+    return $abstract if length($abstract) <= 200;
+    $abstract = substr($abstract, 0, 200);
+    $abstract =~ s/\s+\S*$//;
+    $abstract .= '...';
+    return $abstract;
 }
 
 =head1 RELATIONS
