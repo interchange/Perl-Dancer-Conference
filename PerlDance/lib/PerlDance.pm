@@ -56,8 +56,16 @@ get '/speakers' => sub {
 
 get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
+    my $tokens = {};
 
-    template 'speaker';
+    $tokens->{user} = shop_user($users_id);
+
+    if ( !$tokens->{user} ) {
+        status 'not_found';
+        return "Speaker not found";
+    }
+
+    template 'speaker', $tokens;
 };
 
 get '/talks' => sub {
