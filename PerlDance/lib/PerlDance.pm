@@ -1,4 +1,11 @@
 package PerlDance;
+
+=head1 NAME
+
+PerlDance - Perl Dancer 2015 conference site
+
+=cut
+
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
@@ -9,6 +16,14 @@ our $VERSION = '0.1';
 
 set session => 'DBIC';
 set session_options => { schema => schema };
+
+=head1 HOOKS
+
+=head2 before_layout_render
+
+Add navigation (menus).
+
+=cut
 
 hook 'before_layout_render' => sub {
     my $tokens = shift;
@@ -35,6 +50,14 @@ hook 'before_layout_render' => sub {
     }
 };
 
+=head1 ROUTES
+
+=head2 get /
+
+Home page
+
+=cut
+
 get '/' => sub {
     my $tokens = {};
 
@@ -47,6 +70,12 @@ get '/' => sub {
 
     template 'index', $tokens;
 };
+
+=head2 get /speakers
+
+Speaker list
+
+=cut
 
 get '/speakers' => sub {
     my $tokens = {};
@@ -61,6 +90,12 @@ get '/speakers' => sub {
 
     template 'speakers', $tokens;
 };
+
+=head2 get /speakers/{id}.*
+
+Individual speaker
+
+=cut
 
 get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
@@ -88,6 +123,12 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     template 'speaker', $tokens;
 };
+
+=head2 get /talks
+
+Talks list
+
+=cut
 
 get '/talks' => sub {
     my $tokens = {};
@@ -137,6 +178,12 @@ get '/talks' => sub {
     template 'talks', $tokens;
 };
 
+=head2 get /talks/submit
+
+CFP
+
+=cut
+
 get '/talks/submit' => sub {
     my $tokens = {};
 
@@ -144,6 +191,12 @@ get '/talks/submit' => sub {
 
     template 'cfp', $tokens;
 };
+
+=head2 get /talks/{id}.*
+
+Individual talk
+
+=cut
 
 get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
@@ -163,6 +216,12 @@ get qr{/talks/(?<id>\d+).*} => sub {
     template 'talk', $tokens;
 };
 
+=head2 get /tickets
+
+Conference tickets
+
+=cut
+
 get '/tickets' => sub {
     my $tokens = {};
 
@@ -171,7 +230,19 @@ get '/tickets' => sub {
     template 'tickets', $tokens;
 };
 
+=head2 shop_setup_routes
+
+L<Dancer::Plugin::Interchange6::Routes/shop_setup_routes>
+
+=cut
+
 shop_setup_routes;
+
+=head2 not_found
+
+404
+
+=cut
 
 any qr{.*} => sub {
     my $tokens = {};
@@ -182,12 +253,24 @@ any qr{.*} => sub {
     template '404', $tokens;
 };
 
+=head1 METHODS
+
+=head2 add_javascript($tokens, @js_urls);
+
+=cut
+
 sub add_javascript {
     my $tokens = shift;
     foreach my $src ( @_ ) {
         push @{ $tokens->{"extra-js"} }, { src => $src };
     }
 }
+
+=head2 add_speakers_tokens($tokens);
+
+Add tokens needed by speakers fragment
+
+=cut
 
 sub add_speakers_tokens {
     my $tokens = shift;
