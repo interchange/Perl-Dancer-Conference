@@ -151,6 +151,14 @@ get qr{/talks/(?<id>\d+).*} => sub {
     template 'talk', $tokens;
 };
 
+get '/tickets' => sub {
+    my $tokens = {};
+
+    $tokens->{body_class} = "page";
+
+    template 'tickets', $tokens;
+};
+
 sub add_speakers_tokens {
     my $tokens = shift;
 

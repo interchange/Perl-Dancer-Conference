@@ -1,0 +1,3 @@
+<specification>
+  <value name="gdlr-session-counter-item" op="hook" include="fragments/countdown.html"/>
+</specification>
