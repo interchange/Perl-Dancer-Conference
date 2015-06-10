@@ -10,4 +10,7 @@
     <param name="class" class="link" target="class"/>
   </list>
   <value name="content" class="content" op="hook"/>
+  <list name="extra-js" iterator="extra-js">
+    <param name="file" target="src" op="append"/>
+  </list>
 </specification>

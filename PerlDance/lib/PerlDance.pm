@@ -42,6 +42,8 @@ get '/' => sub {
 
     $tokens->{body_class} = "home page";
 
+    add_javascript( $tokens, "index.js" );
+
     template 'index', $tokens;
 };
 
@@ -178,6 +180,11 @@ any qr{.*} => sub {
     status 'not_found';
     template '404', $tokens;
 };
+
+sub add_javascript {
+    my ( $tokens, $file ) = @_;
+    push @{ $tokens->{"extra-js"} }, { file => "index.js" };
+}
 
 sub add_speakers_tokens {
     my $tokens = shift;
