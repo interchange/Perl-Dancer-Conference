@@ -1,3 +1,5 @@
+var ms_grabbing_curosr='/img/grabbing.cur',ms_grab_curosr='/img/grab.cur';
+var _wpcf7 = {"loaderUrl":"\/img\/ajax-loader.gif","sending":"Sending ..."};
 $(document).ready(function() {
   $('.gdlr-session-counter-item').each(function(){
       this.finalDate = new Date("2015-10-19T09:00:00+01:00");
