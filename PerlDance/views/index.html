@@ -18,26 +18,8 @@
           <div class="gdlr-subscribe-item gdlr-item" style="margin-bottom: 10px;">
             <h4 class="gdlr-subscribe-title">Subscribe for updates</h4>
             <div class="gdlr-newsletter-subscribe">
-              <script type="text/javascript">
-//<![CDATA[
-if (typeof newsletter_check !== "function") {
-  window.newsletter_check = function (f) {
-    var re = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-]{1,})+\.)+([a-zA-Z0-9]{2,})+$/;
-    if (!re.test(f.elements["ne"].value)) {
-      alert("The email is not correct");
-      return false;
-    }
-    if (f.elements["ny"] && !f.elements["ny"].checked) {
-      alert("You must accept the privacy statement");
-      return false;
-    }
-    return true;
-  }
-}
-//]]>
-              </script>
               <div class="newsletter newsletter-subscription">
-                <form method="post" action="/subscribe" onsubmit="return newsletter_check(this)">
+                <form id="newsletter-subscribe" method="post" action="/subscribe">
                   <input class="newsletter-email" type="email" name="ne" size="30" required placeholder="Please fill your email" />
                   <input class="newsletter-submit gdlr-button with-border" type="submit" value="Subscribe"/>
                 </form>
