@@ -3,6 +3,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Interchange6;
+use Dancer::Plugin::Interchange6::Routes;
 
 our $VERSION = '0.1';
 
@@ -165,6 +166,17 @@ get '/tickets' => sub {
     $tokens->{body_class} = "page";
 
     template 'tickets', $tokens;
+};
+
+shop_setup_routes;
+
+any qr{.*} => sub {
+    my $tokens = {};
+
+    $tokens->{body_class} = "single single-ticket";
+
+    status 'not_found';
+    template '404', $tokens;
 };
 
 sub add_speakers_tokens {
