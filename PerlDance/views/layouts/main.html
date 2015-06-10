@@ -56,11 +56,13 @@
             <a href="/"><img src="/img/perl-dancer-2015-logo.png"></a>
             <div class="gdlr-responsive-navigation dl-menuwrapper" id="gdlr-responsive-navigation" ><button class="dl-trigger">Open Menu</button>
               <ul id="menu-main" class="menu-main dl-menu gdlr-main-mobile-menu">
-                <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page current-menu-item page_item current_page_item"><a href="/">Home</a></li>
+                <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Home</a></li>
                 <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Speakers</a></li>
                 <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Schedule</a></li>
                 <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Tickets</a></li>
                 <li class="menu-mobile menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Call For Papers!</a></li>
+                <li class="menu-mobile-login menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Login</a></li>
+                <li class="menu-mobile-logout menu-item menu-item-type-post_type menu-item-object-page"><a class="link" href="/">Logout</a></li>
               </ul>
             </div>
           </div>
@@ -74,6 +76,12 @@
                 <li class="menu-normal menu-item menu-item-type-post_type menu-item-object-page menu-item-type-post_type menu-item-object-page gdlr-normal-menu"><a class="link" href="/">Schedule</a></li>
                 <li class="menu-normal menu-item menu-item-type-post_type menu-item-object-page menu-item-type-post_type menu-item-object-page gdlr-normal-menu"><a class="link" href="/">Tickets</a></li>
                 <li class="menu-normal menu-item menu-item-type-post_type menu-item-object-page menu-item-type-post_type menu-item-object-page gdlr-normal-menu"><a class="link" href="/">Call For Papers!</a></li>
+              </ul>
+              <ul class="auth-login menu-main sf-menu gdlr-main-menu">
+                <li class="menu-login menu-item menu-item-type-post_type menu-item-object-page menu-item-type-post_type menu-item-object-page gdlr-normal-menu"><a class="fancybox-link link" href="#">Login</a></li>
+              </ul>
+              <ul class="auth-logout menu-main sf-menu gdlr-main-menu">
+                <li class="menu-logout menu-item menu-item-type-post_type menu-item-object-page menu-item-type-post_type menu-item-object-page gdlr-normal-menu"><a class="link" href="/">Logout</a></li>
               </ul>
             </nav>  
             <span class="gdlr-menu-search-button-sep">|</span>
@@ -114,6 +122,64 @@
     </footer>
 
   </div> <!-- body-wrapper -->
+
+<div class="display-none">
+<div class="NOTgdlr-lightbox-form" id="lightbox-login" >
+  <div class="gdlr-paypal-form-wrapper">
+    <h3 class="gdlr-paypal-form-head">You are booking for : <span>Conference only</span></h3>
+    <form class="gdlr-paypal-form" action="https://www.paypal.com/cgi-bin/webscr" method="post" data-ajax="http://perl.dance/wp-admin/admin-ajax.php" >
+      <div class="gdlr-paypal-fields">
+        <div class="six columns">
+          <span class="gdlr-head">Name *</span>
+          <input class="gdlr-require" type="text" name="gdlr-name">
+        </div>
+        <div class="six columns gdlr-right">
+          <span class="gdlr-head">Last Name *</span>
+          <input class="gdlr-require" type="text" name="gdlr-last-name">
+        </div>
+        <div class="clear"></div>
+        <div class="six columns">
+          <span class="gdlr-head">Email *</span>
+          <input class="gdlr-require gdlr-email" type="text" name="gdlr-email">
+        </div>
+        <div class="six columns gdlr-right">
+          <span class="gdlr-head">Phone</span>
+          <input type="text" name="gdlr-phone">
+        </div>
+        <div class="clear"></div>
+        <div class="six columns"><span class="gdlr-head">Address</span>
+          <textarea name="gdlr-address"></textarea>
+        </div>
+        <div class="six columns gdlr-right"><span class="gdlr-head">Additional Note</span>
+          <textarea name="gdlr-additional-note"></textarea>
+        </div>
+        <div class="clear"></div>
+      </div>
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="jure.kodzoman@informastudio.com">
+      <input type="hidden" name="item_name" value="Conference only">
+      <input type="hidden" name="ticket_id" value="3282">
+      <input type="hidden" name="invoice" value="">
+      <input type="hidden" name="amount" value="">
+      <input type="hidden" name="return" value="http://perl.dance/?ticket=one-day-pass">
+      <input type="hidden" name="no_shipping" value="0">
+      <input type="hidden" name="no_note" value="1">
+      <input type="hidden" name="currency_code" value="EUR">
+      <input type="hidden" name="lc" value="AU">
+      <input type="hidden" name="bn" value="PP-BuyNowBF">
+      <input type="hidden" class="gdlr-paypal-action" name="action" value="">
+      <input type="hidden" name="security" value="66bccbcf68">
+      <div class="gdlr-notice email-invalid" >Invalid Email Address </div>
+      <div class="gdlr-notice require-field" >Please fill all required fields</div>
+      <div class="gdlr-notice alert-message" ></div>
+      <div class="gdlr-paypal-loader" ></div>
+
+      <input type="button" class="gdlr-button-mail gdlr-button with-border" value="Login" >
+      <div class="clear"></div>
+    </form>
+  </div>
+</div>
+</div>
 
 <link rel='stylesheet' href='/css/google-map.css' type='text/css'>
 <script src='/js/jquery.form.min.js'></script>
