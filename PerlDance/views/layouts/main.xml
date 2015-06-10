@@ -11,6 +11,6 @@
   </list>
   <value name="content" class="content" op="hook"/>
   <list name="extra-js" iterator="extra-js">
-    <param name="file" target="src" op="append"/>
+    <param name="src" target="src"/>
   </list>
 </specification>

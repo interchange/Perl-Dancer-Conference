@@ -42,7 +42,9 @@ get '/' => sub {
 
     $tokens->{body_class} = "home page";
 
-    add_javascript( $tokens, "index.js" );
+    add_javascript(
+        $tokens, "//maps.google.com/maps/api/js?sensor=false&libraries=places,weather,panoramio&language=en", "/js/index.js"
+    );
 
     template 'index', $tokens;
 };
@@ -182,8 +184,10 @@ any qr{.*} => sub {
 };
 
 sub add_javascript {
-    my ( $tokens, $file ) = @_;
-    push @{ $tokens->{"extra-js"} }, { file => "index.js" };
+    my $tokens = shift;
+    foreach my $src ( @_ ) {
+        push @{ $tokens->{"extra-js"} }, { src => $src };
+    }
 }
 
 sub add_speakers_tokens {
