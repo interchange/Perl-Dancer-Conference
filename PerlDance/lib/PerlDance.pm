@@ -133,6 +133,14 @@ get '/talks' => sub {
     template 'talks', $tokens;
 };
 
+get '/talks/submit' => sub {
+    my $tokens = {};
+
+    $tokens->{body_class} = "page";
+
+    template 'cfp', $tokens;
+};
+
 get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
     my $tokens = {};
