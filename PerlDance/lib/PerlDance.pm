@@ -107,7 +107,8 @@ get '/talks' => sub {
         push @{ $days{$day_number} }, $talk;
     };
     my $unscheduled;
-    while ( my ( $day, $value ) = each %days ) {
+    foreach my $day ( sort keys %days ) {
+        my $value = $days{$day};
         my $date = $value->[0]->start_time;
         if ( $day > 0 ) {
             push @{ $tokens->{talks} },
