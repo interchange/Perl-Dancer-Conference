@@ -166,6 +166,8 @@ my $nav = shop_navigation->populate(
             'talks/submit', 'nav', 'menu-main', 'Call For Papers',
             20, 'Requirement and guidance for submitting talks'
         ],
+        [ 'login',  'nav', 'top-login',  'Login/Register', 1, 'Login' ],
+        [ 'logout', 'nav', 'top-logout', 'Logout',         1, 'Logout' ],
     ]
 );
 
