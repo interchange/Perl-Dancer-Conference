@@ -42,9 +42,8 @@ get '/' => sub {
 
     $tokens->{body_class} = "home page";
 
-    add_javascript(
-        $tokens, "//maps.google.com/maps/api/js?sensor=false&libraries=places,weather,panoramio&language=en", "/js/index.js"
-    );
+    add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
+        "/js/index.js" );
 
     template 'index', $tokens;
 };
