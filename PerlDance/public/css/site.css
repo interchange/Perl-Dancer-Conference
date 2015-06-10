@@ -5,3 +5,9 @@
 }
 /* amerikahaus map */
 #wgmpmap img {max-width: none;}
+/* misc stuff */
+.recentcomments a{
+  display:inline !important;
+  padding:0 !important;
+  margin:0 !important;
+}
