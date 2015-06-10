@@ -64,6 +64,7 @@ get '/' => sub {
     add_speakers_tokens($tokens);
 
     $tokens->{body_class} = "home page";
+    $tokens->{title} = "Vienna Austria October 2015";
 
     add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
         "/js/index.js" );
@@ -87,6 +88,7 @@ get '/speakers' => sub {
     add_speakers_tokens($tokens);
 
     $tokens->{body_class} = "page";
+    $tokens->{title} = "Speakers";
 
     template 'speakers', $tokens;
 };
@@ -120,6 +122,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     $tokens->{has_talks} = 1 if $tokens->{user}->talks_authored->has_rows;
 
     $tokens->{body_class} = "single single-speaker";
+    $tokens->{title} = $tokens->{user}->name;
 
     template 'speaker', $tokens;
 };
@@ -174,6 +177,7 @@ get '/talks' => sub {
     push @{ $tokens->{talks} }, $unscheduled if $unscheduled;
 
     $tokens->{body_class} = "page";
+    $tokens->{title} = "Schedule";
 
     template 'talks', $tokens;
 };
@@ -188,6 +192,7 @@ get '/talks/submit' => sub {
     my $tokens = {};
 
     $tokens->{body_class} = "page";
+    $tokens->{title} = "Call For Papers";
 
     template 'cfp', $tokens;
 };
@@ -212,6 +217,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     )->first;
 
     $tokens->{body_class} = "single single-session";
+    $tokens->{title} = $tokens->{talk}->title;
 
     template 'talk', $tokens;
 };
@@ -226,6 +232,7 @@ get '/tickets' => sub {
     my $tokens = {};
 
     $tokens->{body_class} = "page";
+    $tokens->{title} = "Tickets";
 
     template 'tickets', $tokens;
 };
@@ -248,6 +255,7 @@ any qr{.*} => sub {
     my $tokens = {};
 
     $tokens->{body_class} = "single single-ticket";
+    $tokens->{title} = "Not Found";
 
     status 'not_found';
     template '404', $tokens;
