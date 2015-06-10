@@ -43,6 +43,16 @@ engines:
           format: '%R'
           strict:
             empty: 0
+plack_middlewares:
+  -
+    - XSRFBlock
+    - cookie_name
+    - PerlDance-XSRF-Token
+    - meta_tag
+    - xsrf-meta
+    - cookie_options
+    -
+      httponly: 1
 plugins:
   Auth::Extensible:
     disable_roles: 0

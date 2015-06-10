@@ -30,6 +30,7 @@ WriteMakefile(
         'HTML::Scrubber'                   => 0,
         'Interchange6'                     => '0.080',
         'Interchange6::Schema'             => '0.084',
+        'Plack::Middleware::XSRFBlock'     => 0,
         'Template::Flute'                  => '0.0180',
         'Text::Markdown'                   => 0,
         'URI::Escape'                      => 0,
