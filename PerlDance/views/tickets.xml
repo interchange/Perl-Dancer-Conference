@@ -1,3 +1,4 @@
 <specification>
+  <value name="ticket-item-wrapper" op="hook" include="fragments/tickets.html"/>
   <value name="gdlr-session-counter-item" op="hook" include="fragments/countdown.html"/>
 </specification>

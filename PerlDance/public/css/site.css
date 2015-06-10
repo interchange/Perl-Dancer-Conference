@@ -1,4 +1,7 @@
+/* highlight current page in nav */
 .gdlr-main-menu>li>a.current-page {
   color: #0749bc;
   opacity: 1;
 }
+/* amerikahaus map */
+#wgmpmap img {max-width: none;}
