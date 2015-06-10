@@ -27,6 +27,7 @@ WriteMakefile(
         'Dancer::Plugin::Interchange6'     => '0.080',
         'Dancer::Template::TemplateFlute'  => '0.0142',
         'DateTime::Format::ISO8601'        => 0,
+        'HTML::Scrubber'                   => 0,
         'Interchange6'                     => '0.080',
         'Interchange6::Schema'             => '0.084',
         'Template::Flute'                  => '0.0180',
