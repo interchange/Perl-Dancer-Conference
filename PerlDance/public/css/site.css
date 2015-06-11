@@ -115,4 +115,13 @@ h1, h2, h3, h4, h5, h6 {
 .speaker-row {
   padding: 20px 0;
   text-align: center;
+  color: #707070;
+  font-style: italic;
+}
+.speaker-row a {
+  color: #343434;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-style: normal;
 }
