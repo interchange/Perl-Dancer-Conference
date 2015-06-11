@@ -149,13 +149,12 @@ shop_product->create(
 my $nav = shop_navigation->populate(
     [
         [qw/uri type scope name priority description/],
-        [ '', 'nav', 'menu-main', 'Home', 100, '' ],
         [
             'speakers', 'nav', 'menu-main', 'Speakers', 80,
             'Meet Our Speakers!'
         ],
         [
-            'talks', 'nav', 'menu-main', 'Schedule', 60,
+            'talks', 'nav', 'menu-main', 'Talks', 60,
             'Schedule draft. Contains talks confirmed so far.'
         ],
         [
