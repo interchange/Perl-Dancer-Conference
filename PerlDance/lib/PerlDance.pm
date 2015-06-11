@@ -44,7 +44,7 @@ hook 'before_layout_render' => sub {
         my $path = request->path;
         $path =~ s/^\///;
         if ( $path eq $record->{uri} ) {
-            $record->{class} = "current-page";
+            $record->{class} = "active";
         }
         push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;
     }

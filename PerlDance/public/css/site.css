@@ -18,6 +18,11 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 2px;
   margin: 0;
   text-transform: uppercase;
+  padding-bottom: 10px;
+}
+#navbar a.active, #navbar li:hover>a {
+  color: #0749bc;
+  border-bottom: 3px solid #0749bc;
 }
 .normal {
   height: 75px;

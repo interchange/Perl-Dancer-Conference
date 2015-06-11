@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  /* shrink nav bar on scroll */
   $(window).scroll(function() {
     if ($(document).scrollTop() > 150) {
       $('nav').addClass('shrink');
@@ -6,6 +7,7 @@ $(document).ready(function() {
       $('nav').removeClass('shrink');
     }
   });
+  /* countdown timer */
   $('.gdlr-session-counter-item').each(function(){
       this.finalDate = new Date("2015-10-19T09:00:00+01:00");
       this.now = new Date();
