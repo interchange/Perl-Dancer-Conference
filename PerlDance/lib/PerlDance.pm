@@ -174,7 +174,7 @@ get '/talks' => sub {
         }
         else {
             $unscheduled = {
-                day   => 'Unscheduled',
+                day   => 'Not yet scheduled',
                 date  => undef,
                 talks => $value,
             };
