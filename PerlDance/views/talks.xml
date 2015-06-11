@@ -1,4 +1,6 @@
 <specification>
+  <value name="title" class="page-title"/>
+  <value name="description" class="page-caption"/>
   <list name="talks" iterator="talks">
     <param name="panel-title" field="day"/>
     <param name="date" filter="date_only"/>

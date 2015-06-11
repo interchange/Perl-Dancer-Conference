@@ -142,6 +142,10 @@ Talks list
 get '/talks' => sub {
     my $tokens = {};
 
+    my $nav = shop_navigation->find( { uri => 'talks' } );
+    $tokens->{title}       = $nav->name;
+    $tokens->{description} = $nav->description;
+
     my $talks = shop_schema->resultset('Talk')->search(
         {
             accepted => 1,
