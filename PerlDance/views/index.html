@@ -1,18 +1,22 @@
 <div class="homepage">
+
   <div class="container">
     <img src="/img/perl-dancer-homepage-logo.png" class="center-block img-responsive">
   </div>
+
   <div class="container">
-    <div class="center-block countdown-timer">Countdown timer goes here</div>
+    <div class="center-block countdown-timer"><!-- countdown timer --></div>
+    <div class="center-block">
+      <h4 class="text-center subscribe">Subscribe for updates</h4>
+      <form class="text-center form-inline" id="newsletter-subscribe" method="post" action="/subscribe">
+        <div class="form-group">
+          <input class="newsletter-email form-control" type="email" name="ne" size="30" required placeholder="Please fill your email">
+          <input class="newsletter-submit btn btn-primary" type="submit" value="Subscribe">
+        </div>
+      </form>
+    </div>
   </div>
 
-          <div class="gdlr-subscribe-item gdlr-item">
-            <h4 class="gdlr-subscribe-title">Subscribe for updates</h4>
-            <div class="gdlr-newsletter-subscribe">
-              <div class="newsletter newsletter-subscription">
-                <form id="newsletter-subscribe" method="post" action="/subscribe">
-                  <input class="newsletter-email" type="email" name="ne" size="30" required placeholder="Please fill your email" />
-                  <input class="newsletter-submit gdlr-button with-border" type="submit" value="Subscribe"/>
                 </form>
               </div>
             </div>

@@ -4,6 +4,7 @@ body {
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: "Raleway";
+  text-transform: uppercase;
 }
 h1, h2, h3, h4, h5, h6 {
   font-weight: 400;
@@ -104,7 +105,12 @@ h3 {
   font-size: 36px;
   font-weight: 800;
   letter-spacing: 4px;
-  text-transform: uppercase;
+}
+h4.subscribe {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 4px;
+  margin: 20px 0;
 }
 /* amerikahaus map */
 #wgmpmap {
@@ -121,7 +127,6 @@ h3 {
   font-size: 45px;
   font-weight: 800;
   letter-spacing: 5px;
-  text-transform: uppercase;
 }
 .page-caption {
     font-size: 19px;
