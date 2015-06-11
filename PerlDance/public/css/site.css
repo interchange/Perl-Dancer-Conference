@@ -1,6 +1,11 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
 body {
   padding-top: 90px;
   font-family: "Montserrat";
+  margin-bottom: 80px;
 }
 a {
   text-transform: uppercase;
@@ -104,9 +109,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* footer */
 .footer {
+  position: absolute;
+  bottom: 0;
+  height: 60px;
   color: #5b5b5b;
   background-color: #212121;
   padding: 20px 0;
+  margin-top: 20px;
+  width: 100%;
+}
+.footer>.container {
 }
 /* homepage */
 h3 {
