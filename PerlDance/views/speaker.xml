@@ -9,7 +9,7 @@
   <container name="has_talks" value="has_talks"/>
   <list name="talks" iterator="user.talks_authored">
     <param name="talk-link" target="href" op="append" field="seo_uri"/>
-    <param name="title"/>
+    <param name="title" class="talk-link"/>
     <param name="start_time" filter="date_only"/>
     <param name="duration_display"/>
   </list>

@@ -188,3 +188,37 @@ h4.subscribe {
   color: #8b8b8b;
   padding: 20px 0;
 }
+/* countdown */
+.countdown-timer {
+  margin: 20px 0;
+}
+.countdown-timer .session-counter-block {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 0 10px;
+  min-width: 90px;
+  padding: 30px;
+  text-align: center;
+}
+.countdown-timer .session-counter-block.block-day {
+  opacity: 0.95;
+}
+.countdown-timer .session-counter-block.block-hrs {
+  opacity: 0.85;
+}
+.countdown-timer .session-counter-block.block-min {
+  opacity: 0.75;
+}
+.countdown-timer .session-counter-block.block-sec {
+  opacity: 0.65;
+}
+.countdown-timer .gdlr-time {
+  display: block;
+  font-size: 51px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 5px;
+  min-width: 90px;
+}

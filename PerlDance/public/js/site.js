@@ -8,7 +8,7 @@ $(document).ready(function() {
     }
   });
   /* countdown timer */
-  $('.gdlr-session-counter-item').each(function(){
+  $('.countdown-timer').each(function(){
       this.finalDate = new Date("2015-10-19T09:00:00+01:00");
       this.now = new Date();
       this.totalSecsLeft = (this.finalDate.getTime() - this.now.getTime())/1000;
