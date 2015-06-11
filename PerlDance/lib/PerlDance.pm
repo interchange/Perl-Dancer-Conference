@@ -48,13 +48,11 @@ hook 'before_layout_render' => sub {
         }
         push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;
     }
-    # crappy mobile menus mean we can't handle this sensibly in TF spec
-    $tokens->{"mobile-menu-main"} = $tokens->{"nav-menu-main"};
     if ( logged_in_user ) {
-        $tokens->{"mobile-top-logout"} = $tokens->{"nav-top-logout"}
+        delete $tokens->{"nav-top-login"};
     }
     else {
-        $tokens->{"mobile-top-login"} = $tokens->{"nav-top-login"}
+        delete $tokens->{"nav-top-logout"};
     }
 };
 

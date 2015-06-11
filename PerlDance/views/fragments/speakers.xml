@@ -1,6 +1,6 @@
 <specification>
-  <list name="speaker-grid" iterator="speakers" class="speaker-row">
-    <list name="speaker-row" iterator="row" class="speaker-item">
+  <list name="row" iterator="speakers" class="speaker-row">
+    <list name="col" iterator="row" class="speaker">
       <param name="name"/>
       <param name="company" field="addresses.first.company"/>
       <param name="city" field="addresses.first.city"/>

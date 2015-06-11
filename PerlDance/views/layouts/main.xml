@@ -8,19 +8,6 @@
   <value name="title" op="append"/>
   <value name="content" class="content" op="hook"/>
 
-  <list name="menu-mobile" iterator="mobile-menu-main">
-    <param name="name" class="link"/>
-    <param name="uri" class="link" target="href" op="append"/>
-  </list>
-  <list name="menu-mobile-login" iterator="mobile-top-login">
-    <param name="name" class="link"/>
-    <param name="uri" class="link" target="href" op="append"/>
-  </list>
-  <list name="menu-mobile-logout" iterator="mobile-top-logout">
-    <param name="name" class="link"/>
-    <param name="uri" class="link" target="href" op="append"/>
-  </list>
-
   <list name="menu-login" iterator="nav-top-login">
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href"/>
@@ -29,7 +16,7 @@
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href" op="append"/>
   </list>
-  <list name="menu-normal" iterator="nav-menu-main">
+  <list name="menu-main" iterator="nav-menu-main">
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href" op="append"/>
     <param name="class" class="link" target="class"/>
