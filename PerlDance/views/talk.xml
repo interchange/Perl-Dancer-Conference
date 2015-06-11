@@ -1,7 +1,7 @@
 <specification>
-  <value name="gdlr-session-title" field="talk.title"/>
+  <value name="page-title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" op="hook" filter="markdown"/>
-  <value name="speaker-photo-link" target="href" op="append" field="talk.author.uri"/>
+  <value name="photo-link" target="href" op="append" field="talk.author.uri"/>
   <value name="speaker-link" target="href" op="append" field="talk.author.uri"/>
   <value name="author" class="speaker-link" field="talk.author.name"/>
   <value name="photo" target="src" field="talk.author.photo.uri"/>

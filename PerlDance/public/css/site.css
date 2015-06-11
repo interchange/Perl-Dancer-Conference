@@ -167,3 +167,8 @@ h4.subscribe {
 .panel-primary>.panel-body {
   border-bottom: 1px solid #0069af;
 }
+/* talk */
+.session-info {
+  color: #8b8b8b;
+  padding: 20px 0;
+}
