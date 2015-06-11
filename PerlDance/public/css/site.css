@@ -222,3 +222,29 @@ h4.subscribe {
   margin-bottom: 5px;
   min-width: 90px;
 }
+/* 404 */
+.page-not-found-block {
+  color: #ffffff;
+}
+.page-not-found-block {
+  background-color: #d65938;
+}
+.page-not-found-block {
+  margin: 50px 0;
+  padding: 50px 50px 60px;
+  text-align: center;
+}
+.page-not-found-block .page-not-found-icon {
+  font-size: 89px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+.page-not-found-block .page-not-found-title {
+  font-size: 45px;
+  line-height: 1;
+  margin-bottom: 17px;
+}
+.page-not-found-block .page-not-found-caption {
+  font-size: 20px;
+  margin-bottom: 35px;
+}
