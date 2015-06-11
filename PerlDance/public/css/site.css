@@ -2,6 +2,15 @@ body {
   padding-top: 90px;
   font-family: "Montserrat";
 }
+a {
+  text-transform: uppercase;
+  color: #343434;
+  text-decoration: none;
+}
+a:focus, a:hover {
+  text-decoration: none;
+  color: #0749bc;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: "Raleway";
   text-transform: uppercase;
@@ -18,7 +27,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 800;
   letter-spacing: 2px;
   margin: 0;
-  text-transform: uppercase;
   padding-bottom: 10px;
 }
 #navbar ul:hover li>a {
@@ -148,4 +156,14 @@ h4.subscribe {
   letter-spacing: 2px;
   text-transform: uppercase;
   font-style: normal;
+}
+/* misc */
+.panel-primary {
+  border-color: #0069af
+}
+.btn-primary, .panel-primary>.panel-heading {
+  background-color: #0069af;
+}
+.panel-primary>.panel-body {
+  border-bottom: 1px solid #0069af;
 }
