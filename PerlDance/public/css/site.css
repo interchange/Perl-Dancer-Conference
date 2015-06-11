@@ -106,6 +106,9 @@ h3 {
   font-weight: 800;
   letter-spacing: 4px;
 }
+h4.speaker-title {
+  margin-bottom: 5px;
+}
 h4.subscribe {
   font-size: 20px;
   font-weight: 800;
