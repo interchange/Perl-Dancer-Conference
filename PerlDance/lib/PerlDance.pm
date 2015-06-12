@@ -69,6 +69,9 @@ get '/' => sub {
 
     add_speakers_tokens($tokens);
 
+    my $nav = shop_navigation->find( { uri => 'tickets' } );
+    $tokens->{tickets} = [ $nav->products->active->hri->all ];
+
     $tokens->{title} = "Vienna Austria October 2015";
 
     add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
@@ -238,7 +241,7 @@ get '/tickets' => sub {
     my $nav = shop_navigation->find( { uri => 'tickets' } );
     $tokens->{title}       = $nav->name;
     $tokens->{description} = $nav->description;
-    $tokens->{tickets}     = $nav->products;
+    $tokens->{tickets}     = [$nav->products->active->hri->all];
 
     template 'tickets', $tokens;
 };
