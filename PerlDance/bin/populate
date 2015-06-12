@@ -113,39 +113,6 @@ foreach my $row (@users) {
     );
 }
 
-shop_product->create(
-    {
-        sku => '2015CONF',
-        price => 159,
-        name => 'Conference Only',
-        description => "Valid for 2 conference days
-
-        21 and 22 of October
-
-        Entrance to all talks
-
-        Includes social event
-
-        Includes free T-Shirt"
-    }
-);
-shop_product->create(
-    {
-        sku => '2015FULL',
-        price => 249,
-        name => 'Conference + Training',
-        description => "Four Day Full Access
-
-        21 and 22 of October
-
-        Entrance to all talks
-
-        Includes social event
-
-        Includes free T-Shirt"
-    }
-);
-
 my $nav = shop_navigation->populate(
     [
         [qw/uri type scope name priority description/],
@@ -169,6 +136,53 @@ my $nav = shop_navigation->populate(
         [ '#lightbox-register', 'nav', 'top-login', 'Register', 1, 'Register' ],
         [ 'logout',  'nav', 'top-logout', 'Logout',     2, 'Logout' ],
         [ 'profile', 'nav', 'top-logout', 'My Profile', 1, 'Edit profile' ],
+    ]
+);
+
+my $nav_tickets = shop_navigation( { uri => 'tickets' } );
+
+my $products = shop_product->populate(
+    [
+        {
+            sku         => "2015CONFERENCEONLY",
+            name        => "Conference Only",
+            uri         => "perl-dancer-2015-conference-only",
+            priority    => 50,
+            inventory_exempt => 1,
+            price       => 159,
+            navigation_products => [
+                { navigation_id => $nav_tickets->id },
+            ],
+            description => "Valid for 2 conference days
+
+21 and 22 of October
+
+Entrance to all talks
+
+Includes social event
+
+Includes free T-Shirt",
+        },
+        {
+            sku         => "2015CONFERENCE+TRAINING",
+            name        => "Conference + Training",
+            uri         => "perl-dancer-2015-conference-and-training",
+            priority    => 100,
+            inventory_exempt => 1,
+            price       => 249,
+            navigation_products => [
+                { navigation_id => $nav_tickets->id },
+            ],
+            description => "Four Day Full Access
+
+Includes all training sessions
+
+Includes all conference days
+
+Includes social event
+
+Includes free T-Shirt",
+        },
     ]
 );
 

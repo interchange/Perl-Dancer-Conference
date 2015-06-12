@@ -69,7 +69,6 @@ get '/' => sub {
 
     add_speakers_tokens($tokens);
 
-    $tokens->{body_class} = "home page";
     $tokens->{title} = "Vienna Austria October 2015";
 
     add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
@@ -93,7 +92,6 @@ get '/speakers' => sub {
 
     add_speakers_tokens($tokens);
 
-    $tokens->{body_class} = "page";
     $tokens->{title} = "Speakers";
 
     template 'speakers', $tokens;
@@ -127,7 +125,6 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     $tokens->{has_talks} = 1 if $tokens->{user}->talks_authored->has_rows;
 
-    $tokens->{body_class} = "single single-speaker";
     $tokens->{title} = $tokens->{user}->name;
 
     template 'speaker', $tokens;
@@ -186,7 +183,6 @@ get '/talks' => sub {
     }
     push @{ $tokens->{talks} }, $unscheduled if $unscheduled;
 
-    $tokens->{body_class} = "page";
     $tokens->{title} = "Schedule";
 
     template 'talks', $tokens;
@@ -201,7 +197,6 @@ CFP
 get '/talks/submit' => sub {
     my $tokens = {};
 
-    $tokens->{body_class} = "page";
     $tokens->{title} = "Call For Papers";
 
     template 'cfp', $tokens;
@@ -226,7 +221,6 @@ get qr{/talks/(?<id>\d+).*} => sub {
         }
     )->first;
 
-    $tokens->{body_class} = "single single-session";
     $tokens->{title} = $tokens->{talk}->title;
 
     template 'talk', $tokens;
@@ -241,8 +235,10 @@ Conference tickets
 get '/tickets' => sub {
     my $tokens = {};
 
-    $tokens->{body_class} = "page";
-    $tokens->{title} = "Tickets";
+    my $nav = shop_navigation->find( { uri => 'tickets' } );
+    $tokens->{title}       = $nav->name;
+    $tokens->{description} = $nav->description;
+    $tokens->{tickets}     = $nav->products;
 
     template 'tickets', $tokens;
 };
@@ -264,7 +260,6 @@ shop_setup_routes;
 any qr{.*} => sub {
     my $tokens = {};
 
-    $tokens->{body_class} = "single single-ticket";
     $tokens->{title} = "Not Found";
 
     status 'not_found';
