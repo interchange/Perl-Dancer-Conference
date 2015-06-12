@@ -294,9 +294,17 @@ sub add_speakers_tokens {
     my @speakers = shop_user->search(
         {
             'addresses.type' => 'primary',
+            -or              => {
+                'talks_authored.accepted' => 1,
+                -and => {
+                    'attribute.name' => 'speaker',
+                    'attribute.type' => 'boolean',
+                },
+            },
         },
         {
             prefetch => [ { addresses => 'country', }, 'photo' ],
+            join => [ 'talks_authored', { user_attributes => 'attribute' } ],
         }
     )->all;
 

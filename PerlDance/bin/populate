@@ -13,6 +13,13 @@ my $schema = shop_schema;
 
 shop_schema->deploy( { add_drop_table => 1 } );
 
+my $speaker_attr = shop_schema->resultset('Attribute')->create(
+    {
+        name => 'speaker',
+        type => 'boolean',
+    }
+);
+
 my $rset_media_types = $schema->resultset('MediaType');
 
 $rset_media_types->populate( [ { type => 'image' }, { type => 'video' }, ] );
@@ -109,6 +116,11 @@ foreach my $row (@users) {
                 mime_type      => $mime_type,
                 media_types_id => $media_type_image->id,
             },
+            user_attributes => [
+                {
+                    attributes_id => $speaker_attr->id,
+                }
+            ],
         }
     );
 }
