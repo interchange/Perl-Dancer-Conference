@@ -1,7 +1,7 @@
 <specification>
   <list name="tickets" iterator="tickets">
     <param name="name"/>
-    <param name="price"/>
+    <param name="price" filter="currency"/>
     <param name="description" filter="markdown" op="hook"/>
     <param name="sku"/>
   </list>

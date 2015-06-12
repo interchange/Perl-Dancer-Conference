@@ -1,12 +1,14 @@
 <div class="container">
-  <div class="row">
+  <div class="row text-center tickets-container">
     <div class="col-sm-6 tickets">
-      <div class="name">Ticket name</div>
-      <div class="price">0.00</div>
-      <div class="description">Ticket description</div>
+      <div class="ticket-header">
+        <div class="name">Ticket name</div>
+        <div class="price">0.00</div>
+      </div>
+      <div class="description ticket-content">Ticket description</div>
       <form action="/cart" method="post">
         <input type="hidden" class="sku" name="sku">
-        <button class="btn btn-success">Book Now</button>
+        <button type="submit" class="btn btn-primary">Book Now</button>
       </form>
     </div>
   </div>
