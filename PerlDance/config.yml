@@ -28,7 +28,8 @@ engines:
   template_flute:
     filters:
       currency:
-        int_curr_symbol: "€"
+        options:
+          int_curr_symbol: "€"
       date_only:
         class: "Template::Flute::Filter::Date"
         options:
