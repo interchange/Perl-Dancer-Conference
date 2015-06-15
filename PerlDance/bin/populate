@@ -157,7 +157,8 @@ my $products = shop_product->populate(
     [
         {
             sku         => "2015CONFERENCEONLY",
-            name        => "Conference Only",
+            name        => "PerlDancer 2015 Conference only ticket",
+            short_description => "Conference Only",
             uri         => "perl-dancer-2015-conference-only",
             priority    => 50,
             inventory_exempt => 1,
@@ -177,7 +178,8 @@ Includes free T-Shirt",
         },
         {
             sku         => "2015CONFERENCE+TRAINING",
-            name        => "Conference + Training",
+            name        => "PerlDancer 2015 Conference + Training Ticket",
+            short_description => "Conference + Training",
             uri         => "perl-dancer-2015-conference-and-training",
             priority    => 100,
             inventory_exempt => 1,

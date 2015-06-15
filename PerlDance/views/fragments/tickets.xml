@@ -1,6 +1,6 @@
 <specification>
   <list name="tickets" iterator="tickets">
-    <param name="name"/>
+    <param name="short_description"/>
     <param name="price" filter="currency"/>
     <param name="description" filter="markdown" op="hook"/>
     <param name="sku"/>

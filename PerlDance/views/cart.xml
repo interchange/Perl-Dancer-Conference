@@ -1,0 +1,8 @@
+<specification>
+  <list name="products" iterator="cart" class="product">
+    <param name="name"/>
+    <param name="selling_price" filter="currency"/>
+    <param name="quantity"/>
+    <param name="subtotal" filter="currency"/>
+  </list>
+</specification>
