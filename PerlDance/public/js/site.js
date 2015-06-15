@@ -2,9 +2,9 @@ $(document).ready(function() {
   /* shrink nav bar on scroll */
   $(window).scroll(function() {
     if ($(document).scrollTop() > 150) {
-      $('nav').addClass('shrink');
+      $('.navbar-fixed-top').addClass('shrink');
     } else {
-      $('nav').removeClass('shrink');
+      $('.navbar-fixed-top').removeClass('shrink');
     }
   });
   /* countdown timer */
