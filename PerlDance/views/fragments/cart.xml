@@ -3,6 +3,7 @@
   <list name="products" iterator="cart" class="product">
     <param name="sku"/>
     <param name="name"/>
+    <param name="uri" class="name" target="href" op="append"/>
     <param name="remove-sku" field="sku" target="href" pattern="sku"/>
     <param name="selling_price" filter="currency"/>
     <param name="quantity" iterator="quantity_iterator"/>

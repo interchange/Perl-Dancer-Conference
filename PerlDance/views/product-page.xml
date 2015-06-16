@@ -1,0 +1,89 @@
+<specification>
+    <pattern name="rating" type="string">4.7</pattern>
+    <value name="fragment-product-price-and-stock"
+        include="fragments/product-price-and-stock.html"/>
+    <value name="product-title" field="product.name"/>
+    <value name="short-description" field="product.short_description"/>
+    <value name="description" field="product.description"/>
+    <value name="rating" field="product.average_rating" pattern="rating"/>
+    <value name="review-count" field="reviews_count"/>
+    <container name="product-rating-wrap" value="reviews_count"/>
+    <container name="first-review" value="!reviews_count"/>
+    <container name="variant-error" value="session.shop_cart_error"/>
+    <list name="attributes" class="product-attributes-item"
+        iterator="product.attribute_iterator">
+        <param name="name" class="product-attributes-name" target="name"/>
+        <param name="title" class="product-attributes-title"/>
+        <list name="attribute_values" class="product-attributes-values-item"
+            iterator="attribute_values">
+            <param name="value" class="product-attributes-value" field="value"
+                target="value"/>
+            <param name="product-attributes-value" field="title"/>
+            <param name="selected" class="product-attributes-value"
+                target="selected" op="toggle"/>
+        </list>
+    </list>
+    <container name="reviews" value="reviews_count">
+    <list name="reviews" class="review-single" iterator="reviews">
+        <param name="review-rating" field="rating"/>
+        <param name="review-author" field="author"/>
+        <param name="review-date" field="created" filter="date_only"/>
+        <param name="review-content" field="content"/>
+    </list>
+    </container>
+    <!-- accessories token not yet coded -->
+    <container name="accessories" value="accessories">
+        <list name="accessories" class="accessory" iterator="accessories">
+            <param name="name"/>
+            <param name="uri" class="name" target="href" op="append"/>
+            <param name="product-price" field="selling_price"
+                filter="selling_price"/>
+            <param name="inventory" class="label" op="toggle" args="tree"/>
+            <param name="sku" target="value"/>
+        </list>
+    </container>
+
+    <container name="product-similar1" value="similar1">
+        <list name="similar-product1" class="similar-product1"
+            iterator="similar1">
+            <param name="name"/>
+            <param name="uri" class="name" target="href" op="append"/>
+            <param name="product-price" field="selling_price"
+                filter="selling_price"/>
+            <param name="inventory" class="label" op="toggle" args="tree"/>
+            <param name="sku" target="value"/>
+        </list>
+    </container>
+    <container name="product-similar2" value="similar2">
+        <list name="similar-product2" class="similar-product2"
+            iterator="similar2">
+            <param name="name"/>
+            <param name="uri" class="name" target="href" op="append"/>
+            <param name="product-price" field="selling_price"
+                filter="selling_price"/>
+            <param name="inventory" class="label" op="toggle" args="tree"/>
+            <param name="sku" target="value"/>
+        </list>
+    </container>
+
+    <container name="recent-products" value="recent_products">
+        <list name="recent-products" class="recent-product"
+            iterator="recent_products">
+            <param name="name"/>
+            <param name="uri" class="name" target="href" op="append"/>
+            <param name="product-price" field="selling_price"
+                filter="selling_price"/>
+            <param name="inventory" class="label" op="toggle" args="tree"/>
+            <param name="sku" target="value"/>
+        </list>
+    </container>
+    <container name="product-specs" value="hide-this-div-away"/>
+    <list name="specs" class="spec-attribute"
+        iterator="product.attribute_iterator">
+        <param name="txt-label" field="title"/>
+        <list name="spec-values" iterator="attribute_values" class="spec-values">
+            <param name="value" field="title"/>
+            <separator name="sep"/>
+        </list>
+    </list>
+</specification>
