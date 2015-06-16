@@ -1,0 +1,13 @@
+<specification>
+  <pattern name="sku" type="string">SKU</pattern>
+  <list name="products" iterator="cart" class="product">
+    <param name="sku"/>
+    <param name="name"/>
+    <param name="remove-sku" field="sku" target="href" pattern="sku"/>
+    <param name="selling_price" filter="currency"/>
+    <param name="quantity" iterator="quantity_iterator"/>
+    <param name="subtotal" filter="currency"/>
+  </list>
+  <value name="cart_subtotal" filter="currency"/>
+  <value name="cart_total" filter="currency"/>
+</specification>

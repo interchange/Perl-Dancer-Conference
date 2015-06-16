@@ -156,7 +156,7 @@ my $nav_tickets = shop_navigation( { uri => 'tickets' } );
 my $products = shop_product->populate(
     [
         {
-            sku         => "2015CONFERENCEONLY",
+            sku         => "2015PERLDANCE2DAYS",
             name        => "PerlDancer 2015 Conference only ticket",
             short_description => "Conference Only",
             uri         => "perl-dancer-2015-conference-only",
@@ -177,7 +177,7 @@ Includes social event
 Includes free T-Shirt",
         },
         {
-            sku         => "2015CONFERENCE+TRAINING",
+            sku         => "2015PERLDANCE4DAYS",
             name        => "PerlDancer 2015 Conference + Training Ticket",
             short_description => "Conference + Training",
             uri         => "perl-dancer-2015-conference-and-training",

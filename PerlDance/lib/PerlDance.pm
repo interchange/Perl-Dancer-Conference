@@ -19,6 +19,38 @@ set session_options => { schema => schema };
 
 =head1 HOOKS
 
+=head2 before_cart_display
+
+Add quantity_iterator token.
+
+For ajax requests the cart table fragment is returned.
+
+For non-ajax requests add the cart-specific js file and return.
+
+=cut
+
+hook 'before_cart_display' => sub {
+    my $tokens = shift;
+
+        $tokens->{quantity_iterator} =
+          [ map { +{ value => $_ } } ( 1 .. 9, '10+' ) ];
+
+    if ( request->is_ajax ) {
+
+        content_type 'application/json';
+
+        my $html = template( "/fragments/cart", $tokens, { layout => undef } );
+        $html =~ s/^.*?body>//;
+        $html =~ s/<\/body.*?$//;
+
+        Dancer::Continuation::Route::Templated->new(
+            return_value => to_json( { html => $html } ) )->throw;
+    }
+    else {
+        add_javascript( $tokens, "/js/cart.js" );
+    }
+};
+
 =head2 before_layout_render
 
 Add navigation (menus).

@@ -7,10 +7,13 @@ body {
   font-family: "Montserrat";
   margin-bottom: 80px;
 }
-a {
+#navbar a {
   text-transform: uppercase;
   color: #343434;
   text-decoration: none;
+}
+.scheduled-talk a {
+  color: #343434;
 }
 a:focus, a:hover {
   text-decoration: none;
@@ -258,7 +261,7 @@ h4.subscribe {
   font-weight: bold;
   text-transform: uppercase;
 }
-.ticket-header .name {
+.ticket-header .short_description {
   font-size: 19px;
   margin-bottom: 10px;
 }
@@ -277,4 +280,11 @@ h4.subscribe {
   font-weight: bold;
   padding: 15px 0;
   text-transform: uppercase;
+}
+.tickets-container .btn:hover {
+  color: black;
+}
+/* cart */
+.product a.name {
+  color: #343434;
 }
