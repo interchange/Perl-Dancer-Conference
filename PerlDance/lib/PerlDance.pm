@@ -46,6 +46,11 @@ hook 'before_cart_display' => sub {
         Dancer::Continuation::Route::Templated->new(
             return_value => to_json( { html => $html } ) )->throw;
     }
+    elsif ( request->is_post ) {
+        # Posts to cart should generally result in redirect.
+        # This should be addressed in DPIC6 and not here
+        return redirect '/cart';
+    }
     else {
         add_javascript( $tokens, "/js/cart.js" );
     }
