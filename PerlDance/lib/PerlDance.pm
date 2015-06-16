@@ -32,8 +32,8 @@ For non-ajax requests add the cart-specific js file and return.
 hook 'before_cart_display' => sub {
     my $tokens = shift;
 
-        $tokens->{quantity_iterator} =
-          [ map { +{ value => $_ } } ( 1 .. 9, '10+' ) ];
+    $tokens->{quantity_iterator} =
+      [ map { +{ value => $_ } } ( 1 .. 9, '10+' ) ];
 
     if ( request->is_ajax ) {
 
