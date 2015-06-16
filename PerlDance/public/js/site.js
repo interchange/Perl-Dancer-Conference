@@ -1,5 +1,5 @@
-var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
 $(document).ready(function() {
+  var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
   console.log("xsrf " + xsrfMeta );
   /* shrink nav bar on scroll */
   $(window).scroll(function() {

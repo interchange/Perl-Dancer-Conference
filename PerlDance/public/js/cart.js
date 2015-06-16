@@ -11,7 +11,7 @@ $(".cart-container").on( "change", ".product .quantity", function() {
         $.ajax({
             type: "POST",
             url: "/cart",
-            data: { update: sku, quantity: qty },
+            data: { update: sku, quantity: qty, xsrf_token: xsrfMeta },
             success: function(json) {
                 el.closest("table").replaceWith(json.html);
             }
