@@ -4,7 +4,7 @@
         include="fragments/product-price-and-stock.html"/>
     <value name="product-title" field="product.name"/>
     <value name="short-description" field="product.short_description"/>
-    <value name="description" field="product.description"/>
+    <value name="description" field="product.description" op="hook" filter="markdown"/>
     <value name="rating" field="product.average_rating" pattern="rating"/>
     <value name="review-count" field="reviews_count"/>
     <container name="product-rating-wrap" value="reviews_count"/>

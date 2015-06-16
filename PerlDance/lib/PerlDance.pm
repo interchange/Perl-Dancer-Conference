@@ -53,6 +53,7 @@ hook 'before_cart_display' => sub {
     }
     else {
         add_javascript( $tokens, "/js/cart.js" );
+        $tokens->{title} = "Cart";
     }
 };
 
