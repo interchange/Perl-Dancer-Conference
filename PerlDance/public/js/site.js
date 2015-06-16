@@ -1,4 +1,6 @@
+var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
 $(document).ready(function() {
+  console.log("xsrf " + xsrfMeta );
   /* shrink nav bar on scroll */
   $(window).scroll(function() {
     if ($(document).scrollTop() > 150) {
