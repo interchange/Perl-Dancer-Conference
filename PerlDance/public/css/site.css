@@ -186,6 +186,9 @@ h4.subscribe {
 .panel-primary>.panel-body {
   border-bottom: 1px solid #0069af;
 }
+.spacing-top-small {
+  margin-top: 10px !important;
+}
 /* talk */
 .session-info {
   color: #8b8b8b;

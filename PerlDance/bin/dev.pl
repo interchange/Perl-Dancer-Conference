@@ -27,6 +27,13 @@ my $app = sub {
 };
 
 builder {
+    enable 'Session';
+    enable 'XSRFBlock',
+      cookie_name => 'PerlDance-XSRF-Token',
+      meta_tag => 'xsrf-meta',
+      cookie_options => {
+          httponly => 1,
+      };
     enable 'Debug',
       panels => [
         'Parameters',                'Dancer::Version',
@@ -34,5 +41,5 @@ builder {
         'Dancer::TemplateVariables', 'DBIC::QueryLog',
         'Timer',#                     'Profiler::NYTProf',
       ];
-    mount "/" => $app;
+    $app;
 };
