@@ -100,7 +100,6 @@ foreach my $row (@users) {
             nickname   => $row->[3],
             pause_id   => $row->[4],
             bio        => $row->[9],
-            password   => 'ietoYoo9Ue',
             addresses  => [
                 {
                     type             => 'primary',
@@ -123,6 +122,19 @@ foreach my $row (@users) {
             ],
         }
     );
+}
+
+my $admins = shop_user->search(
+    {
+        username => {
+            -in =>
+              [ 'peter@sysnix.com', 'racke@linuxia.de', 'sbatschelet@mac.com' ]
+        },
+    }
+);
+while ( my $user = $admins->next ) {
+    $user->update( { password => 'ietoYoo9Ue' } );
+    $user->add_to_roles( { name => 'admin' } );
 }
 
 my $nav = shop_navigation->populate(
