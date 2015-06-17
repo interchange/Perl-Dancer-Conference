@@ -26,10 +26,10 @@ PAUSE id. Defaults to empty string.
 =cut
 
 __PACKAGE__->add_columns(
-    bio => { data_type => "varchar", length => 2048, default_value => '' },
+    bio => { data_type => "varchar", size => 2048, default_value => '' },
     media_id =>
       { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
-    pause_id => { data_type => "varchar", length => 128, default_value => '' },
+    pause_id => { data_type => "varchar", size => 128, default_value => '' },
 );
 
 =head2 METHODS

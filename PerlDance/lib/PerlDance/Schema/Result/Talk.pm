@@ -76,7 +76,7 @@ Abstract of the talk.
 
 column abstract => {
     data_type     => "varchar",
-    length        => 2048,
+    size          => 2048,
     default_value => '',
 };
 
@@ -100,7 +100,7 @@ Comments to be communicated to the organisers.
 
 column comments => {
     data_type     => "varchar",
-    length        => 1024,
+    size          => 1024,
     default_value => '',
 };
 
