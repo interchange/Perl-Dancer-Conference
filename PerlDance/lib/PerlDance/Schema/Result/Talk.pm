@@ -4,7 +4,7 @@ package PerlDance::Schema::Result::Talk;
 
 =head1 NAME
 
-PerlDance::Schema::Result::Talk - conference/event talks
+PerlDance::Schema::Result::Talk - conference talks
 
 =cut
 
@@ -109,8 +109,30 @@ Whether talk has been accepted.
 =cut
 
 column accepted => {
-    data_type => "boolean",
-    size      => 0,
+    data_type     => "boolean",
+    default_value => 0,
+};
+
+=head2 confirmed
+
+Whether author has confirmed acceptance of talk.
+
+=cut
+
+column confirmed => {
+    data_type     => "boolean",
+    default_value => 0,
+};
+
+=head2 lightning
+
+Whether this is a lightning talk.
+
+=cut
+
+column lightning => {
+    data_type     => "boolean",
+    default_value => 0,
 };
 
 =head2 start_time
