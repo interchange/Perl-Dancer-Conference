@@ -5,28 +5,47 @@
   </div>
 
   <div class="container">
-    <div class="text-center countdown-timer"><!-- countdown timer --></div>
+    <div class="text-center"><h1>Slider to go here</h1></div>
+  </div>
+
+  <div class="container">
     <div class="center-block">
-      <h4 class="text-center subscribe">Subscribe for updates</h4>
-      <form class="text-center form-inline" id="newsletter-subscribe" method="post" action="/subscribe">
+      <h2 class="text-center subscribe">Register now!</h2>
+      <form class="text-center form-inline" method="post" action="/register">
         <div class="form-group">
-          <input class="newsletter-email form-control" type="email" name="ne" size="30" required placeholder="Please enter your email address">
-          <input class="newsletter-submit btn btn-primary" type="submit" value="Subscribe">
+          <input class="form-control" type="email" name="username" size="30" required placeholder="Please enter your email address">
+          <input class="btn btn-primary" type="submit" value="Register">
         </div>
       </form>
     </div>
   </div>
 
-  <div class="container">
-    <h3 class="">Speakers</h3>
-      <div class="speaker-item-wrapper">
-        <!-- fragments/speakers.html -->
+  <div class="container text-center">
+    <h2>What people say about our conference</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <blockquote>
+          <p>Rare opportunity to meet web developers who really work in the trenches. I am surely coming again!</p>
+          <footer>Bill Carr <cite>CEO, Bottlenose</cite></footer>
+        </blockquote>
       </div>
-    </h3>
+      <div class="col-md-4">
+        <blockquote>
+          <p>I am coming for the third year. It feels almost at home. I am looking forward to Vienna this year!</p>
+          <footer>Jure Kodzoma <cite>Informa Studio</cite></footer>
+        </blockquote>
+      </div>
+      <div class="col-md-4">
+        <blockquote>
+          <p>First time I went because it was close by. Now I am ready to travel across the world just to go again. </p>
+          <footer>Sam Batschelet <cite>WBA, NY, USA</cite></footer>
+        </blockquote>
+      </div>
+    </div>
   </div>
 
   <div class="container">
-    <h3>Location</h3>
+    <h2 class="text-center">Location</h2>
     <div class="location">
       <div class="location-title">Training Venue - Amerikahaus</div>
       <div>
@@ -36,10 +55,4 @@
     </div>
   </div>
 
-  <div class="container">
-    <h3>Register Now!</h3>
-    <!--div>Hurry up! Early bird tickets are on sale only until July 15th</div-->
-  </div>
-
-  <div class="ticket-wrapper"><!-- tickets fragment --></div>
 </div>

@@ -156,8 +156,7 @@ my $nav = shop_navigation->populate(
             'talks/submit', 'nav', 'menu-main', 'Call For Papers',
             20, 'Requirement and guidance for submitting talks'
         ],
-        [ '#lightbox-login',    'nav', 'top-login', 'Login',    2, 'Login' ],
-        [ '#lightbox-register', 'nav', 'top-login', 'Register', 1, 'Register' ],
+        [ 'login',    'nav', 'top-login', 'Login',    10, 'Login or Register' ],
         [ 'logout',  'nav', 'top-logout', 'Logout',     2, 'Logout' ],
         [ 'profile', 'nav', 'top-logout', 'My Profile', 1, 'Edit profile' ],
     ]

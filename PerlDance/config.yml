@@ -57,6 +57,7 @@ plack_middlewares:
 plugins:
   Auth::Extensible:
     disable_roles: 0
+    exit_page: '/'
     no_login_handler: 1
     login_page: /login
     logout_page: /logout

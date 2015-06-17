@@ -11,6 +11,7 @@ use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
+use Try::Tiny;
 
 our $VERSION = '0.1';
 
@@ -116,6 +117,65 @@ get '/' => sub {
         "/js/index.js" );
 
     template 'index', $tokens;
+};
+
+=head2 get/post /login
+
+=cut
+
+any [ 'get', 'post' ] => '/login' => sub {
+    my $nav = shop_navigation->find( { uri => 'login' } );
+    my $tokens = {
+        title       => $nav->name,
+        description => $nav->description,
+    };
+    if ( request->is_post ) {
+    }
+    template 'login', $tokens;
+};
+
+=head2 post /register
+
+Register of request password reset.
+
+=cut
+
+post '/register' => sub {
+    my $username = param 'username';
+    # TODO: validate
+
+    debug "register/reset for username: $username";
+
+    my $user = shop_user( { username => $username } );
+    if ($user) {
+
+        # password reset
+    }
+    else {
+
+        # new registration
+        try {
+            $user = shop_user->create(
+                { username => $username, email => $username } );
+        }
+        catch {
+            error "registration failed: $_";
+            # TODO: send email to admins as well
+        }
+    }
+
+    if ( $user ) {
+        my $token = $user->reset_token_generate;
+    }
+
+    template 'register', { username => $username };
+};
+
+get '/emailtest/*' => sub {
+    my ($template) = splat;
+    my $tokens = {};
+
+    template "email/$template", $tokens, { layout => 'email' };
 };
 
 =head2 get /speakers

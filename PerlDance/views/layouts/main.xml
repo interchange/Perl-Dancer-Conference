@@ -2,9 +2,6 @@
   <container name="login" value="!logged_in_user" class="auth-login"/>
   <container name="logout" value="logged_in_user" class="auth-logout"/>
 
-  <value name="body_class" class="_body_" op="append" joiner=" "
-    target="class"/>
-
   <value name="title" op="append"/>
   <value name="content" class="content" op="hook"/>
 
