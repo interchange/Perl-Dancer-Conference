@@ -123,7 +123,7 @@ get '/' => sub {
 
 =cut
 
-any [ 'get', 'post' ] => '/login' => sub {
+get '/login' => sub {
     my $nav = shop_navigation->find( { uri => 'login' } );
     my $tokens = {
         title       => $nav->name,

@@ -189,6 +189,9 @@ h4.subscribe {
 .spacing-top-small {
   margin-top: 10px !important;
 }
+.spacing-bottom-small {
+  margin-bottom: 10px !important;
+}
 /* talk */
 .session-info {
   color: #8b8b8b;
