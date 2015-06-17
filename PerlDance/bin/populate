@@ -38,9 +38,9 @@ my @users = (
     [
         'andrew@geekuni.com', 'Andrew', 'Solomon', 'illy', 'ILLY',
         'Geekuni',            'London', undef,     'GB',
-"Software developer and project leader with over 15 years experience. Applications include algebraic and optimisation algorithms, web services and virtual machines in Perl, Java and C within a Unix environment. Managing projects using both in-house and contract developers.
+"Director and Mentor at Geekuni, Andrew is a trainer and practitioner of software development with over 20 years experience in industry and academia. Applications range from scientific research through to retail, with techniques including optimisation algorithms and web services. Currently coding mostly in Perl and jQuery with a webops toolkit for taking projects through to deployment. Experience managing projects using both in-house and contract developers.
 
-        Specialties:Perl, E-Learning, Optimization, Mathematics, Computer Science, mod_perl, lecturer, linux, dbi, javascript, OO Design, MySQL, PostgreSQL ",
+Specialties: Perl, E-Learning, Devops, Web services, AWS, Optimization, Mathematics, Computer Science, Linux, DBI, jQuery, OO Design, SQL, Agile and TDD.",
         'andrew-solomon.jpg',
     ],
     [
