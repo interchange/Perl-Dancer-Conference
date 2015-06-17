@@ -75,7 +75,8 @@ Abstract of the talk.
 =cut
 
 column abstract => {
-    data_type     => "text",
+    data_type     => "varchar",
+    length        => 2048,
     default_value => '',
 };
 
@@ -98,7 +99,8 @@ Comments to be communicated to the organisers.
 =cut
 
 column comments => {
-    data_type     => "text",
+    data_type     => "varchar",
+    length        => 1024,
     default_value => '',
 };
 
