@@ -24,6 +24,7 @@ WriteMakefile(
         'Dancer'                           => 1.3136,
         'Dancer::Plugin::Auth::Extensible' => '0.40',
         'Dancer::Plugin::DBIC'             => '0.2102',
+        'Dancer::Plugin::Email'            => '1.0400',
         'Dancer::Plugin::Interchange6'     => '0.080',
         'Dancer::Template::TemplateFlute'  => '0.0142',
         'DateTime::Format::ISO8601'        => 0,

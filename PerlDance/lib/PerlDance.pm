@@ -9,6 +9,7 @@ PerlDance - Perl Dancer 2015 conference site
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
+use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
 use Try::Tiny;
