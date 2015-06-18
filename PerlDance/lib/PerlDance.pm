@@ -12,6 +12,7 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
+use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
 our $VERSION = '0.1';
@@ -166,6 +167,37 @@ post '/register' => sub {
 
     if ( $user ) {
         my $token = $user->reset_token_generate;
+
+        my $html = template "email/generic",
+          {
+            "conference-logo" => uri_for(
+                shop_schema->resultset('Media')
+                  ->search( { label => "email-logo" } )->first->uri
+            ),
+            preamble => "You are receiving this email because your email address was used to register for the Perl Dancer Conference 2015.\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:",
+            link => uri_for("/register/confirm/$token")
+          },
+          { layout => 'email' };
+
+        my $f = HTML::FormatText::WithLinks->new;
+        my $text = $f->parse($html);
+        try {
+            email {
+                to      => $user->email,
+                subject => "Registration for the Perl Dancer Conference 2015",
+                body    => $text,
+                type    => 'text',
+                attach  => {
+                    Data     => $html,
+                    Encoding => "quoted-printable",
+                    Type     => "text/html"
+                },
+                multipart => 'alternative',
+            };
+        }
+        catch {
+            error "Could not send email: $_";
+        }
     }
 
     template 'register', { username => $username };

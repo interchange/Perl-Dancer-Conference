@@ -84,6 +84,11 @@ plugins:
         on_connect_do: 'SET client_min_messages=WARNING;'
         pg_enable_utf8: 1
         quote_names: 1
+  Email:
+    headers:
+      sender: "2015@perl.dance"
+      from: "2015@perl.dance"
+      X-Mailer: "PerlDance2015 1.0"
   Interchange6::Routes:
     navigation:
       template: product-listing
