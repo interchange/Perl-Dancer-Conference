@@ -31,7 +31,7 @@ WriteMakefile(
         'HTML::FormatText::WithLinks'      => 0,
         'HTML::Scrubber'                   => 0,
         'Interchange6'                     => '0.080',
-        'Interchange6::Schema'             => '0.084',
+        'Interchange6::Schema'             => '0.085',
         'Number::Format'                   => 0,
         'Plack::Middleware::XSRFBlock'     => 0,
         'Template::Flute'                  => '0.0180',
