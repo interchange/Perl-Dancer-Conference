@@ -26,6 +26,16 @@ $rset_media_types->populate( [ { type => 'image' }, { type => 'video' }, ] );
 
 my $media_type_image = $rset_media_types->find( { type => 'image' } );
 
+# email logo
+shop_schema->resultset('Media')->create(
+    {
+        file           => "img/perl-dancer-2015-email.jpg",
+        uri            => "/img/perl-dancer-2015-email.jpg",
+        mime_type      => 'image/jpeg',
+        media_types_id => $media_type_image->id,
+    }
+);
+
 # username/email, forename, surname, nick, pause id, company, city, state iso,
 # country iso, bio, photo
 my @users = (
