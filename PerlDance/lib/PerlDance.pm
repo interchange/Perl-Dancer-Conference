@@ -53,7 +53,7 @@ hook 'before_cart_display' => sub {
         return redirect '/cart';
     }
     else {
-        add_javascript( $tokens, "/js/cart.js" );
+        PerlDance::Routes::add_javascript( $tokens, "/js/cart.js" );
         $tokens->{title} = "Cart";
     }
 };
