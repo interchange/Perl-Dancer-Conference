@@ -2,12 +2,12 @@ package PerlDance::Filter::Markdown;
 
 =head1 NAME
 
-DanceShop::Filters::SellingPrice - filter for possibly undef selling_price
+PerlDance::Filter::Markdown - markdown filter
 
 =head1 DESCRIPTION
 
-The filter inherits from L<Template::Flute::Filter::Currency> and but instead
-of throwing an exception when the price is undefined it instead returns undef.
+Turns text in Markdown format into HTML. The HTML
+is subject to scrubbing with L<HTML::Scrubber>.
 
 =cut
 
