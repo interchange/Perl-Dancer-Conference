@@ -32,6 +32,7 @@ shop_schema->resultset('Media')->create(
         file           => "img/perl-dancer-2015-email.jpg",
         uri            => "/img/perl-dancer-2015-email.jpg",
         mime_type      => 'image/jpeg',
+        label          => "email-logo",
         media_types_id => $media_type_image->id,
     }
 );

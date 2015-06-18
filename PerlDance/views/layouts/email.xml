@@ -1,3 +1,4 @@
 <specification>
   <value name="content" class="content" op="hook"/>
+  <value name="conference-logo" target="src"/>
 </specification>

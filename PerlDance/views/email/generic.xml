@@ -1,0 +1,5 @@
+<specification>
+  <value name="preamble" filter="markdown" op="hook"/>
+  <value name="link" target="href"/>
+  <value name="link-text" class="link" field="link"/>
+</specification>

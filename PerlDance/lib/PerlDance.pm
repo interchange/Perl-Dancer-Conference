@@ -175,6 +175,14 @@ get '/emailtest/*' => sub {
     my ($template) = splat;
     my $tokens = {};
 
+    $tokens->{"conference-logo"} = uri_for(
+        shop_schema->resultset('Media')->search( { label => "email-logo" } )
+          ->first->uri );
+
+    $tokens->{preamble} = "You are receiving this email because your email address was used to register for the Perl Dancer Conference 2015.\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:";
+
+    $tokens->{link} = uri_for("/reset/password/link");
+
     template "email/$template", $tokens, { layout => 'email' };
 };
 
