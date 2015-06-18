@@ -96,7 +96,17 @@ post '/register' => sub {
         }
     }
 
-    template 'register', { username => $username };
+    template 'email_sent', { username => $username };
+};
+
+get '/register/confirm/:token' => sub {
+
+    my $tokens = {};
+    my $reset_token = param 'token';
+
+        token => param 'token',
+    };
+
 };
 
 true;
