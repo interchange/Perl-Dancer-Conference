@@ -104,9 +104,18 @@ get '/register/confirm/:token' => sub {
     my $tokens = {};
     my $reset_token = param 'token';
 
-        token => param 'token',
-    };
-
+    if ( shop_user->reset_token_verify($reset_token) ) {
+        template "password_reset", $tokens;
+    }
+    else {
+        $tokens = {
+            title       => "Sorry",
+            description => "This registration link is not valid",
+            action => "/register",
+            action_name => "Register",
+        };
+        template "bad_token", $tokens;
+    }
 };
 
 true;

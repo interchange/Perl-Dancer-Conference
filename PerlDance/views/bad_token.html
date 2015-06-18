@@ -1,0 +1,60 @@
+<div class="jumbotron title-wrapper">
+  <div class="container">
+    <h1 class="page-title">nav title</h1>
+    <span class="page-caption">nav description</span>
+  </div>
+</div>  
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Login
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" action="/login" method="post">
+            <div class="form-group">
+              <label for="emailInput" class="col-sm-3 control-label">Email</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control" id="emailInput" required placeholder="Email" name="username">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="emailPassword" class="col-sm-3 control-label">Password</label>
+              <div class="col-sm-9">
+                <input type="password" class="form-control" id="emailPassword" required placeholder="Password" name="password">
+              </div>
+            </div>
+            <div class="text-right">
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Register or Reset Password
+        </div>
+        <div class="panel-body">
+          <form class="form-horizontal" action="/register" method="post">
+            <div class="form-group">
+              <label for="emailInput" class="col-sm-3 control-label">Email</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control" id="emailInput" placeholder="Email" name="username">
+              </div>
+            </div>
+            <div class="text-right">
+              <button class="btn btn-primary" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
