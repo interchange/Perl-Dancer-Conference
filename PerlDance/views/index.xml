@@ -1,4 +1,5 @@
 <specification>
+  <container name="register-container" value="!logged_in_user"/>
   <value name="speaker-item-wrapper" op="hook" include="fragments/speakers.html"/>
   <value name="countdown-timer" op="hook" include="fragments/countdown.html"/>
   <value name="ticket-item-wrapper" op="hook" include="fragments/tickets.html"/>

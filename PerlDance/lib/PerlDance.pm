@@ -58,6 +58,15 @@ hook 'before_cart_display' => sub {
     }
 };
 
+=head2 before_template_render
+
+=cut
+
+hook 'before_template_render' => sub {
+    my $tokens = shift;
+    $tokens->{logged_in_user} = logged_in_user;
+};
+
 =head2 before_layout_render
 
 Add navigation (menus).

@@ -10,6 +10,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
+use Data::Transpose::Validator;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
@@ -99,28 +100,139 @@ post '/register' => sub {
     template 'email_sent', { username => $username };
 };
 
-get '/register/:token' => sub {
+any ['get', 'post'] => '/register/:token' => sub {
 
-    my $tokens = {};
-    my ( $reset_token, $checksum ) = split(/_/, param 'token');
+    my $tokens      = {};
+    my $reset_token = param 'token';
+    my $user;
 
-    # FIXME: this is sucky - maybe some more work needed in ic6s?
-    my $user =
-      shop_user->search( { reset_token => $reset_token }, { rows => 1 } )
-      ->first;
+    if ( request->is_post ) {
 
-    if ( $user && $user->reset_token_verify(param 'token') ) {
-        template "password_reset", $tokens;
+        my %params = params('body');
+        my %errors;
+
+        my $validator = Data::Transpose::Validator->new;
+        $validator->prepare(
+            username => {
+                required  => 1,
+                validator => 'EmailValid'
+            },
+            password => {
+                required  => 1,
+                validator => {
+                    class   => 'PasswordPolicy',
+                    options => {
+                        username      => $params{username},
+                        minlength     => 8,
+                        maxlength     => 70,
+                        patternlength => 4,
+                        mindiffchars  => 5,
+                        disabled      => {
+                            digits   => 1,
+                            mixed    => 1,
+                            specials => 1,
+                        }
+                    }
+                }
+            },
+            confirm_password => { required => 1 },
+            passwords => {
+                validator => 'Group',
+                fields    => [ "password", "confirm_password" ],
+            },
+        );
+
+        my $valid = $validator->transpose(\%params);
+
+        if ( !$valid ) {
+            my $v_hash = $validator->errors_hash;
+
+            while ( my ( $key, $value ) = each %$v_hash ) {
+
+                my $error = $value->[0]->{value};
+                $error = "invalid email address" if $error eq "mxcheck";
+                $errors{$key} = $error;
+
+                # flag the field with error using has-error class
+                $errors{ $key . '_input' } = 'has-error';
+            }
+        }
+
+        $user = shop_user( { username => $params{username} } );
+
+        if ( $user ) {
+
+            if ( !$user->reset_token_verify($reset_token) ) {
+                $tokens = {
+                    title       => "Sorry",
+                    description => "This registration link is no longer valid",
+                    action      => "/register",
+                    action_name => "Register",
+                    text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired - please retry registration.",
+                };
+                return template "bad_token", $tokens;
+            }
+            if ( !%errors ) {
+
+                # all good so login user and redirect to /profile
+                $user->update( { password => $params{password} } );
+                my ( undef, $realm ) =
+                  authenticate_user( $params{username}, $params{password} );
+                session logged_in_user => $user->username;
+                session logged_in_user_id => $user->id;
+                session logged_in_user_realm => $realm;
+
+                return redirect '/profile';
+            }
+        }
+        else {
+            $errors{username}       = "invalid email address";
+            $errors{username_input} = "has-error";
+        }
+
+        # go back and try again
+
+            $tokens = {
+                username    => $params{username},
+                title       => "Register",
+                description => "Please complete the registration process",
+                action_name => "Complete Registration",
+                text =>
+                  "There appears to have been a problem.\n\nPlease try again.",
+                errors => \%errors,
+            };
+            return template "password_reset", $tokens;
     }
     else {
-        $tokens = {
-            title       => "Sorry",
-            description => "This registration link is not valid",
-            action      => "/register",
-            action_name => "Register",
-            text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
-        };
-        template "bad_token", $tokens;
+
+        # get /register/...
+
+        $user = shop_user->find_user_with_reset_token( $reset_token );
+
+        if ( $user ) {
+
+            # look good so ask for password
+
+            $tokens = {
+                title       => "Register",
+                description => "Please complete the registration process",
+                action_name => "Complete Registration",
+            };
+            return template "password_reset", $tokens;
+        }
+        else {
+
+            # token not found
+
+            $tokens = {
+                title       => "Sorry",
+                description => "This registration link is not valid",
+                action      => "/register",
+                action_name => "Register",
+                text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
+            };
+            return template "bad_token", $tokens;
+        }
     }
 };
 
