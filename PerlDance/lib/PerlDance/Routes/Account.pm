@@ -71,7 +71,7 @@ post '/register' => sub {
                   ->search( { label => "email-logo" } )->first->uri
             ),
             preamble => "You are receiving this email because your email address was used to register for the Perl Dancer Conference 2015.\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:",
-            link => uri_for("/register/confirm/$token")
+            link => uri_for("/register/$token")
           },
           { layout => 'email' };
 
@@ -99,20 +99,26 @@ post '/register' => sub {
     template 'email_sent', { username => $username };
 };
 
-get '/register/confirm/:token' => sub {
+get '/register/:token' => sub {
 
     my $tokens = {};
-    my $reset_token = param 'token';
+    my ( $reset_token, $checksum ) = split(/_/, param 'token');
 
-    if ( shop_user->reset_token_verify($reset_token) ) {
+    # FIXME: this is sucky - maybe some more work needed in ic6s?
+    my $user =
+      shop_user->search( { reset_token => $reset_token }, { rows => 1 } )
+      ->first;
+
+    if ( $user && $user->reset_token_verify(param 'token') ) {
         template "password_reset", $tokens;
     }
     else {
         $tokens = {
             title       => "Sorry",
             description => "This registration link is not valid",
-            action => "/register",
+            action      => "/register",
             action_name => "Register",
+            text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
         };
         template "bad_token", $tokens;
     }
