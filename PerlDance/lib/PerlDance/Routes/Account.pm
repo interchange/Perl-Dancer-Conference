@@ -38,6 +38,15 @@ Register of request password reset.
 
 =cut
 
+get '/profile' => sub {
+    my $tokens = {
+        title       => 'Profile',
+        description => 'Update profile',
+    };
+
+    template 'profile', $tokens;
+};
+
 post '/register' => sub {
     my $username = param 'username';
     # TODO: validate
