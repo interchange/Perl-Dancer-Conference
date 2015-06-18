@@ -49,7 +49,7 @@ hook 'before_cart_display' => sub {
     }
     elsif ( request->is_post ) {
         # Posts to cart should generally result in redirect.
-        # This should be addressed in DPIC6 and not here
+        # FIXME: This should be addressed in DPIC6 and not here
         return redirect '/cart';
     }
     else {
@@ -129,8 +129,7 @@ get '/login' => sub {
         title       => $nav->name,
         description => $nav->description,
     };
-    if ( request->is_post ) {
-    }
+    $tokens->{title} = "Login";
     template 'login', $tokens;
 };
 
@@ -160,7 +159,7 @@ post '/register' => sub {
         }
         catch {
             error "registration failed: $_";
-            # TODO: send email to admins as well
+            # TODO: send email to admins as well?
         }
     }
 
@@ -283,8 +282,6 @@ get '/talks' => sub {
         }
     }
     push @{ $tokens->{talks} }, $unscheduled if $unscheduled;
-
-    $tokens->{title} = "Schedule";
 
     template 'talks', $tokens;
 };
