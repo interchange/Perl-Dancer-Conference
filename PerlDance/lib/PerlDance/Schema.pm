@@ -81,6 +81,35 @@ __PACKAGE__->has_many(
     "users_id"
 );
 
+=head3 conferences_attended
+
+Link table to L<PerlDance::Schema::Result::Conference>.
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::ConferenceAttendee>
+
+=cut
+
+__PACKAGE__->has_many(
+    'conferences_attended' => 'PerlDance::Schema::Result::ConferenceAttendee',
+    "users_id"
+);
+
+=head3 conferences
+
+User attends many conferences.
+
+Type: many_to_many with L<PerlDance::Schema::Result::Conference>
+via L</conference_attendees>
+
+=cut
+
+__PACKAGE__->many_to_many(
+    'conferences' => "conference_attendees",
+    "conference"
+);
+
 =head3 talks_attended
 
 User attends many talks.

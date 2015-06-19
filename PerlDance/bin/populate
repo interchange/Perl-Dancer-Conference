@@ -20,6 +20,12 @@ my $speaker_attr = shop_schema->resultset('Attribute')->create(
     }
 );
 
+my $conference = shop_schema->resultset('Conference')->create(
+    {
+        name => "Perl Dancer Conference 2015",
+    }
+);
+
 my $rset_media_types = $schema->resultset('MediaType');
 
 $rset_media_types->populate( [ { type => 'image' }, { type => 'video' }, ] );
@@ -129,6 +135,11 @@ foreach my $row (@users) {
             user_attributes => [
                 {
                     attributes_id => $speaker_attr->id,
+                }
+            ],
+            conferences_attended => [
+                {
+                    conferences_id => $conference->id,
                 }
             ],
         }
@@ -261,6 +272,7 @@ Includes free T-Shirt",
 shop_schema->resultset('Talk')->create(
     {
         author_id => shop_user({ username => 'andrew@geekuni.com'})->id,
+        conferences_id => $conference->id,
         duration  => 240,
         start_time =>
           DateTime->new( year => 2015, month => 10, day => 19, hour => 9 ),
@@ -275,6 +287,7 @@ From doing the exercises you will learn to use the Dancer framework, learn to us
 shop_schema->resultset('Talk')->create(
     {
         author_id => shop_user({ username => 'racke@linuxia.de'})->id,
+        conferences_id => $conference->id,
         duration  => 40,
         title => 'Template Flute',
         tags => 'Dancer',
@@ -285,6 +298,7 @@ shop_schema->resultset('Talk')->create(
 shop_schema->resultset('Talk')->create(
     {
         author_id => shop_user({ username => 'peter@sysnix.com'})->id,
+        conferences_id => $conference->id,
         duration  => 20,
         start_time =>
           DateTime->new( year => 2015, month => 10, day => 21, hour => 14 ),

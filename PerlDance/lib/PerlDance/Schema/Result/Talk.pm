@@ -38,6 +38,20 @@ column author_id => {
     is_foreign_key => 1,
 };
 
+=head2 conferences_id
+
+Conference.
+
+FK on L<PerlDance::Schema::Result::Conference/conferencess_id> for
+relation L</conference>.
+
+=cut
+
+column conferences_id => {
+    data_type      => "integer",
+    is_foreign_key => 1,
+};
+
 =head2 duration
 
 Duration of the talk in minutes.
@@ -258,5 +272,16 @@ Composing rels: L</attendee_talks> -> user
 =cut
 
 many_to_many attendees => "attendee_talks", "user";
+
+=head2 conference
+
+Type: belongs_to
+
+Related object: L<PerlDance::Schema::Result::Conference>
+
+=cut
+
+belongs_to
+  conference => 'PerlDance::Schema::Result::Conference', "conferences_id";
 
 1;
