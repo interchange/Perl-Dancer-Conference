@@ -5,6 +5,7 @@
 server_tokens: 0;
 require_environment: 1
 session_name: perldance.session
+conference_name: "Perl Dancer Conference 2015"
 
 # Your application's name
 appname: "PerlDance"

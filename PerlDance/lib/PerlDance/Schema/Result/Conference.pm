@@ -27,9 +27,11 @@ primary_column conferences_id => {
 
 Name of conference such as "Perl Dancer Conference 2015"
 
+Unique constraint.
+
 =cut
 
-column name => {
+unique_column name => {
     data_type => "varchar",
     size      => 128,
 };

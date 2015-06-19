@@ -18,6 +18,9 @@ our $VERSION = '0.1';
 set session => 'DBIC';
 set session_options => { schema => shop_schema };
 
+set conferences_id => shop_schema->resultset('Conference')
+  ->find( { name => setting 'conference_name' } )->id;
+
 =head1 HOOKS
 
 =head2 before_cart_display

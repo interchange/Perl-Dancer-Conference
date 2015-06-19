@@ -140,6 +140,7 @@ foreach my $row (@users) {
             conferences_attended => [
                 {
                     conferences_id => $conference->id,
+                    confirmed      => 1,
                 }
             ],
         }

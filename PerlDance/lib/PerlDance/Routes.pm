@@ -71,16 +71,18 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
 
-    $tokens->{user} = shop_user->search(
+    $tokens->{user} = shop_user(
         {
-            'me.users_id'    => $users_id,
-            'addresses.type' => 'primary',
+            'me.users_id'                         => $users_id,
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+            'addresses.type'                      => 'primary',
         },
         {
             prefetch =>
               [ { addresses => 'country', }, 'photo', 'talks_authored' ],
+            join => 'conferences_attended',
         }
-    )->first;
+    );
 
     if ( !$tokens->{user} ) {
         status 'not_found';
@@ -158,10 +160,11 @@ sub add_speakers_tokens {
 
     my @speakers = shop_user->search(
         {
-            'addresses.type' => 'primary',
-            -or              => {
+            'addresses.type'                      => 'primary',
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+            -or                                   => {
                 'talks_authored.accepted' => 1,
-                -and => {
+                -and                      => {
                     'attribute.name' => 'speaker',
                     'attribute.type' => 'boolean',
                 },
@@ -169,7 +172,10 @@ sub add_speakers_tokens {
         },
         {
             prefetch => [ { addresses => 'country', }, 'photo' ],
-            join => [ 'talks_authored', { user_attributes => 'attribute' } ],
+            join     => [
+                'conferences_attended', 'talks_authored',
+                { user_attributes => 'attribute' }
+            ],
         }
     )->all;
 

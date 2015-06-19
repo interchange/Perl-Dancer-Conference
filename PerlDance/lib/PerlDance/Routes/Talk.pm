@@ -28,7 +28,8 @@ get '/talks' => sub {
 
     my $talks = shop_schema->resultset('Talk')->search(
         {
-            accepted => 1,
+            accepted       => 1,
+            conferences_id => setting('conferences_id'),
         },
         {
             order_by => 'start_time',
@@ -93,14 +94,13 @@ get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
     my $tokens = {};
 
-    $tokens->{talk} = shop_schema->resultset('Talk')->search(
+    $tokens->{talk} = shop_schema->resultset('Talk')->find(
         {
-            'me.talks_id' => $talks_id,
+            'me.talks_id'       => $talks_id,
+            'me.conferences_id' => setting('conferences_id'),
         },
-        {
-            prefetch => [ 'author', { attendee_talks => 'user' } ],
-        }
-    )->first;
+        { prefetch => [ 'author', { attendee_talks => 'user' } ], }
+    );
 
     $tokens->{title} = $tokens->{talk}->title;
 

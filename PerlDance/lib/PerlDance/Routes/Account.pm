@@ -80,7 +80,7 @@ post '/register' => sub {
                 shop_schema->resultset('Media')
                   ->search( { label => "email-logo" } )->first->uri
             ),
-            preamble => "You are receiving this email because your email address was used to register for the Perl Dancer Conference 2015.\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:",
+            preamble => "You are receiving this email because your email address was used to register for the " . setting("conference_name") . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:",
             link => uri_for("/register/$token")
           },
           { layout => 'email' };
@@ -90,7 +90,7 @@ post '/register' => sub {
         try {
             email {
                 to      => $user->email,
-                subject => "Registration for the Perl Dancer Conference 2015",
+                subject => "Registration for the " . setting("conference_name"),
                 body    => $text,
                 type    => 'text',
                 attach  => {
@@ -183,8 +183,13 @@ any ['get', 'post'] => '/register/:token' => sub {
             }
             if ( !%errors ) {
 
-                # all good so login user and redirect to /profile
+                # all good so set password, add to attendees, login and
+                # redirect to /profile
                 $user->update( { password => $params{password} } );
+
+                $user->add_to_conferences_attended(
+                    { conferences_id => setting('conferences_id') } );
+
                 my ( undef, $realm ) =
                   authenticate_user( $params{username}, $params{password} );
                 session logged_in_user => $user->username;
@@ -201,16 +206,16 @@ any ['get', 'post'] => '/register/:token' => sub {
 
         # go back and try again
 
-            $tokens = {
-                username    => $params{username},
-                title       => "Register",
-                description => "Please complete the registration process",
-                action_name => "Complete Registration",
-                text =>
-                  "There appears to have been a problem.\n\nPlease try again.",
-                errors => \%errors,
-            };
-            return template "password_reset", $tokens;
+        $tokens = {
+            username    => $params{username},
+            title       => "Register",
+            description => "Please complete the registration process",
+            action_name => "Complete Registration",
+            text =>
+              "There appears to have been a problem.\n\nPlease try again.",
+            errors => \%errors,
+        };
+        return template "password_reset", $tokens;
     }
     else {
 
