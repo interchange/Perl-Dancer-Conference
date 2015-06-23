@@ -73,11 +73,13 @@ get '/reset_password' => sub {
         return template "register_reset", $tokens;
 };
 
-post '/register' => sub {
-    my $username = param 'username';
+post qr{ /(?<action> register | reset_password )$ }x => sub {
+    my $username = param('username') || param('register');
+    my $captures = captures;
+    my $action   = $$captures{action};
     # TODO: validate
 
-    debug "register/reset for username: $username";
+    debug "$action for username: $username";
 
     my $user = shop_user( { username => $username } );
     if ($user) {
@@ -92,7 +94,7 @@ post '/register' => sub {
                 { username => $username, email => $username } );
         }
         catch {
-            error "registration failed: $_";
+            error "create user failed in $action: $_";
             # TODO: send email to admins as well?
         }
     }
@@ -100,14 +102,17 @@ post '/register' => sub {
     if ( $user ) {
         my $token = $user->reset_token_generate;
 
-        my $html = template "email/generic",
-          {
+        my $reason = $action eq 'register' ? 'register' : 'reset your password';
+        my $action_name =
+          $action eq 'register' ? 'registration' : 'password reset';
+
+        my $html = template "email/generic", {
             "conference-logo" => uri_for(
                 shop_schema->resultset('Media')
                   ->search( { label => "email-logo" } )->first->uri
             ),
-            preamble => "You are receiving this email because your email address was used to register for the " . setting("conference_name") . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with registration please click on the following link:",
-            link => uri_for("/register/$token")
+            preamble => "You are receiving this email because your email address was used to $reason for the " . setting("conference_name") . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
+            link => uri_for( path( request->uri, $token ) ),
           },
           { layout => 'email' };
 
@@ -116,7 +121,7 @@ post '/register' => sub {
         try {
             email {
                 to      => $user->email,
-                subject => "Registration for the " . setting("conference_name"),
+                subject => "\u$action_name for the " . setting("conference_name"),
                 body    => $text,
                 type    => 'text',
                 attach  => {
@@ -262,7 +267,7 @@ any [ 'get', 'post' ] => qr{
             # look good so ask for password
 
             $tokens = {
-                title       => "Register",
+                title       => "\u$name",
                 description => "Please complete the $name process",
                 action_name => "Complete \u$name",
             };
