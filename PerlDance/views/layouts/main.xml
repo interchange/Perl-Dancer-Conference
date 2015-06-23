@@ -7,16 +7,28 @@
 
   <list name="menu-login" iterator="nav-top-login">
     <param name="name" class="link"/>
-    <param name="uri" class="link" target="href"/>
+    <param name="uri" class="link" target="href" op="append"/>
+    <list name="child-menu" iterator="children">
+      <param name="name" class="link"/>
+      <param name="uri" class="link" target="href" op="append"/>
+    </list>
   </list>
   <list name="menu-logout" iterator="nav-top-logout">
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href" op="append"/>
+    <list name="child-menu" iterator="children">
+      <param name="name" class="link"/>
+      <param name="uri" class="link" target="href" op="append"/>
+    </list>
   </list>
   <list name="menu-main" iterator="nav-menu-main">
     <param name="name" class="link"/>
     <param name="uri" class="link" target="href" op="append"/>
     <param name="class" class="link" target="class"/>
+    <list name="child-menu" iterator="children">
+      <param name="name" class="link"/>
+      <param name="uri" class="link" target="href" op="append"/>
+    </list>
   </list>
 
   <list name="extra-js" iterator="extra-js">

@@ -85,10 +85,9 @@ hook 'before_layout_render' => sub {
             'me.type'      => 'nav',
             'me.parent_id' => undef,
         },
-        {
-            order_by => [ { -desc => 'me.priority' }, 'me.name', ],
-        }
-    )->hri->all;
+        { prefetch => 'children', }
+      )->order_by('!me.priority,me.name,!children.priority,children.name')
+      ->hri->all;
 
     # add class to highlight current page in menu
     foreach my $record (@nav) {
