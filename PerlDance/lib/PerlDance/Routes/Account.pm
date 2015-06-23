@@ -219,7 +219,7 @@ any [ 'get', 'post' ] => qr{
                 # redirect to /profile
                 $user->update( { password => $params{password} } );
 
-                $user->find_or_create_related( 'ConferenceAttendee',
+                $user->find_or_create_related( 'conferences_attended',
                     { conferences_id => setting('conferences_id') } );
 
                 my ( undef, $realm ) =
