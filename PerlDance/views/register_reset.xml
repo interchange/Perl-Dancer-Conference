@@ -4,5 +4,4 @@
   <value name="action" class="form" target="action"/>
   <value name="action_name"/>
   <value name="text" filter="markdown" op="hook"/>
-  <value name="action_name" class="submit" target="value"/>
 </specification>

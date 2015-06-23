@@ -28,7 +28,11 @@ get '/login' => sub {
         title       => $nav->name,
         description => $nav->description,
     };
-    $tokens->{title} = "Login";
+    if ( var 'login_failed' ) {
+        # var added by DPAE's post /login route
+        $tokens->{login_input} = "has-error";
+        $tokens->{login_error} = "Username or password incorrect";
+    }
     template 'login', $tokens;
 };
 
@@ -45,6 +49,28 @@ get '/profile' => sub {
     };
 
     template 'profile', $tokens;
+};
+
+get '/register' => sub {
+        my $tokens = {
+            title       => "Register",
+            description => "Please complete the registration process",
+            action      => "/register",
+            action_name => "Complete Registration",
+            text => "Please enter your email address and hit submit to begin the registration process.",
+        };
+        return template "register_reset", $tokens;
+};
+
+get '/reset_password' => sub {
+        my $tokens = {
+            title       => "Reset Password",
+            description => "",
+            action      => "/reset_password",
+            action_name => "Reset Password",
+            text => "Please enter your email address and hit submit to begin the password reset process.",
+        };
+        return template "register_reset", $tokens;
 };
 
 post '/register' => sub {
@@ -109,10 +135,16 @@ post '/register' => sub {
     template 'email_sent', { username => $username };
 };
 
-any ['get', 'post'] => '/register/:token' => sub {
+any [ 'get', 'post' ] => qr{
+    / (?<action> register | reset_password )
+    / (?<token> \w+ )
+    }x => sub {
 
     my $tokens      = {};
-    my $reset_token = param 'token';
+    my $captures    = captures;
+    my $action      = $$captures{action};
+    my $reset_token = $$captures{token};
+    my $name        = $action eq 'register' ? 'register' : 'reset password';
     my $user;
 
     if ( request->is_post ) {
@@ -174,12 +206,12 @@ any ['get', 'post'] => '/register/:token' => sub {
             if ( !$user->reset_token_verify($reset_token) ) {
                 $tokens = {
                     title       => "Sorry",
-                    description => "This registration link is no longer valid",
-                    action      => "/register",
-                    action_name => "Register",
-                    text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired - please retry registration.",
+                    description => "This $name link is no longer valid",
+                    action      => "/$action",
+                    action_name => $name,
+                    text => "I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired - please retry $name.",
                 };
-                return template "bad_token", $tokens;
+                return template "register_reset", $tokens;
             }
             if ( !%errors ) {
 
@@ -187,7 +219,7 @@ any ['get', 'post'] => '/register/:token' => sub {
                 # redirect to /profile
                 $user->update( { password => $params{password} } );
 
-                $user->add_to_conferences_attended(
+                $user->find_or_create_related( 'ConferenceAttendee',
                     { conferences_id => setting('conferences_id') } );
 
                 my ( undef, $realm ) =
@@ -208,9 +240,9 @@ any ['get', 'post'] => '/register/:token' => sub {
 
         $tokens = {
             username    => $params{username},
-            title       => "Register",
-            description => "Please complete the registration process",
-            action_name => "Complete Registration",
+            title       => $name,
+            description => "Please complete the $name process",
+            action_name => "Complete \u$name",
             text =>
               "There appears to have been a problem.\n\nPlease try again.",
             errors => \%errors,
@@ -219,9 +251,11 @@ any ['get', 'post'] => '/register/:token' => sub {
     }
     else {
 
-        # get /register/...
+        # get /register/:token
 
-        $user = shop_user->find_user_with_reset_token( $reset_token );
+        try {
+            $user = shop_user->find_user_with_reset_token( $reset_token );
+        };
 
         if ( $user ) {
 
@@ -229,8 +263,8 @@ any ['get', 'post'] => '/register/:token' => sub {
 
             $tokens = {
                 title       => "Register",
-                description => "Please complete the registration process",
-                action_name => "Complete Registration",
+                description => "Please complete the $name process",
+                action_name => "Complete \u$name",
             };
             return template "password_reset", $tokens;
         }
@@ -240,12 +274,12 @@ any ['get', 'post'] => '/register/:token' => sub {
 
             $tokens = {
                 title       => "Sorry",
-                description => "This registration link is not valid",
-                action      => "/register",
-                action_name => "Register",
-                text => "I am sorry but the registration link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
+                description => "This $name link is not valid",
+                action      => "/$action",
+                action_name => $name,
+                text => "I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
             };
-            return template "bad_token", $tokens;
+            return template "register_reset", $tokens;
         }
     }
 };
