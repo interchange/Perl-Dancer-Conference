@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  /* menu dropdowns */
+  $("#navbar ul li ul :first-child").parent().siblings("a").addClass("dropdown-toggle").attr("data-toggle", "dropdown").attr("href", "#").attr("role", "button").attr("aria-haspopup", "true").attr("aria-expanded", "false").append(' <span class="caret"></span>');
   /* shrink nav bar on scroll */
   $(window).scroll(function() {
     if ($(document).scrollTop() > 150) {

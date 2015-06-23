@@ -40,7 +40,7 @@ h1, h2, h3, h4, h5, h6 {
 #navbar ul:hover li>a {
   border-bottom: 0px;
 }
-#navbar ul li:hover>a, #navbar a.active {
+#navbar>ul>li:hover>a, #navbar>ul>li>a.active {
   color: #0749bc;
   border-bottom: 3px solid #0749bc;
 }

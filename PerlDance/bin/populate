@@ -177,6 +177,22 @@ my $nav = shop_navigation->populate(
             name        => 'Talks',
             priority    => 60,
             description => 'Schedule draft. Contains talks confirmed so far.',
+            children => [
+                {
+                    uri => 'talks/list',
+                    type => 'nav',
+                    name => 'Talks',
+                    description => 'List of talks',
+                    priority => 100,
+                },
+                {
+                    uri => 'talks/submit',
+                    type => 'nav',
+                    name => 'Submit a talk proposal',
+                    description => '',
+                    priority => 90,
+                },
+            ],
         },
         {
             uri         => 'tickets',
@@ -187,7 +203,7 @@ my $nav = shop_navigation->populate(
             description => "Get Your Seat Before It's Too Late",
         },
         {
-            uri         => 'talks/submit',
+            uri         => 'call-for-papers',
             type        => 'nav',
             scope       => 'menu-main',
             name        => 'Call For Papers',
