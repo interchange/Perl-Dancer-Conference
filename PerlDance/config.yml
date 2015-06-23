@@ -2,7 +2,7 @@
 # env-related settings should go to environments/$env.yml.
 # All the settings in this file will be loaded at Dancer's startup.
 
-server_tokens: 0;
+server_tokens: 0
 require_environment: 1
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2015"

@@ -192,6 +192,27 @@ my $nav = shop_navigation->populate(
                     description => '',
                     priority => 90,
                 },
+                {
+                    uri => 'talks/favourite',
+                    type => 'nav',
+                    name => 'Favourite Talks',
+                    description => '',
+                    priority => 80,
+                },
+                {
+                    uri => 'talks/schedule',
+                    type => 'nav',
+                    name => 'Talks Schedule',
+                    description => '',
+                    priority => 70,
+                },
+                {
+                    uri => 'talks/timetable.ics',
+                    type => 'nav',
+                    name => 'iCal export',
+                    description => '',
+                    priority => 60,
+                },
             ],
         },
         {

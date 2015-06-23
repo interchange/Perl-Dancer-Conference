@@ -19,6 +19,10 @@ Talks list
 
 =cut
 
+get '/talks/list' => sub {
+    forward '/talks';
+};
+
 get '/talks' => sub {
     my $tokens = {};
 
