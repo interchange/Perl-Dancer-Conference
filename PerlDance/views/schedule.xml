@@ -1,0 +1,20 @@
+<specification>
+  <value name="title" class="page-title"/>
+  <value name="description" class="page-caption"/>
+  <list name="talks" iterator="talks">
+    <param name="panel-title" field="day"/>
+    <param name="date" filter="date_only"/>
+    <list name="scheduled-talk" iterator="talks">
+      <param name="duration_display"/>
+      <param name="speaker-name" class="speaker-link" field="author.name"/>
+      <param name="speaker-link" target="href" op="append" field="author.uri"/>
+      <param name="photo-link" target="href" op="append" field="author.uri"/>
+      <param name="photo" target="src" field="author.photo.uri"/>
+      <param name="talk-title" class="talk-link" field="title"/>
+      <param name="talk-link" target="href" op="append" field="seo_uri"/>
+      <param name="short_abstract"/>
+    </list>
+  </list>
+  <list name="unscheduled" iterator="unscheduled">
+  </list>
+</specification>

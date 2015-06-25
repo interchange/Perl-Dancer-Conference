@@ -6,32 +6,33 @@
 </div>
 
 <div class="container">
-  <div class="panel panel-primary talks">
+  <div class="panel panel-primary">
     <div class="panel-heading">
-      <h3 class="panel-title">day</h3>
-      <span class="date">date</span>
+      <h3 class="panel-title">List of talks</h3>
+      <div class="text-center">Submitted talks: <span class="talks_submitted">0</span></div>
+      <div class="text-center">Accepted talks: <span class="talks_accepted">0</span></div>
     </div>
-    <div class="panel-body scheduled-talk">
-      <div class="row">
-        <div class="col-sm-3">
-          <div>
-            <i class="fa fa-clock-o"></i> <span class="duration_display">when</span>
-          </div>
-          <div class="session-info session-location">
-            <i class="fa fa-location-arrow"></i> <span class="location">where</span>
-          </div>
-          <div>
-            <i class="fa fa-user" ></i> <a class="speaker-link" href="/speakers/" >Speaker Name</a>
-          </div>
-        </div>
-        <div class="col-sm-1">
-          <a class="photo-link" href="/speakers/" ><img class="img-responsive img-rounded photo"></a>
-        </div>
-        <div class="col-sm-8">
-          <h4><a class="talk-link" href="/talks/">Talk Title</a></h4>
-          <div class="short_abstract">Short extract from abstract</div>
-        </div>
-      </div>
+    <div class="panel-body">
+      <h3 class="panel-title">Tags</h3>
+      <div id="tagcloud" class="cloud"></div>
     </div>
+    <table class="table table-responsive table-hover">
+      <thead>
+        <tr>
+          <th>Speaker</th>
+          <th>Title</th>
+          <th>Duration</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="talks">
+          <td><a class="name" href="/speakers/">Name</a></td>
+          <td><a class="title" href="/talks/">Title</a></td>
+          <td><span class="duration">XX</span> min</td>
+          <td class="start_time">1/1/2011</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

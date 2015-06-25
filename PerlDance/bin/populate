@@ -370,7 +370,7 @@ shop_schema->resultset('Talk')->create(
         conferences_id => $conference->id,
         duration  => 40,
         title => 'Template Flute',
-        tags => 'Dancer Tenplate::Flute',
+        tags => 'Dancer Template::Flute',
         abstract => 'Flutey flute',
         accepted => 1,
     }

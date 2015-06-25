@@ -93,7 +93,7 @@ hook 'before_layout_render' => sub {
     foreach my $record (@nav) {
         my $path = request->path;
         $path =~ s/^\///;
-        if ( $path eq $record->{uri} ) {
+        if ( $record->{uri} && $path eq $record->{uri} ) {
             $record->{class} = "active";
         }
         push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;

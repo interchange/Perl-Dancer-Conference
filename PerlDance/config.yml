@@ -31,6 +31,12 @@ engines:
       currency:
         options:
           int_curr_symbol: "€"
+      date:
+        class: "Template::Flute::Filter::Date"
+        options:
+          format: '%x %R'
+          strict:
+            empty: 0
       date_only:
         class: "Template::Flute::Filter::Date"
         options:

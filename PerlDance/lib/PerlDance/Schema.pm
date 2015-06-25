@@ -3,7 +3,7 @@ package PerlDance::Schema;
 use Interchange6::Schema::Result::Navigation;
 use Interchange6::Schema::Result::User;
 
-package Interchange6::Schema::Result::User;
+package Interchange6::Schema::Result::Navigation;
 use Class::Method::Modifiers;
 
 __PACKAGE__->add_columns(
