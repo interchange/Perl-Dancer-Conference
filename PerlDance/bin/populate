@@ -357,7 +357,7 @@ shop_schema->resultset('Talk')->create(
         start_time =>
           DateTime->new( year => 2015, month => 10, day => 19, hour => 9 ),
         title => 'Web development using Dancer',
-        tags => 'Dancer',
+        tags => 'Dancer training Template::Toolkit MVC',
         abstract => q(A hands-on training session to develop a website with dynamic content in Dancer.
 
 From doing the exercises you will learn to use the Dancer framework, learn to use Template Toolkit, understand the concept of Model-View-Controller, experience structuring code for maintainability, experience using object oriented modules. To attend this session you should have basic knowledge of Perl (but you can join if you have any programming experience), and you should be able to use Linux command line and text editor (like vi/emacs/pico).),
@@ -370,7 +370,7 @@ shop_schema->resultset('Talk')->create(
         conferences_id => $conference->id,
         duration  => 40,
         title => 'Template Flute',
-        tags => 'Dancer',
+        tags => 'Dancer Tenplate::Flute',
         abstract => 'Flutey flute',
         accepted => 1,
     }
