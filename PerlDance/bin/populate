@@ -171,7 +171,7 @@ my $nav = shop_navigation->populate(
             description => 'Meet Our Speakers!',
         },
         {
-            uri         => 'talks',
+            uri => undef,
             type        => 'nav',
             scope       => 'menu-main',
             name        => 'Talks',
@@ -179,7 +179,7 @@ my $nav = shop_navigation->populate(
             description => 'Schedule draft. Contains talks confirmed so far.',
             children => [
                 {
-                    uri => 'talks/list',
+                    uri => 'talks',
                     type => 'nav',
                     name => 'Talks',
                     description => 'List of talks',
@@ -224,7 +224,7 @@ my $nav = shop_navigation->populate(
             description => "Get Your Seat Before It's Too Late",
         },
         {
-            uri         => 'sponsor',
+            uri => undef,
             type        => 'nav',
             scope       => 'menu-main',
             name        => 'Sponsors',
@@ -232,14 +232,14 @@ my $nav = shop_navigation->populate(
             description => 'Sponsors',
             children => [
                 {
-                    uri => 'sponsor/sponsors',
+                    uri => 'sponsors',
                     type => 'nav',
                     name => 'Sponsors',
                     description => 'Conference Sponsors',
                     priority => 100,
                 },
                 {
-                    uri => 'sponsor/sponsoring',
+                    uri => 'sponsoring',
                     type => 'nav',
                     name => 'Sponsoring',
                     description => 'Become a Sponsor!',
@@ -248,15 +248,29 @@ my $nav = shop_navigation->populate(
             ],
         },
         {
-            uri         => 'login',
+            uri => undef,
             type        => 'nav',
             scope       => 'top-login',
             name        => 'Login',
             priority    => 10,
             description => 'Login or Register',
+            children => [
+                {
+                    uri => 'login',
+                    type => 'nav',
+                    name => 'Login',
+                    priority => 100,
+                },
+                {
+                    uri => 'register',
+                    type => 'nav',
+                    name => 'Register',
+                    priority => 80,
+                },
+            ],
         },
         {
-            uri         => 'profile',
+            uri => undef,
             type        => 'nav',
             scope       => 'top-logout',
             name        => 'Profile',
