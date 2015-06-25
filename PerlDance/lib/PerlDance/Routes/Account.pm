@@ -56,7 +56,7 @@ get '/register' => sub {
             title       => "Register",
             description => "Please complete the registration process",
             action      => "/register",
-            action_name => "Complete Registration",
+            action_name => "Registration",
             text => "Please enter your email address and hit submit to begin the registration process.",
         };
         return template "register_reset", $tokens;
