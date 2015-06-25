@@ -224,12 +224,28 @@ my $nav = shop_navigation->populate(
             description => "Get Your Seat Before It's Too Late",
         },
         {
-            uri         => 'call-for-papers',
+            uri         => 'sponsor',
             type        => 'nav',
             scope       => 'menu-main',
-            name        => 'Call For Papers',
+            name        => 'Sponsors',
             priority    => 20,
-            description => 'Requirement and guidance for submitting talks',
+            description => 'Sponsors',
+            children => [
+                {
+                    uri => 'sponsor/sponsors',
+                    type => 'nav',
+                    name => 'Sponsors',
+                    description => 'Conference Sponsors',
+                    priority => 100,
+                },
+                {
+                    uri => 'sponsor/sponsoring',
+                    type => 'nav',
+                    name => 'Sponsoring',
+                    description => 'Become a Sponsor!',
+                    priority => 80,
+                },
+            ],
         },
         {
             uri         => 'login',

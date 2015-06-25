@@ -50,10 +50,7 @@ Speaker list
 get '/speakers' => sub {
     my $tokens = {};
 
-    my $nav = shop_navigation->find( { uri => 'speakers' } );
-    $tokens->{title}       = $nav->name;
-    $tokens->{description} = $nav->description;
-
+    add_navigation_tokens( $tokens );
     add_speakers_tokens($tokens);
 
     $tokens->{title} = "Speakers";
@@ -96,6 +93,44 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     template 'speaker', $tokens;
 };
 
+=head2 get /sponsor
+
+resirect to /sponsor/sponsors
+
+=cut
+
+get qr{/sponsor/*$} => sub {
+    redirect '/sponsor/sponsors';
+};
+
+=head2 get /sponsor/sponsors
+
+Sponsor list
+
+=cut
+
+get '/sponsor/sponsors' => sub {
+    my $tokens = {};
+
+    add_navigation_tokens( $tokens );
+
+    template 'sponsors', $tokens;
+};
+
+=head2 get /sponsor/sponsoring
+
+Be a sponsor
+
+=cut
+
+get '/sponsor/sponsoring' => sub {
+    my $tokens = {};
+
+    add_navigation_tokens($tokens);
+
+    template 'sponsoring', $tokens;
+};
+
 =head2 get /tickets
 
 Conference tickets
@@ -105,10 +140,10 @@ Conference tickets
 get '/tickets' => sub {
     my $tokens = {};
 
-    my $nav = shop_navigation->find( { uri => 'tickets' } );
-    $tokens->{title}       = $nav->name;
-    $tokens->{description} = $nav->description;
-    $tokens->{tickets}     = [$nav->products->active->hri->all];
+    add_navigation_tokens($tokens);
+
+    $tokens->{tickets} = [ shop_navigation( { uri => 'tickets' } )
+          ->products->active->hri->all ];
 
     template 'tickets', $tokens;
 };
@@ -147,6 +182,22 @@ sub add_javascript {
     foreach my $src ( @_ ) {
         push @{ $tokens->{"extra-js"} }, { src => $src };
     }
+}
+
+=head2 add_navigation_tokens
+
+Add title and description tokens;
+
+=cut
+
+sub add_navigation_tokens {
+    my $tokens = shift;
+
+    ( my $uri = request->path ) =~ s{^/+}{};
+    my $nav = shop_navigation->find( { uri => $uri } );
+
+    $tokens->{title}       = $nav->name;
+    $tokens->{description} = $nav->description;
 }
 
 =head2 add_speakers_tokens($tokens);
