@@ -21,7 +21,8 @@ WriteMakefile(
     PREREQ_PM => {
         'Test::More'                       => 0,
         'YAML'                             => 0,
-        'Dancer'                           => 1.3136,
+        'Class::Method::Modifiers'         => '2.11',
+        'Dancer'                           => '1.3136',
         'Dancer::Plugin::Auth::Extensible' => '0.40',
         'Dancer::Plugin::DBIC'             => '0.2102',
         'Dancer::Plugin::Email'            => '1.0400',
