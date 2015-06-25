@@ -93,23 +93,13 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     template 'speaker', $tokens;
 };
 
-=head2 get /sponsor
-
-resirect to /sponsor/sponsors
-
-=cut
-
-get qr{/sponsor/*$} => sub {
-    redirect '/sponsor/sponsors';
-};
-
-=head2 get /sponsor/sponsors
+=head2 get /sponsors
 
 Sponsor list
 
 =cut
 
-get '/sponsor/sponsors' => sub {
+get '/sponsors' => sub {
     my $tokens = {};
 
     add_navigation_tokens( $tokens );
@@ -117,13 +107,13 @@ get '/sponsor/sponsors' => sub {
     template 'sponsors', $tokens;
 };
 
-=head2 get /sponsor/sponsoring
+=head2 get /sponsoring
 
 Be a sponsor
 
 =cut
 
-get '/sponsor/sponsoring' => sub {
+get '/sponsoring' => sub {
     my $tokens = {};
 
     add_navigation_tokens($tokens);
