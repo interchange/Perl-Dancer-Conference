@@ -1,4 +1,6 @@
 <specification>
+  <container name="has_tag" value="tag"/>
+  <value name="tag"/>
   <value name="title" class="page-title"/>
   <value name="description" class="page-caption"/>
   <value name="talks_submitted"/>

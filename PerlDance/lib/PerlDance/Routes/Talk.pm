@@ -46,7 +46,7 @@ get '/talks' => sub {
     }
     $tokens->{cloud} = $cloud->html;
 
-    $tokens->{talks} = $talks->search(
+    $talks = $talks->search(
         {
             'me.accepted' => 1,
         },
@@ -55,6 +55,20 @@ get '/talks' => sub {
             prefetch => 'author',
         }
     );
+
+    if ( my $tag = var('tag') ) {
+        my $tagged_talks = $talks->search(
+            {
+                "me.tags" => { like => '%' . $tag . '%' }
+            }
+        );
+        if ( $tagged_talks->has_rows ) {
+            $talks = $tagged_talks;
+            $tokens->{tag} = $tag;
+        }
+    }
+
+    $tokens->{talks} = $talks;
 
     template 'talks', $tokens;
 };
@@ -116,6 +130,17 @@ get '/talks/submit' => sub {
     $tokens->{title} = "Call For Papers";
 
     template 'cfp', $tokens;
+};
+
+=head2 get /talks/tag/:tag
+
+Tag cloud links in /talks
+
+=cut
+
+get '/talks/tag/:tag' => sub {
+    var tag => param('tag');
+    forward '/talks';
 };
 
 =head2 get /talks/{id}.*
