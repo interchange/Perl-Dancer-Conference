@@ -6,58 +6,5 @@
 </div>  
 
 <div class="container">
-  <div class="row">
-
-    <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          Login
-        </div>
-        <div class="panel-body">
-          <form class="form-horizontal" action="/login" method="post">
-            <div class="form-group login_input">
-              <label for="emailInput" class="col-sm-3 control-label">Email</label>
-              <div class="col-sm-9">
-                <input type="email" class="form-control username" id="emailInput" required placeholder="Email" name="username">
-              </div>
-            </div>
-            <div class="form-group login_input">
-              <label for="emailPassword" class="col-sm-3 control-label">Password</label>
-              <div class="col-sm-9">
-                <input type="password" class="form-control" id="emailPassword" required placeholder="Password" name="password">
-                <div class="help-block login_error"></div>
-              </div>
-            </div>
-            <div class="pull-right">
-              <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-            <div><a href="/reset_password">Forgot password? Reset here</a></div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          New Users Register Here
-        </div>
-        <div class="panel-body">
-          <form class="form-horizontal" action="/register" method="post">
-            <div class="form-group username_input">
-              <label for="emailInput" class="col-sm-3 control-label">Email</label>
-              <div class="col-sm-9">
-                <input type="email" class="form-control register" id="emailInput" placeholder="Email" name="register">
-                <div class="help-block username_error"></div>
-              </div>
-            </div>
-            <div class="text-right">
-              <button class="btn btn-primary" type="submit">Submit</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-  </div>
+  <div class="login-fragment"></div>
 </div>

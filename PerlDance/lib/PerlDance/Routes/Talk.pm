@@ -23,9 +23,7 @@ Talks list by speaker
 get '/talks' => sub {
     my $tokens = {};
 
-    my $nav = shop_navigation->find( { uri => 'talks' } );
-    $tokens->{title}       = $nav->name;
-    $tokens->{description} = $nav->description;
+    PerlDance::Routes::add_navigation_tokens($tokens);
 
     my $talks = shop_schema->resultset('Talk')->search(
         {
@@ -83,9 +81,7 @@ Talks schedule
 get '/talks/schedule' => sub {
     my $tokens = {};
 
-    my $nav = shop_navigation->find( { uri => 'talks' } );
-    $tokens->{title}       = $nav->name;
-    $tokens->{description} = $nav->description;
+    PerlDance::Routes::add_navigation_tokens($tokens);
 
     my $talks = shop_schema->resultset('Talk')->search(
         {
@@ -128,7 +124,9 @@ CFP
 get '/talks/submit' => sub {
     my $tokens = {};
 
-    $tokens->{title} = "Call For Papers";
+    PerlDance::Routes::add_navigation_tokens($tokens);
+
+    session return_url => "/talks/submit";
 
     template 'cfp', $tokens;
 };

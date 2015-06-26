@@ -239,6 +239,7 @@ my $nav = shop_navigation->populate(
                     name => 'Sponsors',
                     description => 'Conference Sponsors',
                     priority => 100,
+                    active => 0,  # FIXME
                 },
                 {
                     uri => 'sponsoring',
