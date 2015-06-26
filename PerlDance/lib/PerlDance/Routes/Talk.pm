@@ -128,6 +128,15 @@ get '/talks/submit' => sub {
 
     session return_url => "/talks/submit";
 
+    $tokens->{durations} = [
+        {
+            value => 20, label => "20 minutes",
+        },
+        {
+            value => 40, label => "40 minutes",
+        },
+    ];
+
     template 'cfp', $tokens;
 };
 
