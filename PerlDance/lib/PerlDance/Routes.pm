@@ -215,8 +215,9 @@ sub add_speakers_tokens {
             'addresses.type'                      => 'primary',
             'conferences_attended.conferences_id' => setting('conferences_id'),
             -or                                   => {
-                'talks_authored.accepted' => 1,
-                -and                      => {
+                'talks_authored.accepted'  => 1,
+                'talks_authored.confirmed' => 1,
+                -and                       => {
                     'attribute.name' => 'speaker',
                     'attribute.type' => 'boolean',
                 },
