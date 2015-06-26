@@ -8,7 +8,10 @@ PerlDance::Routes::Talk - Talk routes for PerlDance conference application
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
+use Data::Transpose::Validator;
+use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
 use Try::Tiny;
 
@@ -115,18 +118,117 @@ get '/talks/schedule' => sub {
     template 'schedule', $tokens;
 };
 
-=head2 get /talks/submit
+=head2 get/post /talks/submit
 
 CFP
 
 =cut
 
-get '/talks/submit' => sub {
+any [ 'get', 'post' ] => '/talks/submit' => sub {
     my $tokens = {};
 
     PerlDance::Routes::add_navigation_tokens($tokens);
 
-    session return_url => "/talks/submit";
+    if ( request->is_post && logged_in_user ) {
+
+        my %params = params('body');
+
+        my $validator = Data::Transpose::Validator->new(
+            stripwhite => 1,
+            requireall => 1,
+        );
+
+        $validator->prepare(
+            talk_title => "String",
+            abstract   => "String",
+            tags       => "String",
+            duration   => {
+                validator => {
+                    class   => "NumericRange",
+                    options => {
+                        integer => 1,
+                        min     => 20,
+                        max     => 40,
+                    }
+                }
+            }
+        );
+
+        my $valid = $validator->transpose(\%params);
+
+        if ( $valid ) {
+
+            my $tags = $valid->{tags};
+            $tags =~ s/,/ /g;
+            $tags =~ s/\s+/ /g;
+
+            try {
+                my $talk = shop_schema->resultset('Talk')->create(
+                    {
+                        author_id      => logged_in_user->id,
+                        conferences_id => setting('conferences_id'),
+                        duration       => $valid->{duration},
+                        title          => $valid->{talk_title},
+                        tags           => $tags,
+                        abstract       => $valid->{abstract},
+                    }
+                );
+
+                debug "new talk submitted";
+
+                my $html = template '/email/talk_submitted',
+                  {
+                    %$valid,
+                    logged_in_user    => logged_in_user,
+                    talk              => $talk,
+                    "conference-logo" => uri_for(
+                        shop_schema->resultset('Media')
+                          ->search( { label => "email-logo" } )->first->uri
+                    ),
+                  },
+                  { layout => 'email' };
+
+                my $f = HTML::FormatText::WithLinks->new;
+                my $text = $f->parse($html);
+
+                email {
+                    subject => setting("conference_name") . " talk submitted",
+                    body    => $text,
+                    type    => 'text',
+                    attach  => {
+                        Data     => $html,
+                        Encoding => "quoted-printable",
+                        Type     => "text/html"
+                    },
+                    multipart => 'alternative',
+                };
+
+                debug "sent email/talk_submitted";
+
+                redirect '/profile';
+            }
+            catch {
+                # FIXME: handle errors
+                error "Talk submission error: $_";
+            };
+        }
+        else {
+            my %errors;
+            my $v_hash = $validator->errors_hash;
+            while ( my ( $key, $value ) = each %$v_hash ) {
+                $errors{$key} = $value->[0]->{value};
+                $errors{ $key . '_input' } = 'has-error';
+            }
+            $tokens->{errors} = \%errors;
+            foreach my $field (qw/talk_title abstract tags duration/) {
+                $tokens->{$field} = $params{$field};
+            }
+        }
+    }
+    else {
+        # for login redirect
+        session return_url => "/talks/submit";
+    }
 
     $tokens->{durations} = [
         {
@@ -139,6 +241,7 @@ get '/talks/submit' => sub {
 
     template 'cfp', $tokens;
 };
+
 
 =head2 get /talks/tag/:tag
 

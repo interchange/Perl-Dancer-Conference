@@ -1,0 +1,8 @@
+<specification>
+  <value name="users_id" field="logged_in_user.id"/>
+  <value name="name" field="logged_in_user.name"/>
+  <value name="talks_id" field="talk.id"/>
+  <value name="title" field="talk.title"/>
+  <value name="abstract" field="talk.abstract" filter="markdown" op="hook"/>
+  <value name="duration" field="talk.duration"/>
+</specification>

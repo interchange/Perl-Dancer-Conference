@@ -95,6 +95,7 @@ plugins:
     headers:
       sender: "2015@perl.dance"
       from: "Perl Dancer 2015 <2015@perl.dance>"
+      to: "Perl Dancer 2015 <2015@perl.dance>"
       X-Mailer: "PerlDance2015 1.0"
   Interchange6::Routes:
     navigation:
