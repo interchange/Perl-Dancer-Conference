@@ -7,4 +7,7 @@
   <value name="photo" target="src" field="talk.author.photo.uri"/>
   <value name="date" field="talk.start_time" filter="date_only"/>
   <value name="duration_display" field="talk.duration_display"/>
+  <container name="session-location" value="talk.room">
+    <value name="location" field="talk.room"/>
+  </container>
 </specification>

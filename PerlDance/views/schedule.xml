@@ -6,6 +6,9 @@
     <param name="date" filter="date_only"/>
     <list name="scheduled-talk" iterator="talks">
       <param name="duration_display"/>
+      <container name="session-location" value="room">
+        <param name="location" field="room"/>
+      </container>
       <param name="speaker-name" class="speaker-link" field="author.name"/>
       <param name="speaker-link" target="href" op="append" field="author.uri"/>
       <param name="photo-link" target="href" op="append" field="author.uri"/>
