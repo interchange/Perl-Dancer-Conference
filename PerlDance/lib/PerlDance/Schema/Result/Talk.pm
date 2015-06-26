@@ -164,6 +164,19 @@ column start_time => {
     is_nullable => 1,
 };
 
+
+=head2 room
+
+The room/location for this talk.
+
+=cut
+
+column room => {
+    data_type     => "varchar",
+    size          => 128,
+    default_value => "",
+};
+
 =head2 METHODS
 
 =head2 duration_display
