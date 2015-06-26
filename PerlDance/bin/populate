@@ -377,8 +377,6 @@ shop_schema->resultset('Talk')->create(
         title => 'Template Flute',
         tags => 'Dancer Template::Flute',
         abstract => 'Flutey flute',
-        accepted => 1,
-        confirmed => 1,
     }
 );
 shop_schema->resultset('Talk')->create(
@@ -391,6 +389,18 @@ shop_schema->resultset('Talk')->create(
         title => 'Dancing on the roof',
         tags => 'Dancer',
         abstract => 'More Dancer',
+    }
+);
+shop_schema->resultset('Talk')->create(
+    {
+        author_id => shop_user({ username => 'sbatschelet@mac.com'})->id,
+        conferences_id => $conference->id,
+        duration  => 40,
+        start_time =>
+          DateTime->new( year => 2015, month => 10, day => 21, hour => 11 ),
+        title => 'Space Camp :: The Final Frontier',
+        tags => 'CoreOS Development Platform',
+        abstract => 'Learn about a new development platform using the newest in open source cloud systems CoreOS and rkt (Rocket).',
         accepted => 1,
         confirmed => 1,
     }
