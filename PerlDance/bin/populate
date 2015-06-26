@@ -365,6 +365,7 @@ shop_schema->resultset('Talk')->create(
 
 From doing the exercises you will learn to use the Dancer framework, learn to use Template Toolkit, understand the concept of Model-View-Controller, experience structuring code for maintainability, experience using object oriented modules. To attend this session you should have basic knowledge of Perl (but you can join if you have any programming experience), and you should be able to use Linux command line and text editor (like vi/emacs/pico).),
         accepted => 1,
+        confirmed => 1,
     }
 );
 shop_schema->resultset('Talk')->create(
@@ -376,6 +377,7 @@ shop_schema->resultset('Talk')->create(
         tags => 'Dancer Template::Flute',
         abstract => 'Flutey flute',
         accepted => 1,
+        confirmed => 1,
     }
 );
 shop_schema->resultset('Talk')->create(
@@ -389,5 +391,6 @@ shop_schema->resultset('Talk')->create(
         tags => 'Dancer',
         abstract => 'More Dancer',
         accepted => 1,
+        confirmed => 1,
     }
 );

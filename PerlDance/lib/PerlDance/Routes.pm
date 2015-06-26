@@ -68,7 +68,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
 
-    $tokens->{user} = shop_user(
+    $tokens->{user} = shop_user->search(
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -76,17 +76,28 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         },
         {
             prefetch =>
-              [ { addresses => 'country', }, 'photo', 'talks_authored' ],
+              [ { addresses => 'country', }, 'photo' ],
             join => 'conferences_attended',
+            rows => 1,
+        }
+    )->first;
+
+    if ( !$tokens->{user} ) {
+        $tokens->{title} = "Speaker Not Found";
+        status 'not_found';
+        return template '404', $tokens;
+    }
+
+    $tokens->{talks} = $tokens->{user}->search_related(
+        'talks_authored',
+        {
+            conferences_id => setting('conferences_id'),
+            accepted       => 1,
+            confirmed      => 1,
         }
     );
 
-    if ( !$tokens->{user} ) {
-        status 'not_found';
-        return "Speaker not found";
-    }
-
-    $tokens->{has_talks} = 1 if $tokens->{user}->talks_authored->has_rows;
+    $tokens->{has_talks} = 1 if $tokens->{talks}->has_rows;
 
     $tokens->{title} = $tokens->{user}->name;
 

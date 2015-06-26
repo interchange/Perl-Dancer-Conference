@@ -1,2 +1,3 @@
 <specification>
+  <value name="page-caption" field="title"/>
 </specification>

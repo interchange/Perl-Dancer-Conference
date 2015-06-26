@@ -7,7 +7,7 @@
   <value name="bio" field="user.bio" op="hook" filter="markdown"/>
   <value name="pause_id" field="user.pause_id"/>
   <container name="has_talks" value="has_talks"/>
-  <list name="talks" iterator="user.talks_authored">
+  <list name="talks" iterator="talks">
     <param name="talk-link" target="href" op="append" field="seo_uri"/>
     <param name="title" class="talk-link"/>
     <param name="start_time" filter="date_only"/>

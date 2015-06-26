@@ -35,7 +35,7 @@ get '/talks' => sub {
     );
     $tokens->{talks_submitted} = $talks->count;
 
-    my $talks_accepted = $talks->search( { accepted => 1 } );
+    my $talks_accepted = $talks->search( { accepted => 1, confirmed => 1 } );
     $tokens->{talks_accepted} = $talks_accepted->count;
 
     my %tags;
@@ -49,7 +49,8 @@ get '/talks' => sub {
 
     $talks = $talks->search(
         {
-            'me.accepted' => 1,
+            'me.accepted'  => 1,
+            'me.confirmed' => 1,
         },
         {
             order_by => [ 'author.first_name', 'author.last_name' ],
@@ -89,6 +90,7 @@ get '/talks/schedule' => sub {
     my $talks = shop_schema->resultset('Talk')->search(
         {
             accepted       => 1,
+            confirmed      => 1,
             conferences_id => setting('conferences_id'),
             start_time     => { '!=' => undef },
         },
@@ -264,17 +266,26 @@ get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
     my $tokens = {};
 
-    $tokens->{talk} = shop_schema->resultset('Talk')->find(
+    my $talk = shop_schema->resultset('Talk')->find(
         {
-            'me.talks_id'       => $talks_id,
-            'me.conferences_id' => setting('conferences_id'),
+            talks_id       => $talks_id,
+            accepted       => 1,
+            confirmed      => 1,
+            conferences_id => setting('conferences_id'),
         },
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
     );
 
-    $tokens->{title} = $tokens->{talk}->title;
-
-    template 'talk', $tokens;
+    if ($talk) {
+        $tokens->{talk}  = $talk;
+        $tokens->{title} = $talk->title;
+        template 'talk', $tokens;
+    }
+    else {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        template '404', $tokens;
+    }
 };
 
 true;
