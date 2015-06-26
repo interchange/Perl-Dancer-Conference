@@ -65,6 +65,7 @@ get '/talks' => sub {
         if ( $tagged_talks->has_rows ) {
             $talks = $tagged_talks;
             $tokens->{tag} = $tag;
+            $tokens->{title} .= " | " . $tag;
         }
     }
 

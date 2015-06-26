@@ -2,7 +2,8 @@
   <container name="login" value="!logged_in_user" class="auth-login"/>
   <container name="logout" value="logged_in_user" class="auth-logout"/>
 
-  <value name="title" op="append"/>
+  <value name="head-title"/>
+  <value name="meta-description" target="content"/>
   <value name="content" class="content" op="hook"/>
 
   <list name="menu-login" iterator="nav-top-login">

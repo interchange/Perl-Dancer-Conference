@@ -51,6 +51,7 @@ hook 'before_cart_display' => sub {
             return_value => to_json( { html => $html } ) )->throw;
     }
     elsif ( request->is_post ) {
+
         # Posts to cart should generally result in redirect.
         # FIXME: This should be addressed in DPIC6 and not here
         return redirect '/cart';
@@ -98,12 +99,17 @@ hook 'before_layout_render' => sub {
         }
         push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;
     }
-    if ( logged_in_user ) {
+    if (logged_in_user) {
         delete $tokens->{"nav-top-login"};
     }
     else {
         delete $tokens->{"nav-top-logout"};
     }
+
+    $tokens->{"head-title"} =
+      setting('conference_name') . " | " . $tokens->{title};
+    $tokens->{"meta-description"} =
+      setting('conference_name') . ". " . $tokens->{description};
 };
 
 =head1 ROUTES
