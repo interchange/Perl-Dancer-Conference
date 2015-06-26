@@ -204,7 +204,7 @@ my $nav = shop_navigation->populate(
                     uri => 'talks/schedule',
                     type => 'nav',
                     name => 'Talks Schedule',
-                    description => '',
+                    description => 'Schedule subject to change',
                     priority => 70,
                 },
                 {
