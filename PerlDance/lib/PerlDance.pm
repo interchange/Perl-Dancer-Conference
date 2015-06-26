@@ -107,9 +107,9 @@ hook 'before_layout_render' => sub {
     }
 
     $tokens->{"head-title"} =
-      setting('conference_name') . " | " . $tokens->{title};
+      setting('conference_name') . " | " . ( $tokens->{title} || '' );
     $tokens->{"meta-description"} =
-      setting('conference_name') . ". " . $tokens->{description};
+      setting('conference_name') . ". " . ( $tokens->{description} || '' );
 };
 
 =head1 ROUTES
