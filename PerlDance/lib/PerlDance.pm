@@ -82,9 +82,10 @@ hook 'before_layout_render' => sub {
 
     my @nav = shop_navigation->search(
         {
-            'me.active'    => 1,
-            'me.type'      => 'nav',
-            'me.parent_id' => undef,
+            'me.active'       => 1,
+            'me.type'         => 'nav',
+            'me.parent_id'    => undef,
+            'children.active' => [ undef, 1 ],
         },
         { prefetch => 'children', }
       )->order_by('!me.priority,me.name,!children.priority,children.name')

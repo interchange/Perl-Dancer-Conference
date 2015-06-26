@@ -198,6 +198,7 @@ my $nav = shop_navigation->populate(
                     name => 'Favourite Talks',
                     description => '',
                     priority => 80,
+                    active => 0,  # FIXME
                 },
                 {
                     uri => 'talks/schedule',
@@ -212,6 +213,7 @@ my $nav = shop_navigation->populate(
                     name => 'iCal export',
                     description => '',
                     priority => 60,
+                    active => 0,  # FIXME
                 },
             ],
         },
