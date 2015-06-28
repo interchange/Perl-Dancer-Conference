@@ -47,11 +47,17 @@ get '/talks' => sub {
     }
     $tokens->{cloud} = $cloud->html;
 
-    $talks = $talks->search(
-        {
+    my $conditions = {};
+
+    if (! user_has_role('admin')) {
+        $conditions = {
             'me.accepted'  => 1,
             'me.confirmed' => 1,
         },
+    }
+
+    $talks = $talks->search(
+        $conditions,
         {
             order_by => [ 'author.first_name', 'author.last_name' ],
             prefetch => 'author',
