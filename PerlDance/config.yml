@@ -35,8 +35,8 @@ engines:
         class: "Template::Flute::Filter::Date"
         options:
           format: '%x %R'
-          strict:
-            empty: 0
+          date_text:
+            empty: "Not yet scheduled"
       date_only:
         class: "Template::Flute::Filter::Date"
         options:

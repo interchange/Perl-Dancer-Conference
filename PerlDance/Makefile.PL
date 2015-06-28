@@ -37,7 +37,7 @@ WriteMakefile(
         'Interchange6::Schema'             => '0.085',
         'Number::Format'                   => 0,
         'Plack::Middleware::XSRFBlock'     => 0,
-        'Template::Flute'                  => '0.0180',
+        'Template::Flute'                  => '0.0181',
         'Text::Markdown'                   => 0,
         'URI::Escape'                      => 0,
     },
