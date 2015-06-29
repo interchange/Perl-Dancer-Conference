@@ -267,7 +267,7 @@ my $nav = shop_navigation->populate(
                 {
                     uri => 'register',
                     type => 'nav',
-                    name => 'Register',
+                    name => 'Register for Conference',
                     priority => 80,
                 },
                 {
