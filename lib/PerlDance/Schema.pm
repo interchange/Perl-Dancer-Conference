@@ -1,21 +1,6 @@
 package PerlDance::Schema;
 
-use Interchange6::Schema::Result::Navigation;
 use Interchange6::Schema::Result::User;
-
-package Interchange6::Schema::Result::Navigation;
-use Class::Method::Modifiers;
-
-__PACKAGE__->add_columns(
-    uri => { data_type => "varchar", size => 255, is_nullable => 1 } );
-
-around 'insert' => sub {
-    my $orig = shift;
-    my $self = shift;
-    $self->next::method(@args);
-    return $self;
-};
-
 package Interchange6::Schema::Result::User;
 use URI::Escape;
 
