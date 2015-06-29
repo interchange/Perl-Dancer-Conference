@@ -103,6 +103,7 @@ Specialties: Perl, E-Learning, Devops, Web services, AWS, Optimization, Mathemat
         'sam-batschelet.jpg',
     ],
 );
+
 foreach my $row (@users) {
     my $state = shop_state( { state_iso_code => $row->[7] } );
     my $mime_type = $row->[10];
@@ -156,7 +157,6 @@ my $admins = shop_user->search(
     }
 );
 while ( my $user = $admins->next ) {
-    $user->update( { password => 'ietoYoo9Ue' } );
     $user->add_to_roles( { name => 'admin' } );
 }
 
