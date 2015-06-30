@@ -74,6 +74,11 @@ get '/profile/photo' => require_login sub {
     template 'profile/photo', $tokens;
 };
 
+post '/profile/photo' => require_login sub {
+    content_type('application/json');
+    to_json({ data => foo });
+};
+
 =head2 get /register
 
 =cut

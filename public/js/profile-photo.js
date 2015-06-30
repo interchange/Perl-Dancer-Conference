@@ -2,9 +2,10 @@ $(document).ready(function() {
     $("photo-upload").fileinput({
         uploadUrl: "/profile/photo/upload",
         allowedFileExtensions : ['jpg', 'png','gif'],
-        overwriteInitial: false,
         maxFileSize: 1000,
         uploadAsync: true,
-        maxFileCount: 1,
+        minImageWidth: 300,
+        minImageHeight: 300,
+        maxFileCount: 1
     });
 });
