@@ -68,7 +68,8 @@ hook 'before_cart_display' => sub {
 
 hook 'before_template_render' => sub {
     my $tokens = shift;
-    $tokens->{logged_in_user} = logged_in_user;
+    $tokens->{logged_in_user}  = logged_in_user;
+    $tokens->{conference_name} = setting('conference_name');
 };
 
 =head2 before_layout_render
@@ -111,6 +112,7 @@ hook 'before_layout_render' => sub {
       setting('conference_name') . " | " . ( $tokens->{title} || '' );
     $tokens->{"meta-description"} =
       setting('conference_name') . ". " . ( $tokens->{description} || '' );
+    $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 };
 
 =head1 ROUTES

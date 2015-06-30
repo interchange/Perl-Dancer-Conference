@@ -38,6 +38,8 @@ get '/' => sub {
     add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
         "/js/index.js" );
 
+    var no_title_wrapper => 1;
+
     template 'index', $tokens;
 };
 
@@ -67,6 +69,8 @@ Individual speaker
 get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
+
+    var no_title_wrapper => 1;
 
     $tokens->{user} = shop_user->search(
         {
@@ -167,6 +171,7 @@ any qr{.*} => sub {
     my $tokens = {};
 
     $tokens->{title} = "Not Found";
+    $tokens->{description} = "404 - Page not Found";
 
     status 'not_found';
     template '404', $tokens;

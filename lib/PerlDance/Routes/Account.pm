@@ -42,13 +42,25 @@ Register of request password reset.
 
 =cut
 
-get '/profile' => sub {
+get '/profile' => require_login sub {
+    my $nav = shop_navigation({ uri => 'profile' });
+
+    my $talks = logged_in_user->talks_authored->search(
+        { conferences_id => setting('conferences_id') } );
+
     my $tokens = {
         title       => 'Profile',
         description => 'Update profile',
+        profile_nav =>
+          [ $nav->active_children->order_by('!priority')->hri->all ],
+        talks => $talks,
     };
 
     template 'profile', $tokens;
+};
+
+get '/profile/photo' => require_login sub {
+    template 'profile/photo';
 };
 
 get '/register' => sub {
@@ -137,7 +149,8 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         }
     }
 
-    template 'email_sent', { username => $username };
+    template 'email_sent',
+      { title => "Thankyou", "Email on its way", username => $username };
 };
 
 any [ 'get', 'post' ] => qr{

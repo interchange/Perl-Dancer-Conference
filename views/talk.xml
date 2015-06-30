@@ -1,5 +1,4 @@
 <specification>
-  <value name="page-title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" op="hook" filter="markdown"/>
   <value name="photo-link" target="href" op="append" field="talk.author.uri"/>
   <value name="speaker-link" target="href" op="append" field="talk.author.uri"/>

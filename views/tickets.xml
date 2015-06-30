@@ -1,6 +1,4 @@
 <specification>
-  <value name="title" class="page-title"/>
-  <value name="description" class="page-caption"/>
   <value name="ticket-wrapper" op="hook" include="fragments/tickets.html"/>
   <value name="countdown-timer" op="hook" include="fragments/countdown.html"/>
 </specification>

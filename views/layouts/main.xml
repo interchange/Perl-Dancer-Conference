@@ -1,6 +1,9 @@
 <specification>
   <container name="login" value="!logged_in_user" class="auth-login"/>
   <container name="logout" value="logged_in_user" class="auth-logout"/>
+  <container name="title-wrapper" value="title_wrapper"/>
+  <value name="title" class="page-title"/>
+  <value name="description" class="page-caption"/>
 
   <value name="head-title"/>
   <value name="meta-description" target="content"/>

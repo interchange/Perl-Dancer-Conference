@@ -1,4 +1,11 @@
 <specification>
-  <value name="title" class="page-title"/>
-  <value name="description" class="page-caption"/>
+  <value name="conference_name"/>
+  <list name="profile" iterator="profile_nav">
+    <param name="name" class="link"/>
+    <param name="link" field="uri" target="href" op="append"/>
+  </list>
+  <list name="talk" iterator="talks">
+    <param name="title" class="talk-link"/>
+    <param name="talk-link" field="seo_uri" target="href" op="append"/>
+  </list>
 </specification>
