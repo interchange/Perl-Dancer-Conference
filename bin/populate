@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 
+use utf8;
 use warnings;
 use strict;
 
@@ -80,7 +81,7 @@ Specialties: Perl, E-Learning, Devops, Web services, AWS, Optimization, Mathemat
     ],
     [
         'jure.kodzoman@informastudio.com', 'Jure',
-        'Kodzoman',                        undef, '',
+        'Kodžoman',                        undef, '',
         'Informa Studio Ltd.',             'Split',
         undef,                             'HR',
         "Jure works as Head of Development at Informa Studio. He has more than 10 years of active experience in E-Commerce working with different types of clients, from small webshops to large corporations. Strong interest in improving usability and effectiveness of online shopping.",
@@ -297,6 +298,26 @@ my $nav = shop_navigation->populate(
                     type => 'nav',
                     name => 'My Profile',
                     priority => 80,
+                    children => [
+                        {
+                            uri => 'profile/edit',
+                            type => 'nav',
+                            name => 'Update your profile',
+                            priority => 100,
+                        },
+                        {
+                            uri => 'profile/photo',
+                            type => 'nav',
+                            name => 'Manage your photo',
+                            priority => 80,
+                        },
+                        {
+                            uri => 'profile/password',
+                            type => 'nav',
+                            name => 'Change your password',
+                            priority => 60,
+                        },
+                    ],
                 },
             ],
         },
