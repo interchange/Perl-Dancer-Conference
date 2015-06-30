@@ -1,6 +1,30 @@
 <div class="container">
-  <div class="well">
-    <h2>Your current photo</h2>
-    <img class="photo img-responsive" src="">
+  <div class="row">
+
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Your current photo
+        </div>
+        <div class="panel-body">
+          <img class="photo img-responsive" src="">
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          Upload a new photo
+        </div>
+        <div class="panel-body">
+          <form enctype="multipart/form-data" method="post">
+            <div class="form-group">
+              <input id="photo-upload" name="photo" type="file" class="file" data-overwrite-initial="false">
+            </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>

@@ -36,9 +36,9 @@ get '/login' => sub {
     template 'login', $tokens;
 };
 
-=head2 post /register
+=head2 get /profile
 
-Register of request password reset.
+Profile update top-level page showing available options.
 
 =cut
 
@@ -59,31 +59,56 @@ get '/profile' => require_login sub {
     template 'profile', $tokens;
 };
 
+=head2 get /profile/photo
+
+Profile photo display/update
+
+=cut
+
 get '/profile/photo' => require_login sub {
-    template 'profile/photo';
+    my $tokens = {};
+
+    # could also add extra js locales here if wanted
+    PerlDance::Routes::add_javascript( $tokens, '/js/fileinput.min.js', '/js/profile-photo.js' );
+
+    template 'profile/photo', $tokens;
 };
+
+=head2 get /register
+
+=cut
 
 get '/register' => sub {
-        my $tokens = {
-            title       => "Register",
-            description => "Please complete the registration process",
-            action      => "/register",
-            action_name => "Registration",
-            text => "Please enter your email address and hit submit to begin the registration process.",
-        };
-        return template "register_reset", $tokens;
+    my $tokens = {
+        title       => "Register",
+        description => "Please complete the registration process",
+        action      => "/register",
+        action_name => "Registration",
+        text => "Please enter your email address and hit submit to begin the registration process.",
+    };
+    return template "register_reset", $tokens;
 };
 
+=head2 get /reset_password
+
+=cut
+
 get '/reset_password' => sub {
-        my $tokens = {
-            title       => "Reset Password",
-            description => "",
-            action      => "/reset_password",
-            action_name => "Reset Password",
-            text => "Please enter your email address and hit submit to begin the password reset process.",
-        };
-        return template "register_reset", $tokens;
+    my $tokens = {
+        title       => "Reset Password",
+        description => "",
+        action      => "/reset_password",
+        action_name => "Reset Password",
+        text => "Please enter your email address and hit submit to begin the password reset process.",
+    };
+    return template "register_reset", $tokens;
 };
+
+=head2 post /(register|reset_password)
+
+Register of request password reset.
+
+=cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
     my $username = param('username') || param('register');
@@ -152,6 +177,10 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     template 'email_sent',
       { title => "Thankyou", "Email on its way", username => $username };
 };
+
+=head2 get/post /(register|reset_password)/:token
+
+=cut
 
 any [ 'get', 'post' ] => qr{
     / (?<action> register | reset_password )
