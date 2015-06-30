@@ -279,6 +279,8 @@ any [ 'get', 'post' ] => qr{
 
             # look good so ask for password
 
+            $name = 'registration' if $name eq 'register';
+
             $tokens = {
                 title       => "\u$name",
                 description => "Please complete the $name process",
