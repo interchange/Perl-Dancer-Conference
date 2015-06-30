@@ -45,7 +45,7 @@ sub uri {
     my $name = lc($self->name);
     $name =~ s/^\s+|\s+$//g;
     $name =~ s/\s+/-/g;
-    return join('-', $self->id, uri_escape($name));
+    return join('-', $self->id, uri_escape_utf8($name));
 }
 
 =head2 RELATIONS

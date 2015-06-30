@@ -229,7 +229,7 @@ sub seo_uri {
     my $title = lc( $self->title );
     $title =~ s/^\s+|\s+$//g;
     $title =~ s/\s+/-/g;
-    return join( '-', $self->id, uri_escape($title) );
+    return join( '-', $self->id, uri_escape_utf8($title) );
 }
 
 =head2 short_abstract
