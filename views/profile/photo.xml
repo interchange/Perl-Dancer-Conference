@@ -1,2 +1,3 @@
 <specification>
+  <value name="photo" target="src" field="logged_in_user.photo.uri"/>
 </specification>
