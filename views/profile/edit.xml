@@ -1,0 +1,27 @@
+<specification>
+  <container name="login-required" value="!logged_in_user">
+    <value name="login-fragment" op="hook" include="fragments/login.html"/>
+  </container>
+  <container name="logged-in" value="logged_in_user"/>
+
+  <value name="talk_title" target="value"/>
+  <value name="talk_title_input" field="errors.talk_title_input" target="class"
+    op="append" joiner=" "/>
+  <value name="talk_title_error" field="errors.talk_title"/>
+
+  <value name="abstract"/>
+  <value name="abstract_input" field="errors.abstract_input" target="class"
+    op="append" joiner=" "/>
+  <value name="abstract_error" field="errors.abstract"/>
+
+  <value name="tags" target="value"/>
+  <value name="tags_input" field="errors.tags_input" target="class"
+    op="append" joiner=" "/>
+  <value name="tags_error" field="errors.tags"/>
+
+  <value name="duration" iterator="durations"/>
+  <value name="duration_input" field="errors.duration_input" target="class"
+    op="append" joiner=" "/>
+  <value name="duration_error" field="errors.duration"/>
+
+</specification>

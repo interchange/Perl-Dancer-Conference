@@ -1,11 +1,6 @@
 $(document).ready(function() {
-    $("photo-upload").fileinput({
-        uploadUrl: "/profile/photo/upload",
-        allowedFileExtensions : ['jpg', 'png','gif'],
-        maxFileSize: 1000,
-        uploadAsync: true,
-        minImageWidth: 300,
-        minImageHeight: 300,
-        maxFileCount: 1
+    var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
+    $("#photo-upload").fileinput({
+        uploadExtraData: { xsrf_token: xsrfMeta }
     });
 });

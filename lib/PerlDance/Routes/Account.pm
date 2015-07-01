@@ -68,8 +68,7 @@ Profile photo display/update
 get '/profile/photo' => require_login sub {
     my $tokens = {};
 
-    # could also add extra js locales here if wanted
-    PerlDance::Routes::add_javascript( $tokens, '/js/fileinput.min.js', '/js/profile-photo.js' );
+    PerlDance::Routes::add_javascript( $tokens, '/js/profile-photo.js' );
 
     template 'profile/photo', $tokens;
 };

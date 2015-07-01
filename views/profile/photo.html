@@ -4,7 +4,7 @@
     <div class="col-md-6">
       <div class="panel panel-default">
         <div class="panel-heading">
-          Your current photo
+          Current photo
         </div>
         <div class="panel-body">
           <img class="photo img-responsive" src="">
@@ -18,9 +18,9 @@
           Upload a new photo
         </div>
         <div class="panel-body">
-          <form enctype="multipart/form-data" method="post">
+          <form method="post">
             <div class="form-group">
-              <input id="photo-upload" name="photo" type="file" multiple class="file" accept="image/*">
+              <input name="photo" id="photo-upload" class="file" type="file" data-preview-file-type="image" data-upload-url="/profile/photo/upload" data-preview-file-icon="">
             </div>
         </div>
       </div>
