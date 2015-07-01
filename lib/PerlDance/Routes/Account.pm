@@ -76,7 +76,7 @@ get '/profile/photo' => require_login sub {
 
 post '/profile/photo' => require_login sub {
     content_type('application/json');
-    to_json({ data => foo });
+    to_json({ data => 'foo' });
 };
 
 =head2 get /register
