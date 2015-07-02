@@ -74,6 +74,9 @@ get '/profile/photo' => require_login sub {
 };
 
 post '/profile/photo' => require_login sub {
+    my $file = upload('photo');
+    debug "got file ********* " if $file;
+    debug keys params;
     content_type('application/json');
     to_json({ data => 'foo' });
 };

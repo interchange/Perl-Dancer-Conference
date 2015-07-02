@@ -13,15 +13,23 @@
     </div>
 
     <div class="col-md-6">
-      <div class="panel panel-default">
+      <div class="panel panel-default upload-panel">
         <div class="panel-heading">
-          Upload a new photo
+          Upload a new photo min 300x300px, max 1MB
         </div>
         <div class="panel-body">
           <form method="post">
             <div class="form-group">
-              <input name="photo" id="photo-upload" class="file" type="file" data-preview-file-type="image" data-upload-url="/profile/photo/upload" data-preview-file-icon="">
+              <input name="photo" id="photo-upload" type="file" >
             </div>
+        </div>
+      </div>
+      <div class="panel panel-default crop-panel hidden">
+        <div class="panel-heading">
+          Please crop image
+        </div>
+        <div class="panel-body">
+          <img id="new-photo" src="">
         </div>
       </div>
     </div>
