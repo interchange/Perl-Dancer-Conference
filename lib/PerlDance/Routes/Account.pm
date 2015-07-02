@@ -180,7 +180,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     }
 
     template 'email_sent',
-      { title => "Thankyou", "Email on its way", username => $username };
+      { title => "Thankyou", description => "Email on its way", username => $username };
 };
 
 =head2 get/post /(register|reset_password)/:token
