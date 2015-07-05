@@ -9,7 +9,7 @@ $(document).on('ready', function(){
         allowedFileExtensions: ['jpg', 'gif', 'png'],
         minImageHeight: 300,
         minImageWidth: 300,
-        maxFileSize: 1024
+        maxFileSize: 10240
     });
     $("#photo-upload").on('fileuploaded', function(e, data) {
         $(".upload-panel").addClass('hidden');
