@@ -28,7 +28,7 @@ WriteMakefile(
         'Dancer::Plugin::Email'            => '1.0400',
         'Dancer::Plugin::Interchange6'     => '0.086',
         'Dancer::Template::TemplateFlute'  => '0.0142',
-        'Data::Transpose'                  => '0.0014',
+        'Data::Transpose'                  => '0.0015',
         'DateTime::Format::ISO8601'        => 0,
         'HTML::FormatText::WithLinks'      => 0,
         'HTML::Scrubber'                   => 0,
