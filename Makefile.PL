@@ -33,6 +33,7 @@ WriteMakefile(
         'HTML::FormatText::WithLinks'      => 0,
         'HTML::Scrubber'                   => 0,
         'HTML::TagCloud'                   => '0.38',
+        'Imager'                           => 0,
         'Interchange6'                     => '0.080',
         'Interchange6::Schema'             => '0.085',
         'Number::Format'                   => 0,
