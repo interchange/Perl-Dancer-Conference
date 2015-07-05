@@ -8,10 +8,15 @@ PerlDance::Routes::Account - account routes such as login, edit profile, ...
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
+use File::Copy;
+use File::Spec;
+use File::Type;
 use HTML::FormatText::WithLinks;
+use Imager;
 use Try::Tiny;
 
 =head1 ROUTES 
@@ -29,6 +34,7 @@ get '/login' => sub {
         description => $nav->description,
     };
     if ( var 'login_failed' ) {
+
         # var added by DPAE's post /login route
         $tokens->{login_input} = "has-error";
         $tokens->{login_error} = "Username or password incorrect";
@@ -43,7 +49,7 @@ Profile update top-level page showing available options.
 =cut
 
 get '/profile' => require_login sub {
-    my $nav = shop_navigation({ uri => 'profile' });
+    my $nav = shop_navigation( { uri => 'profile' } );
 
     my $talks = logged_in_user->talks_authored->search(
         { conferences_id => setting('conferences_id') } );
@@ -73,10 +79,91 @@ get '/profile/photo' => require_login sub {
     template 'profile/photo', $tokens;
 };
 
-post '/profile/photo' => require_login sub {
-    my $file = upload('photo');
-    content_type('application/json');
-    to_json({ data => 'foo' });
+post '/profile/photo/upload' => require_login sub {
+    if ( request->is_ajax ) {
+        # FIXME: upload dir from config
+        my $file = upload('photo');
+        my $upload_dir = path( setting('public'), 'img', 'uploads' );
+        my ( undef, undef, $tempname ) = File::Spec->splitpath( $file->tempname );
+        my $target = path( $upload_dir, $tempname );
+        session new_photo => $target;
+        $file->copy_to($target); 
+        content_type('application/json');
+        to_json( { src => path( '/', 'img', 'uploads', $tempname ) } );
+    }
+    else {
+        # TODO: handle non-ajax post
+    }
+};
+post '/profile/photo/crop' => require_login sub {
+    use Imager;
+    my $file = session('new_photo');
+
+    my $ft = File::Type->new;
+    my $mime_type = $ft->checktype_filename($file);
+
+    die "Not an image" unless $mime_type =~ /^image\//;
+
+    ( my $type = $mime_type ) =~ s/^.+?\///;
+
+    my $img = Imager->new;
+    $img->read( file => $file ) or die "Cannot read photo $file: ", $img->errstr;
+
+    debug "cropping photo";
+
+    $img = $img->crop(
+        left   => param('x'),
+        top    => param('y'),
+        width  => param('w'),
+        height => param('h')
+    ) or die "image crop failure: ", $img->errstr;
+
+    debug "scaling image";
+
+    $img = $img->scale( xpixels => 300, ypixels => 300 )
+      or die "image scale failure: ", $img->errstr;
+
+    my %options = ( file => $file, type => $type );
+
+    $options{jpegquality} = 90 if $type eq 'jpeg';
+
+    debug "saving image";
+
+    $img->write( %options ) or die "image write failed";
+
+    my $user = logged_in_user;
+    my $photo = $user->photo;
+    if ( !$photo ) {
+
+        debug "creating new photo record";
+
+        my $media_type_image = rset('MediaTyp')->find( { type => 'image' } );
+
+        ( my $file_ext = $file ) =~ s/^.+?\.//;
+
+        my $target = lc($user->name);
+        $target =~ s/(^\s+|\s+$)//g;
+        $target =~ s/\s+/-/g;
+        $target = "img/people/$target.$file_ext";
+
+        $user->create_related(
+            'photo',
+            {
+                file           => $target,
+                uri            => "/$target",
+                mime_type      => $mime_type,
+                media_types_id => $media_type_image->id,
+            }
+        ) or die "failed to create photo record in database";
+    }
+
+    my $target = path( setting('public'), $photo->file );
+
+    debug "moving temp file to: $target";
+
+    move( $file, $target );
+
+    redirect '/profile/photo';
 };
 
 =head2 get /register
@@ -89,7 +176,8 @@ get '/register' => sub {
         description => "Please complete the registration process",
         action      => "/register",
         action_name => "Registration",
-        text => "Please enter your email address and hit submit to begin the registration process.",
+        text =>
+"Please enter your email address and hit submit to begin the registration process.",
     };
     return template "register_reset", $tokens;
 };
@@ -104,7 +192,8 @@ get '/reset_password' => sub {
         description => "",
         action      => "/reset_password",
         action_name => "Reset Password",
-        text => "Please enter your email address and hit submit to begin the password reset process.",
+        text =>
+"Please enter your email address and hit submit to begin the password reset process.",
     };
     return template "register_reset", $tokens;
 };
@@ -119,6 +208,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     my $username = param('username') || param('register');
     my $captures = captures;
     my $action   = $$captures{action};
+
     # TODO: validate
 
     debug "$action for username: $username";
@@ -137,36 +227,42 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         }
         catch {
             error "create user failed in $action: $_";
+
             # TODO: send email to admins as well?
         }
     }
 
-    if ( $user ) {
+    if ($user) {
         my $token = $user->reset_token_generate;
 
         my $reason = $action eq 'register' ? 'register' : 'reset your password';
         my $action_name =
           $action eq 'register' ? 'registration' : 'password reset';
 
-        my $html = template "email/generic", {
+        my $html = template "email/generic",
+          {
             "conference-logo" => uri_for(
                 shop_schema->resultset('Media')
                   ->search( { label => "email-logo" } )->first->uri
             ),
-            preamble => "You are receiving this email because your email address was used to $reason for the " . setting("conference_name") . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
+            preamble =>
+"You are receiving this email because your email address was used to $reason for the "
+              . setting("conference_name")
+              . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
             link => uri_for( path( request->uri, $token ) ),
           },
           { layout => 'email' };
 
-        my $f = HTML::FormatText::WithLinks->new;
+        my $f    = HTML::FormatText::WithLinks->new;
         my $text = $f->parse($html);
         try {
             email {
                 to      => $user->email,
-                subject => "\u$action_name for the " . setting("conference_name"),
-                body    => $text,
-                type    => 'text',
-                attach  => {
+                subject => "\u$action_name for the "
+                  . setting("conference_name"),
+                body   => $text,
+                type   => 'text',
+                attach => {
                     Data     => $html,
                     Encoding => "quoted-printable",
                     Type     => "text/html"
@@ -180,7 +276,11 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     }
 
     template 'email_sent',
-      { title => "Thankyou", description => "Email on its way", username => $username };
+      {
+        title       => "Thankyou",
+        description => "Email on its way",
+        username    => $username
+      };
 };
 
 =head2 get/post /(register|reset_password)/:token
@@ -229,13 +329,13 @@ any [ 'get', 'post' ] => qr{
                 }
             },
             confirm_password => { required => 1 },
-            passwords => {
+            passwords        => {
                 validator => 'Group',
                 fields    => [ "password", "confirm_password" ],
             },
         );
 
-        my $valid = $validator->transpose(\%params);
+        my $valid = $validator->transpose( \%params );
 
         if ( !$valid ) {
             my $v_hash = $validator->errors_hash;
@@ -253,7 +353,7 @@ any [ 'get', 'post' ] => qr{
 
         $user = shop_user( { username => $params{username} } );
 
-        if ( $user ) {
+        if ($user) {
 
             if ( !$user->reset_token_verify($reset_token) ) {
                 $tokens = {
@@ -261,7 +361,8 @@ any [ 'get', 'post' ] => qr{
                     description => "This $name link is no longer valid",
                     action      => "/$action",
                     action_name => $name,
-                    text => "I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired - please retry $name.",
+                    text =>
+"I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired - please retry $name.",
                 };
                 return template "register_reset", $tokens;
             }
@@ -276,8 +377,8 @@ any [ 'get', 'post' ] => qr{
 
                 my ( undef, $realm ) =
                   authenticate_user( $params{username}, $params{password} );
-                session logged_in_user => $user->username;
-                session logged_in_user_id => $user->id;
+                session logged_in_user       => $user->username;
+                session logged_in_user_id    => $user->id;
                 session logged_in_user_realm => $realm;
 
                 return redirect '/profile';
@@ -306,10 +407,10 @@ any [ 'get', 'post' ] => qr{
         # get /register/:token
 
         try {
-            $user = shop_user->find_user_with_reset_token( $reset_token );
+            $user = shop_user->find_user_with_reset_token($reset_token);
         };
 
-        if ( $user ) {
+        if ($user) {
 
             # look good so ask for password
 
@@ -331,7 +432,8 @@ any [ 'get', 'post' ] => qr{
                 description => "This $name link is not valid",
                 action      => "/$action",
                 action_name => $name,
-                text => "I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
+                text =>
+"I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
             };
             return template "register_reset", $tokens;
         }
