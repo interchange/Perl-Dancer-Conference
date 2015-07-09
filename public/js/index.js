@@ -1,4 +1,49 @@
 /* amerikahaus map */
+var confinfoWindows=[];
+function conf_closeAllInfoWindows(){
+    for (var i=0;i<confinfoWindows.length;i++){
+        confinfoWindows[i].close();
+    }
+    confinfoWindows=[];
+};
+function init_confmap(){
+    var conflatlng = new google.maps.LatLng(48.1824134,16.3812668);
+    var confmapOptions={
+        zoom: 16,
+        scrollwheel:false,
+        panControl:true,
+        zoomControl:true,
+        mapTypeControl:true,
+        scaleControl:true,
+        streetViewControl:true,
+        overviewMapControl:true,
+        overviewMapControlOptions:{opened:true},
+        center: conflatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    confmap=new google.maps.Map(document.getElementById("confmap"),confmapOptions);
+    marker0confmap=new google.maps.Marker({
+        map: confmap,
+        draggable:false,
+        position: conflatlng,
+        title:"Hotel Schani Wien",
+        clickable:true,
+        icon:""
+    });
+    infowindow0confmap =new google.maps.InfoWindow({
+        content:"Karl-Popper-Straße 22, 1100 Wien, Austria"
+    });
+    google.maps.event.addListener(marker0confmap,'click',function(){ 
+        conf_closeAllInfoWindows();
+        confinfoWindows.push(infowindow0confmap);
+        infowindow0confmap.open(confmap,marker0confmap);
+        google.maps.event.addListener(confmap,'click',function(){
+            infowindow0confmap.close();
+        });
+    });
+};
+google.maps.event.addDomListener(window, 'load', init_confmap);
+
 var infoWindows=[];
 function wgmp_closeAllInfoWindows(){
     for (var i=0;i<infoWindows.length;i++){

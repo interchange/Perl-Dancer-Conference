@@ -139,11 +139,11 @@ h4.subscribe {
   margin: 20px 0;
 }
 /* amerikahaus map */
-#wgmpmap {
+#wgmpmap, #confmap {
   width:100%;
   height:200px;
 }
-#wgmpmap img {max-width: none;}
+#wgmpmap img, #confmap img {max-width: none;}
 /* title wrapper */
 .title-wrapper {
   background-image: url("/img/meliavienna-carrusel51.jpg");
