@@ -2,6 +2,7 @@
   <form name="update_create_news" link="name">
     <field name="messages_id"/>
     <field name="title"/>
+    <field name="uri"/>
     <field name="public"/>
     <field name="content"/>
   </form>

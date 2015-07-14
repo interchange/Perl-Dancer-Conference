@@ -73,6 +73,7 @@ post '/admin/news/create' => require_role admin => sub {
             author_users_id => logged_in_user->id,
             public          => $values{public} || 0,
             title           => $values{title},
+            uri             => $values{uri} || undef,
             content         => $values{content},
         }
     );
@@ -106,7 +107,8 @@ get '/admin/news/edit/:id' => require_role admin => sub {
             messages_id => $news->messages_id,
             title       => $news->title,
             public      => $news->public,
-            content     => $news->content
+            uri         => $news->uri,
+            content     => $news->content,
         }
     );
     $tokens->{form} = $form;
@@ -134,6 +136,7 @@ post '/admin/news/edit/:id' => require_role admin => sub {
             author_users_id => logged_in_user->id,
             public          => $values{public} || 0,
             title           => $values{title},
+            uri             => $values{uri} || undef,
             content         => $values{content},
         }
     );
