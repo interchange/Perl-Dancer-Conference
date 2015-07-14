@@ -8,7 +8,7 @@ PerlDance::Schema::Result::Conference
 
 =cut
 
-use Interchange6::Schema::Candy;
+use Interchange6::Schema::Candy -components => [qw(InflateColumn::DateTime)];
 
 =head1 ACCESSORS
 
@@ -34,6 +34,17 @@ Unique constraint.
 unique_column name => {
     data_type => "varchar",
     size      => 128,
+};
+
+=head2 start_date
+
+Start date of conference
+
+=cut
+
+column start_date => {
+    data_type => "date",
+    is_nullable => 1,
 };
 
 =head1 RELATIONS

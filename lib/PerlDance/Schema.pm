@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 1;
+our $VERSION = 2;
 
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;
