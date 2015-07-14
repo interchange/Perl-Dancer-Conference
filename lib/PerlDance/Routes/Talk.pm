@@ -149,7 +149,6 @@ any [ 'get', 'post' ] => '/talks/submit' => sub {
         $validator->prepare(
             talk_title => "String",
             abstract   => "String",
-            tags       => "String",
             duration   => {
                 validator => {
                     class   => "NumericRange",
@@ -166,7 +165,7 @@ any [ 'get', 'post' ] => '/talks/submit' => sub {
 
         if ( $valid ) {
 
-            my $tags = $valid->{tags};
+            my $tags = defined $valid->{tags} ? $valid->{tags} : '';
             $tags =~ s/,/ /g;
             $tags =~ s/\s+/ /g;
 
