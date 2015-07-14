@@ -13,6 +13,7 @@ use Dancer::Plugin::Interchange6::Routes;
 use Try::Tiny;
 
 use PerlDance::Routes::Account;
+use PerlDance::Routes::Admin;
 use PerlDance::Routes::Talk;
 
 =head1 ROUTES
