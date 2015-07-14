@@ -8,4 +8,5 @@
     <param name="created" filter="date_only"/>
     <param name="content" filter="markdown_unsafe" op="hook"/>
   </list>
+  <container name="all-news" value="vars.uri"/>
 </specification>
