@@ -1,7 +1,10 @@
 <specification>
   <list name="news-item" iterator="news">
     <param name="title"/>
-    <param name="public"/>
-    <param name="created"/>
+    <param name="public" filter="boolean"/>
+    <param name="created" filter="date"/>
+    <param name="author" field="author.name"/>
+    <param name="edit" field="messages_id" target="href" op="append"/>
+    <param name="delete" field="messages_id" target="href" op="append"/>
   </list>
 </specification>

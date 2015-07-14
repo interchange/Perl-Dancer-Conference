@@ -1,6 +1,8 @@
 <specification>
-  <value name="title" field="news.title"/>
-  <value name="public" field="news.public"/>
-  <value name="content" field="news.content"/>
-  <value name="preview" field="news.content" filter="markdown"/>
+  <form name="update_create_news" link="name">
+    <field name="messages_id"/>
+    <field name="title"/>
+    <field name="public"/>
+    <field name="content"/>
+  </form>
 </specification>

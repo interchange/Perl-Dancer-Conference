@@ -31,6 +31,8 @@ template: "template_flute"
 engines:
   template_flute:
     filters:
+      boolean:
+        class: "PerlDance::Filter::Boolean"
       currency:
         options:
           int_curr_symbol: "€"
