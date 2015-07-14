@@ -57,19 +57,28 @@ get '/admin/news/create' => require_role admin => sub {
 post '/admin/news/create' => require_role admin => sub {
     my $tokens = {};
 
-    my $form = form('update_create_news');
-    my %values = %{$form->values};
-    $values{type} = "news_item";
+    my $form   = form('update_create_news');
+    my %values = %{ $form->values };
+    $values{type}            = "news_item";
     $values{author_users_id} = logged_in_user->id;
+    $values{public} ||= 0;
 
-    # TODO: validate
-    rset('Message')->create(\%values);
+    # TODO: validate values and if OK then try create
+    rset('Message')->create(
+        {
+            type            => "news_item",
+            author_users_id => logged_in_user->id,
+            public          => $values{public} || 0,
+            title           => $values{title},
+            content         => $values{content},
+        }
+    );
     return redirect '/admin/news';
 };
 
 get '/admin/news/delete/:id' => require_role admin => sub {
     try {
-        rset('Message')->find(param('id'))->delete;
+        rset('Message')->find( param('id') )->delete;
     };
     redirect '/admin/news';
 };
@@ -113,12 +122,13 @@ post '/admin/news/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form = form('update_create_news');
-    my %values = %{$form->values};
+    my $form   = form('update_create_news');
+    my %values = %{ $form->values };
     $values{author_users_id} = logged_in_user->id;
+    $values{public} ||= 0;
 
-    # TODO: validate
-    rset('Message')->update(\%values);
+    # TODO: validate values and if OK then try update
+    rset('Message')->update( \%values );
     return redirect '/admin/news';
 };
 
