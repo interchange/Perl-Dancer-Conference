@@ -30,6 +30,7 @@ WriteMakefile(
         'Dancer::Template::TemplateFlute'  => '0.0142',
         'Data::Transpose'                  => '0.0015',
         'DateTime::Format::ISO8601'        => 0,
+        'DBIx::Class::DeploymentHandler'   => 0,
         'HTML::FormatText::WithLinks'      => 0,
         'HTML::Scrubber'                   => 0,
         'HTML::TagCloud'                   => '0.38',
