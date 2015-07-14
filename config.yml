@@ -19,6 +19,9 @@ layout: "main"
 # about unicode within your app when this setting is set (recommended).
 charset: "UTF-8"
 
+# include timestamp in log format
+logger_format: "%t [%P] %L @%D> %m in %f l. %l"
+
 # template engine
 # simple: default and very basic template engine
 # template_toolkit: TT
