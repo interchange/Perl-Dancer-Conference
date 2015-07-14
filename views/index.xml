@@ -2,6 +2,10 @@
   <container name="main-carousel-container" value="!news.has_rows"/>
   <container name="news-container" value="news.has_rows">
     <list name="news-item" iterator="news">
+      <container name="has_uri" value="uri">
+        <param name="uri" class="title" target="href" op="append"/>
+      </container>
+      <container name="no_uri" value="!uri"/>
       <param name="title"/>
       <param name="created" filter="date_only"/>
       <param name="content" filter="markdown_unsafe" op="hook"/>

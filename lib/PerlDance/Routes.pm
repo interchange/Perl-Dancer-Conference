@@ -55,6 +55,59 @@ get '/' => sub {
     template 'index', $tokens;
 };
 
+=head2 get /news
+
+All news
+
+=cut
+
+get '/news' => sub {
+    my $tokens = {};
+
+    my $search = {
+        'message_type.name' => 'news_item',
+        'me.public'         => 1,
+    };
+
+    if ( var('uri') ) {
+        $search->{"me.uri"} = var('uri');
+    }
+
+    $tokens->{news} = shop_schema->resultset('Message')->search(
+        $search,
+        {
+            join     => 'message_type',
+            order_by => { -desc => 'created' },
+        }
+    );
+
+    if ( $tokens->{news}->has_rows ) {
+        if ( var('uri') ) {
+            $tokens->{title} = $tokens->{news}->first->title;
+            $tokens->{news}->reset;
+        }
+        else {
+            $tokens->{title} = "News";
+        }
+    }
+    else {
+        $tokens->{title} = "No news is good news";
+    }
+
+    template 'news', $tokens;
+};
+
+=head2 get /news/some-uri
+
+Specific news item
+
+=cut
+
+get '/news/:uri' => sub {
+    var uri => param('uri');
+    forward '/news';
+};
+
 =head2 get /speakers
 
 Speaker list
