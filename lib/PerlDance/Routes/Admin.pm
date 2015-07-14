@@ -38,6 +38,9 @@ get '/admin/news' => require_role admin => sub {
             order_by => "created",
         }
     );
+
+    PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
+
     template 'admin/news', $tokens;
 };
 
