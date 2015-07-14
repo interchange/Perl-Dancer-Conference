@@ -1,4 +1,12 @@
 <specification>
+  <container name="main-carousel-container" value="!news.has_rows"/>
+  <container name="news-container" value="news.has_rows">
+    <list name="news-item" iterator="news">
+      <param name="title"/>
+      <param name="created" filter="date_only"/>
+      <param name="content" filter="markdown" op="hook"/>
+    </list>
+  </container>
   <container name="register-container" value="!logged_in_user"/>
   <value name="speaker-item-wrapper" op="hook" include="fragments/speakers.html"/>
   <value name="countdown-timer" op="hook" include="fragments/countdown.html"/>

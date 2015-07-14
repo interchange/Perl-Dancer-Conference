@@ -36,6 +36,17 @@ get '/' => sub {
 
     $tokens->{title} = "Vienna Austria October 2015";
 
+    $tokens->{news} = shop_schema->resultset('Message')->search(
+        {
+            'message_type.name' => 'news_item',
+            'me.public'         => 1,
+        },
+        {
+            join     => 'message_type',
+            order_by => { -desc => 'created' },
+        }
+    );
+
     add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
         "/js/index.js" );
 
