@@ -124,11 +124,16 @@ post '/admin/news/edit/:id' => require_role admin => sub {
 
     my $form   = form('update_create_news');
     my %values = %{ $form->values };
-    $values{author_users_id} = logged_in_user->id;
-    $values{public} ||= 0;
 
     # TODO: validate values and if OK then try update
-    rset('Message')->update( \%values );
+    $news->update(
+        {
+            author_users_id => logged_in_user->id,
+            public          => $values{public} || 0,
+            title           => $values{title},
+            content         => $values{content},
+        }
+    );
     return redirect '/admin/news';
 };
 
