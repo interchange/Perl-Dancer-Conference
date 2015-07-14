@@ -1,0 +1,7 @@
+<specification>
+  <list name="news-item" iterator="news">
+    <param name="title"/>
+    <param name="public"/>
+    <param name="created"/>
+  </list>
+</specification>

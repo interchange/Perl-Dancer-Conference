@@ -164,7 +164,6 @@ column start_time => {
     is_nullable => 1,
 };
 
-
 =head2 room
 
 The room/location for this talk.
@@ -177,7 +176,7 @@ column room => {
     default_value => "",
 };
 
-=head2 METHODS
+=head1 METHODS
 
 =head2 duration_display
 

@@ -1,0 +1,6 @@
+<specification>
+  <value name="title" field="news.title"/>
+  <value name="public" field="news.public"/>
+  <value name="content" field="news.content"/>
+  <value name="preview" field="news.content" filter="markdown"/>
+</specification>
