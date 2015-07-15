@@ -1,16 +1,7 @@
 <specification>
   <container name="main-carousel-container" value="!news.has_rows"/>
-  <container name="news-container" value="news.has_rows">
-    <list name="news-item" iterator="news">
-      <container name="has_uri" value="uri">
-        <param name="uri" class="title" target="href" op="append"/>
-      </container>
-      <container name="no_uri" value="!uri"/>
-      <param name="title"/>
-      <param name="author" field="author.name"/>
-      <param name="created" filter="date_only"/>
-      <param name="content" filter="markdown_unsafe" op="hook"/>
-    </list>
+  <container name="has_news" value="news.has_rows">
+    <value name="has_news" op="hook" include="news.html"/>
   </container>
   <container name="register-container" value="!logged_in_user"/>
   <value name="speaker-item-wrapper" op="hook" include="fragments/speakers.html"/>
