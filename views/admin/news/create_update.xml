@@ -4,6 +4,6 @@
     <field name="title"/>
     <field name="uri"/>
     <field name="public"/>
-    <field name="content"/>
   </form>
+  <value name="content"/>
 </specification>
