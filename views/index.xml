@@ -7,6 +7,7 @@
       </container>
       <container name="no_uri" value="!uri"/>
       <param name="title"/>
+      <param name="author" field="author.name"/>
       <param name="created" filter="date_only"/>
       <param name="content" filter="markdown_unsafe" op="hook"/>
     </list>
