@@ -44,7 +44,7 @@ get '/' => sub {
         {
             join     => 'message_type',
             prefetch => 'author',
-            order_by => { -desc => 'created' },
+            order_by => { -desc => 'me.created' },
         }
     );
 
@@ -79,7 +79,7 @@ get '/news' => sub {
         {
             join     => 'message_type',
             prefetch => 'author',
-            order_by => { -desc => 'created' },
+            order_by => { -desc => 'me.created' },
         }
     );
 
