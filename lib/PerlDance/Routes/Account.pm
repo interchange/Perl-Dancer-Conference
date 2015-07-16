@@ -21,6 +21,78 @@ use Try::Tiny;
 
 =head1 ROUTES 
 
+=head2 get /profile/password
+
+=cut
+
+get '/profile/password' => require_login sub {
+    template 'change_password', { title => 'Change Password' };
+};
+
+=head2 post /profile/password
+
+=cut
+
+post '/profile/password' => require_login sub {
+    template 'change_password';
+
+    my %params = params('body');
+
+    my $validator = Data::Transpose::Validator->new;
+    $validator->prepare(
+        old_password => {
+            required => 1,
+            validator => sub {
+                if ( logged_in_user->check_password($_[0]) ) {
+                    return $_[0];
+                }
+                else {
+                    return (undef, "Password incorrect");
+                }
+            },
+        },
+        password => {
+            required  => 1,
+            validator => {
+                class   => 'PasswordPolicy',
+                options => {
+                    username      => logged_in_user->username,
+                    minlength     => 8,
+                    maxlength     => 70,
+                    patternlength => 4,
+                    mindiffchars  => 5,
+                    disabled      => {
+                        digits   => 1,
+                        mixed    => 1,
+                        specials => 1,
+                    }
+                }
+            }
+        },
+        confirm_password => { required => 1 },
+        passwords        => {
+            validator => 'Group',
+            fields    => [ "password", "confirm_password" ],
+        },
+    );
+    my $valid = $validator->transpose( \%params );
+
+    if ( $valid ) {
+        logged_in_user->update({ password => $valid->{password} });
+        # FIXME: flash?
+        redirect '/profile';
+    }
+    else {
+        my %errors;
+        my $v_hash = $validator->errors_hash;
+        while ( my ( $key, $value ) = each %$v_hash ) {
+            $errors{$key} = $value->[0]->{value};
+            $errors{ $key . '_input' } = 'has-error';
+        }
+        template 'change_password', { %errors, title => "Change Password " };
+    }
+};
+
 =head2 get /login
 
 post is handled by L<Dancer::Plugin::Interchange6>
