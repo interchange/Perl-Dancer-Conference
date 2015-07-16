@@ -62,8 +62,7 @@ post '/admin/news/create' => require_role admin => sub {
 
     my $form   = form('update_create_news');
     my %values = %{ $form->values };
-    # FIXME ugly hack - content is not part of form
-    ( $values{content} = param('content') ) =~ s/\r\n/\n/g;
+    $values{content} =~ s/\r\n/\n/g;
     $values{type}            = "news_item";
     $values{author_users_id} = logged_in_user->id;
     $values{public} ||= 0;
@@ -109,11 +108,10 @@ get '/admin/news/edit/:id' => require_role admin => sub {
             title       => $news->title,
             public      => $news->public,
             uri         => $news->uri,
+            content     => $news->content,
         }
     );
 
-    # FIXME ugly hack - content is not part of form
-    $tokens->{content} = $news->content;
     $tokens->{form}    = $form;
     $tokens->{title}   = "Edit News";
 
@@ -133,8 +131,6 @@ post '/admin/news/edit/:id' => require_role admin => sub {
 
     my $form   = form('update_create_news');
     my %values = %{ $form->values };
-    # FIXME ugly hack - content is not part of form
-    ( $values{content} = param('content') ) =~ s/\r\n/\n/g;
     $values{content} =~ s/\r\n/\n/g;
 
     # TODO: validate values and if OK then try update
