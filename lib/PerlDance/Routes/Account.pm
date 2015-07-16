@@ -26,7 +26,7 @@ use Try::Tiny;
 =cut
 
 get '/profile/password' => require_login sub {
-    template 'change_password', { title => 'Change Password' };
+    template 'profile/password', { title => 'Change Password' };
 };
 
 =head2 post /profile/password
@@ -34,7 +34,6 @@ get '/profile/password' => require_login sub {
 =cut
 
 post '/profile/password' => require_login sub {
-    template 'change_password';
 
     my %params = params('body');
 
@@ -79,7 +78,7 @@ post '/profile/password' => require_login sub {
 
     if ( $valid ) {
         logged_in_user->update({ password => $valid->{password} });
-        # FIXME: flash?
+        # FIXME: flash success message?
         redirect '/profile';
     }
     else {
@@ -89,7 +88,7 @@ post '/profile/password' => require_login sub {
             $errors{$key} = $value->[0]->{value};
             $errors{ $key . '_input' } = 'has-error';
         }
-        template 'change_password', { %errors, title => "Change Password " };
+        template 'profile/password', { %errors, title => "Change Password " };
     }
 };
 
