@@ -65,11 +65,12 @@ get '/profile' => require_login sub {
         )->hri->all
     ];
 
+    # *** HACK *** - temporarily remove photo update until working correctly
     my $tokens = {
         title       => 'Profile',
         description => 'Update profile',
         profile_nav =>
-          [ $nav->active_children->order_by('!priority')->hri->all ],
+          [ $nav->active_children->search({'me.uri' => { '!=' => 'profile/photo' }})->order_by('!priority')->hri->all ],
         talks => $talks,
     };
 
