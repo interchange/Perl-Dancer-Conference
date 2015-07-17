@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 2;
+our $VERSION = 3;
 
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;
@@ -30,6 +30,8 @@ __PACKAGE__->add_columns(
     bio => { data_type => "varchar", size => 2048, default_value => '' },
     media_id =>
       { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
+    monger_groups =>
+      { data_type => "varchar", size => 256, default_value => '' },
     pause_id => { data_type => "varchar", size => 128, default_value => '' },
 );
 
