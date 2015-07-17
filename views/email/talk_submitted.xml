@@ -5,4 +5,7 @@
   <value name="title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" filter="markdown" op="hook"/>
   <value name="duration" field="talk.duration"/>
+  <value name="url" field="talk.url"/>
+  <value name="comments" field="talk.comments"/>
+  <value name="confirmed" field="talk.confirmed"/>
 </specification>

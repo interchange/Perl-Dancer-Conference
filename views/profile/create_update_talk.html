@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="title"></h4>
+    </div>
+    <div class="panel-body">
+      <form class="form-horizontal" method="post" name="create_update_talk">
+
+        <div class="form-group talk_title_input">
+          <label for="inputTitle" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control talk_title" id="inputTitle" name="talk_title" required placeholder="Talk title">
+            <div class="help-block talk_title_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group abstract_input">
+          <label for="inputAbstract" class="col-sm-2 control-label">Abstract</label>
+          <div class="col-sm-10">
+            <textarea rows="4" class="form-control" id="inputAbstract" name="abstract" required placeholder="Talk abstract (max 200 words)"></textarea>
+            <div class="help-block abstract_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group tags_input">
+          <label for="inputTags" class="col-sm-2 control-label">Tags</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputTags" name="tags" placeholder="Tags, e.g.: Dancer DBIx::Class git">
+            <div class="help-block tags_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group duration_input">
+          <label for="inputDuration" class="col-sm-2 control-label">Duration</label>
+          <div class="col-sm-10">
+            <select class="form-control" id="inputDuration" name="duration" required>
+              <option>10 mins</option>
+              <option>20 mins</option>
+            </select>
+            <div class="help-block duration_error"></div>
+          </div>
+
+        </div>
+
+        <div class="form-group url_input">
+          <label for="inputUrl" class="col-sm-2 control-label">URL</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputUrl" name="url" placeholder="URL of talk">
+            <div class="help-block url_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group comments_input">
+          <label for="inputComments" class="col-sm-2 control-label">Comments</label>
+          <div class="col-sm-10">
+            <textarea rows="4" class="form-control" id="inputComments" name="comments" placeholder="Comments to be communicated to the organisers"></textarea>
+            <div class="help-block comments_error"></div>
+            <div class="help-block">Comments will not be made public.</div>
+          </div>
+        </div>
+
+        <div class="accepted">
+
+          <div class="form-group">
+            <label for="inputAccepted" class="col-sm-2 control-label">Status</label>
+            <div class="col-sm-10">
+              <p class="form-control-static">Accepted</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label">Confirmed</label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="confirmed">
+                </label>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/profile" class="btn btn-default cancel">Cancel</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

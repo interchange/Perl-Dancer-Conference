@@ -6,6 +6,7 @@
   </list>
   <list name="talk" iterator="talks">
     <param name="title" class="talk-link"/>
-    <param name="talk-link" field="seo_uri" target="href" op="append"/>
+    <param name="talk-link" field="talks_id" target="href" op="append"/>
+    <param name="accepted" op="toggle" args="tree"/>
   </list>
 </specification>

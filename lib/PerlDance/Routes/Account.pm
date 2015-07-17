@@ -35,6 +35,12 @@ get '/login' => sub {
         title       => $nav->name,
         description => $nav->description,
     };
+
+    # DPIC6 uses session return_url in post /login
+    if ( param('return_url') ) {
+        session return_url =>  param('return_url');
+    }
+
     if ( var 'login_failed' ) {
 
         # var added by DPAE's post /login route
@@ -53,8 +59,11 @@ Profile update top-level page showing available options.
 get '/profile' => require_login sub {
     my $nav = shop_navigation( { uri => 'profile' } );
 
-    my $talks = logged_in_user->talks_authored->search(
-        { conferences_id => setting('conferences_id') } );
+    my $talks = [
+        logged_in_user->talks_authored->search(
+            { conferences_id => setting('conferences_id') }
+        )->hri->all
+    ];
 
     my $tokens = {
         title       => 'Profile',
@@ -391,6 +400,267 @@ post '/profile/photo/crop' => require_login sub {
     redirect '/profile/photo';
 };
 
+=head2 get /profile/talk/create
+
+create new talk
+
+=cut
+
+get '/profile/talk/create' => require_login sub {
+    my $tokens = {
+        title => "New Talk",
+    };
+
+    $tokens->{form} = form('create_update_talk');
+    $tokens->{form}->reset;
+    $tokens->{form}->fill( duration => 40 );
+
+    add_durations_token($tokens);
+
+    template 'profile/create_update_talk', $tokens;
+};
+
+=head2 post /profile/talk/create
+
+=cut
+
+post '/profile/talk/create' => require_login sub {
+    my $tokens = {};
+
+    my $form   = form('create_update_talk');
+
+    my ( $validator, $valid ) = validate_talk($form);
+
+    if ($valid) {
+
+        debug "valid values: ", $valid;
+
+        my $tags = defined $valid->{tags} ? $valid->{tags} : '';
+        $tags =~ s/,/ /g;
+        $tags =~ s/\s+/ /g;
+
+        ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
+
+        try {
+            my $talk = shop_schema->resultset('Talk')->create(
+                {
+                    author_id      => logged_in_user->id,
+                    conferences_id => setting('conferences_id'),
+                    title          => $valid->{talk_title},
+                    abstract       => $abstract,
+                    tags           => $tags,
+                    duration       => $valid->{duration},
+                    url            => $valid->{url} || '',
+                    comments       => $valid->{comments} || '',
+                }
+            );
+
+            debug "new talk submitted";
+
+            my $html = template '/email/talk_submitted',
+              {
+                %$valid,
+                logged_in_user    => logged_in_user,
+                talk              => $talk,
+                "conference-logo" => uri_for(
+                    shop_schema->resultset('Media')
+                      ->search( { label => "email-logo" } )->first->uri
+                ),
+              },
+              { layout => 'email' };
+
+            my $f    = HTML::FormatText::WithLinks->new;
+            my $text = $f->parse($html);
+
+            email {
+                subject => setting("conference_name") . " talk submitted",
+                body    => $text,
+                type    => 'text',
+                attach  => {
+                    Data     => $html,
+                    Encoding => "quoted-printable",
+                    Type     => "text/html"
+                },
+                multipart => 'alternative',
+            };
+
+            debug "sent email/talk_submitted";
+
+            $form->reset;
+
+            return redirect '/profile';
+        }
+        catch {
+            # FIXME: handle errors
+            error "Talk submission error: $_";
+        };
+    }
+    else {
+        my %errors;
+        my $v_hash = $validator->errors_hash;
+        while ( my ( $key, $value ) = each %$v_hash ) {
+            $errors{$key} = $value->[0]->{value};
+            $errors{ $key . '_input' } = 'has-error';
+        }
+        $tokens->{errors} = \%errors;
+    }
+
+    $tokens->{form} = $form;
+
+    add_durations_token($tokens);
+
+    template 'profile/create_update_talk', $tokens;
+};
+
+=head2 get /profile/talk/:id
+
+=cut
+
+get '/profile/talk/:id' => require_login sub {
+    my $tokens = {};
+
+    my $form = form('create_update_talk');
+    $form->reset;
+
+    my $talk = shop_schema->resultset('Talk')->find(param('id'));
+
+    # check we have a talk for this conference owned by this user
+    if (   $talk
+        && $talk->conferences_id == setting('conferences_id')
+        && $talk->author->id == logged_in_user->id )
+    {
+        # all good
+
+        $form->fill(
+            talk_title => $talk->title,
+            abstract   => $talk->abstract,
+            tags       => $talk->tags,
+            duration   => $talk->duration,
+            url        => $talk->url,
+            comments   => $talk->comments,
+            confirmed  => $talk->confirmed,
+        );
+        $tokens->{form}     = $form;
+        $tokens->{accepted} = $talk->accepted;
+        $tokens->{title}    = "Edit Talk",
+
+        add_durations_token($tokens);
+
+        template 'profile/create_update_talk', $tokens;
+    }
+    else {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        template '404', $tokens;
+    }
+};
+
+=head2 post /profile/talk/:id
+
+=cut
+
+post '/profile/talk/:id' => require_login sub {
+    my $tokens = {};
+
+    my $talk = shop_schema->resultset('Talk')->find( param('id') );
+
+    # check we have a talk for this conference owned by this user
+    if (   $talk
+        && $talk->conferences_id == setting('conferences_id')
+        && $talk->author->id == logged_in_user->id )
+    {
+        # all good so validate
+
+        my $form = form('create_update_talk');
+
+        my ( $validator, $valid ) = validate_talk($form);
+
+        if ($valid) {
+
+            debug "valid values: ", $valid;
+
+            my $tags = defined $valid->{tags} ? $valid->{tags} : '';
+            $tags =~ s/,/ /g;
+            $tags =~ s/\s+/ /g;
+
+            ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
+
+            try {
+                $talk->update(
+                    {
+                        title     => $valid->{talk_title},
+                        abstract  => $abstract,
+                        tags      => $tags,
+                        duration  => $valid->{duration},
+                        url       => $valid->{url} || '',
+                        comments  => $valid->{comments} || '',
+                        confirmed => $valid->{confirmed} ? 1 : 0,
+                    }
+                );
+
+                debug "talk updated with id: ", $talk->id;
+
+                my $html = template '/email/talk_submitted',
+                  {
+                    %$valid,
+                    logged_in_user    => logged_in_user,
+                    talk              => $talk,
+                    "conference-logo" => uri_for(
+                        shop_schema->resultset('Media')
+                          ->search( { label => "email-logo" } )->first->uri
+                    ),
+                  },
+                  { layout => 'email' };
+
+                my $f    = HTML::FormatText::WithLinks->new;
+                my $text = $f->parse($html);
+
+                email {
+                    subject => setting("conference_name") . " talk updated",
+                    body    => $text,
+                    type    => 'text',
+                    attach  => {
+                        Data     => $html,
+                        Encoding => "quoted-printable",
+                        Type     => "text/html"
+                    },
+                    multipart => 'alternative',
+                };
+
+                $form->reset;
+
+                return redirect '/profile';
+            }
+            catch {
+                # FIXME: handle errors
+                error "Talk submission error: $_";
+            };
+        }
+        else {
+            my %errors;
+            my $v_hash = $validator->errors_hash;
+            while ( my ( $key, $value ) = each %$v_hash ) {
+                $errors{$key} = $value->[0]->{value};
+                $errors{ $key . '_input' } = 'has-error';
+            }
+            $tokens->{errors} = \%errors;
+        }
+
+        $tokens->{form}     = $form;
+        $tokens->{accepted} = $talk->accepted;
+        $tokens->{title}    = "Edit Talk",
+
+        add_durations_token($tokens);
+
+        template 'profile/create_update_talk', $tokens;
+    }
+    else {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        template '404', $tokens;
+    }
+};
+
 =head2 get /register
 
 =cut
@@ -664,5 +934,80 @@ any [ 'get', 'post' ] => qr{
         }
     }
 };
+
+=head1 METHODS
+
+=head2 add_durations_token( $tokens )
+
+=cut
+
+sub add_durations_token {
+    my $tokens = shift;
+    $tokens->{durations} = [
+        {
+            value => 20,
+            label => "20 minutes",
+        },
+        {
+            value => 40,
+            label => "40 minutes",
+        },
+    ];
+}
+
+=head2 validate_talk( $form )
+
+Returns ( $validator, $valid )
+
+=cut
+
+sub validate_talk {
+    my $form = shift;
+
+    my $values = $form->values;
+
+    my $validator = Data::Transpose::Validator->new(
+        stripwhite => 1,
+    );
+
+    $validator->prepare(
+        talk_title => {
+            validator => "String",
+            required => 1,
+        },
+        abstract   => {
+            validator => "String",
+            required => 1,
+        },
+        tags => {
+            validator => "String",
+            required => 0,
+        },
+        duration   => {
+            validator => {
+                class   => "NumericRange",
+                options => {
+                    integer => 1,
+                    min     => 20,
+                    max     => 40,
+                }
+            },
+            required => 1,
+        },
+        url => {
+            validator => "String",
+            required => 0,
+        },
+        comments => {
+            validator => "String",
+            required => 0,
+        },
+        confirmed => {
+            required => 0,
+        },
+    );
+
+    return ( $validator, $validator->transpose($values) );
+}
 
 true;
