@@ -45,6 +45,8 @@ WriteMakefile(
         'Template::Flute'                  => '0.0184',
         'Text::Markdown'                   => 0,
         'URI::Escape'                      => 0,
+        # PayPal payments
+        'Business::PayPal::API' => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'PerlDance-*' },
