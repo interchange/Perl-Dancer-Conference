@@ -7,6 +7,11 @@ require_environment: 1
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2015"
 
+geoip_database:
+  city: /usr/share/GeoIP/GeoLiteCity.dat
+  country4: /usr/share/GeoIP/GeoIP.dat
+  country6: /usr/share/GeoIP/GeoIPv6.dat
+
 # Your application's name
 appname: "PerlDance"
 
