@@ -5,7 +5,7 @@ $(document).ready(function() {
     .addClass("dropdown-toggle").attr("data-toggle", "dropdown")
     .attr("href", "#").attr("role", "button").attr("aria-haspopup", "true")
     .attr("aria-expanded", "false").append(' <span class="caret"></span>')
-    .dropdownHover({ hoverDelay: 250 });
+    .dropdownHover();
 
   /* shrink nav bar on scroll */
   $(window).scroll(function() {
