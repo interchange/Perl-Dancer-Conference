@@ -31,6 +31,7 @@ WriteMakefile(
         'Data::Transpose'                  => '0.0015',
         'DateTime::Format::ISO8601'        => 0,
         'DBIx::Class::DeploymentHandler'   => 0,
+        'Geo::IP'                          => 0,
         'HTML::FormatText::WithLinks'      => 0,
         'HTML::Scrubber'                   => 0,
         'HTML::TagCloud'                   => '0.38',

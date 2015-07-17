@@ -1,27 +1,28 @@
 <specification>
-  <container name="login-required" value="!logged_in_user">
-    <value name="login-fragment" op="hook" include="fragments/login.html"/>
-  </container>
-  <container name="logged-in" value="logged_in_user"/>
 
-  <value name="talk_title" target="value"/>
-  <value name="talk_title_input" field="errors.talk_title_input" target="class"
-    op="append" joiner=" "/>
-  <value name="talk_title_error" field="errors.talk_title"/>
+  <form name="edit_profile" link="name">
+    <field name="first_name"/>
+    <field name="last_name"/>
+    <field name="nickname"/>
+    <field name="company"/>
+    <field name="city"/>
+    <field name="country" iterator="countries"
+      iterator_value_key="country_iso_code" iterator_name_key="name"/>
+    <field name="monger_groups"/>
+    <field name="pause_id"/>
+    <field name="bio"/>
+  </form>
 
-  <value name="abstract"/>
-  <value name="abstract_input" field="errors.abstract_input" target="class"
+  <value name="first_name_input" field="errors.first_name_input" target="class"
     op="append" joiner=" "/>
-  <value name="abstract_error" field="errors.abstract"/>
+  <value name="first_name_error" field="errors.first_name"/>
 
-  <value name="tags" target="value"/>
-  <value name="tags_input" field="errors.tags_input" target="class"
+  <value name="last_name_input" field="errors.last_name_input" target="class"
     op="append" joiner=" "/>
-  <value name="tags_error" field="errors.tags"/>
+  <value name="last_name_error" field="errors.last_name"/>
 
-  <value name="duration" iterator="durations"/>
-  <value name="duration_input" field="errors.duration_input" target="class"
+  <value name="nickname_input" field="errors.nickname_input" target="class"
     op="append" joiner=" "/>
-  <value name="duration_error" field="errors.duration"/>
+  <value name="nickname_error" field="errors.nickname"/>
 
 </specification>

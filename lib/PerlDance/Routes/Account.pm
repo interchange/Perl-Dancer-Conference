@@ -10,16 +10,214 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
 use File::Copy;
 use File::Spec;
 use File::Type;
+use Geo::IP;
 use HTML::FormatText::WithLinks;
 use Imager;
 use Try::Tiny;
 
 =head1 ROUTES 
+
+=head2 get /login
+
+post is handled by L<Dancer::Plugin::Interchange6>
+
+=cut
+
+get '/login' => sub {
+    my $nav = shop_navigation->find( { uri => 'login' } );
+    my $tokens = {
+        title       => $nav->name,
+        description => $nav->description,
+    };
+    if ( var 'login_failed' ) {
+
+        # var added by DPAE's post /login route
+        $tokens->{login_input} = "has-error";
+        $tokens->{login_error} = "Username or password incorrect";
+    }
+    template 'login', $tokens;
+};
+
+=head2 get /profile
+
+Profile update top-level page showing available options.
+
+=cut
+
+get '/profile' => require_login sub {
+    my $nav = shop_navigation( { uri => 'profile' } );
+
+    my $talks = logged_in_user->talks_authored->search(
+        { conferences_id => setting('conferences_id') } );
+
+    my $tokens = {
+        title       => 'Profile',
+        description => 'Update profile',
+        profile_nav =>
+          [ $nav->active_children->order_by('!priority')->hri->all ],
+        talks => $talks,
+    };
+
+    template 'profile', $tokens;
+};
+
+=head2 get /profile/edit
+
+=cut
+
+get '/profile/edit' => require_login sub {
+    my $tokens = { title => "Update Profile" };
+
+    # countries dropdown
+    $tokens->{countries} = [
+        shop_country->search( undef,
+            { columns => [ 'country_iso_code', 'name' ], order_by => 'name' } )
+          ->hri->all
+    ];
+
+    my $user = logged_in_user;
+    my %values = (
+        first_name    => $user->first_name,
+        last_name     => $user->last_name,
+        nickname      => $user->nickname,
+        monger_groups => $user->monger_groups,
+        pause_id      => $user->pause_id,
+        bio           => $user->bio,
+    );
+
+    my $address = $user->search_related(
+        'addresses',
+        {
+            'me.type' => 'primary',
+        },
+        {
+            prefetch => 'country',
+            rows     => 1,
+        }
+    )->first;
+
+    if ($address) {
+        $values{company} = $address->company;
+        $values{city}    = $address->city;
+        $values{country} = $address->country_iso_code;
+        $values{company} = $address->company;
+    }
+    else {
+
+        # try to get city + country via GeoIP
+
+        if ( my $geoipdb = setting('geoip_database' ) ) {
+            my $ipaddress = request->address;
+
+            debug "geoip lookup for address ", $ipaddress;
+
+            if ( $ipaddress =~ /^\d+\.\d+\.\d+\.\d+$/ ) {
+
+                # ipv4
+
+                if ( my $g = Geo::IP->open( $geoipdb->{city} ) ) {
+                    my $record = $g->record_by_addr($ipaddress);
+                    if ( $record ) {
+                        $values{city}    = $record->city;
+                        $values{country} = $record->country_code;
+                    }
+                }
+                elsif ( $g = Geo::IP->open( $geoipdb->{country4} ) ) {
+                    $values{country} = $g->country_code_by_addr($ipaddress);
+                }
+            }
+            else {
+
+                # ipv6
+
+                if ( my $g = Geo::IP->open( $geoipdb->{country6} ) ) {
+                    $values{country} = $g->country_code_by_addr_v6($ipaddress);
+                }
+            }
+        }
+
+        if ( !$values{country} ) {
+            # no country found to add 'Select Country' option to countries
+            unshift @{ $tokens->{countries} },
+              { country_iso_code => undef, name => "Select Country" };
+        }
+    }
+
+    debug \%values;
+
+    # fill the form
+    my $form = form('edit_profile');
+    $form->reset;
+    $form->fill( \%values );
+    $tokens->{form} = $form;
+
+    template 'profile/edit', $tokens;
+};
+
+=head2 post /profile/edit
+
+=cut
+
+post '/profile/edit' => require_login sub {
+    my $tokens = {};
+
+    my $form   = form('edit_profile');
+    my %values = %{ $form->values };
+    $values{bio} =~ s/\r\n/\n/g;
+
+    my $user = logged_in_user;
+    foreach
+      my $field (qw/first_name last_name nickname monger_groups pause_id bio/)
+    {
+        $values{$field} ||= '';
+        $user->$field($values{$field});
+    }
+    $user->update;
+
+    my $address = $user->search_related(
+        'addresses',
+        {
+            'me.type' => 'primary',
+        },
+        {
+            prefetch => 'country',
+            rows     => 1,
+        }
+    )->first;
+
+    if ( $address ) {
+        $address->update(
+            {
+                company => $values{company} || '',
+                city    => $values{city}    || '',
+                country_iso_code => $values{country},
+            }
+        );
+    }
+    else {
+        if ( $values{country} ) {
+            $user->create_related(
+                'addresses',
+                {
+                    type             => 'primary',
+                    company          => $values{company} || '',
+                    city             => $values{city} || '',
+                    country_iso_code => $values{country},
+                }
+            );
+        }
+    }
+
+    # FIXME: flash 'done'?
+    $form->reset;
+    redirect '/profile';
+};
 
 =head2 get /profile/password
 
@@ -90,50 +288,6 @@ post '/profile/password' => require_login sub {
         }
         template 'profile/password', { %errors, title => "Change Password " };
     }
-};
-
-=head2 get /login
-
-post is handled by L<Dancer::Plugin::Interchange6>
-
-=cut
-
-get '/login' => sub {
-    my $nav = shop_navigation->find( { uri => 'login' } );
-    my $tokens = {
-        title       => $nav->name,
-        description => $nav->description,
-    };
-    if ( var 'login_failed' ) {
-
-        # var added by DPAE's post /login route
-        $tokens->{login_input} = "has-error";
-        $tokens->{login_error} = "Username or password incorrect";
-    }
-    template 'login', $tokens;
-};
-
-=head2 get /profile
-
-Profile update top-level page showing available options.
-
-=cut
-
-get '/profile' => require_login sub {
-    my $nav = shop_navigation( { uri => 'profile' } );
-
-    my $talks = logged_in_user->talks_authored->search(
-        { conferences_id => setting('conferences_id') } );
-
-    my $tokens = {
-        title       => 'Profile',
-        description => 'Update profile',
-        profile_nav =>
-          [ $nav->active_children->order_by('!priority')->hri->all ],
-        talks => $talks,
-    };
-
-    template 'profile', $tokens;
 };
 
 =head2 get /profile/photo
