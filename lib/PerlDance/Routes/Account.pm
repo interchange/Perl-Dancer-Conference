@@ -701,9 +701,10 @@ Register of request password reset.
 =cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
-    my $username = param('username') || param('register');
+    my $email = param('username') || param('register');
     my $captures = captures;
     my $action   = $$captures{action};
+    my $username = lc($email);
 
     # TODO: validate
 
@@ -719,7 +720,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         # new registration
         try {
             $user = shop_user->create(
-                { username => $username, email => $username } );
+                { username => $username, email => $email } );
         }
         catch {
             error "create user failed in $action: $_";
@@ -775,7 +776,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
       {
         title       => "Thankyou",
         description => "Email on its way",
-        username    => $username
+        username    => $email
       };
 };
 
