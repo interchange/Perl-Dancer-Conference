@@ -64,6 +64,26 @@ get '/' => sub {
         )->hri->all
     ];
 
+    # check whether user ordered a ticket
+    my $order_rs = $user->orders;
+    my $order_number;
+
+    while (my $order = $order_rs->next) {
+        my $orderline_rs = $order->orderlines;
+
+        while (my $orderline = $orderline_rs->next) {
+            my ($ct, $conf);
+
+            if ($ct = $orderline->product->conference_ticket) {
+                if (($conf = $ct->conference)
+                        && $conf->name eq config->{'conference_name'}) {
+                    $order_number = $order->order_number;
+                    last;
+                }
+            }
+        }
+    }
+
     # *** HACK *** - temporarily remove photo update until working correctly
     my $tokens = {
         title       => 'Profile',
@@ -72,6 +92,20 @@ get '/' => sub {
           [ $nav->active_children->search({'me.uri' => { '!=' => 'profile/photo' }})->order_by('!priority')->hri->all ],
         talks => $talks,
     };
+
+    # Ticket link
+    if ($order_number) {
+        push @{$tokens->{profile_nav}}, {
+            name => 'View your conference ticket',
+            uri => "profile/orders/$order_number",
+        }
+    }
+    else {
+        push @{$tokens->{profile_nav}}, {
+            name => 'Buy your conference ticket',
+            uri => 'tickets',
+        }
+    }
 
     template 'profile', $tokens;
 };
