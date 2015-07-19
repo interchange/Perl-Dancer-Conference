@@ -667,14 +667,26 @@ post '/profile/talk/:id' => require_login sub {
 =cut
 
 get '/register' => sub {
+    my $form = form('register-email');
+    my $errors = $form->errors;
+
     my $tokens = {
         title       => "Register",
         description => "Please complete the registration process",
         action      => "/register",
         action_name => "Registration",
+        form => $form,
         text =>
 "Please enter your email address and hit submit to begin the registration process.",
     };
+
+    for my $err (@$errors) {
+        $tokens->{$err->{name}} = $err->{label};
+    }
+
+    # prevent stale errors
+    $form->reset;
+
     return template "register_reset", $tokens;
 };
 
@@ -716,6 +728,37 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         # password reset
     }
     else {
+        my %params = params('body');
+        my %errors;
+        my $form = form('register-email');
+
+        my $validator = Data::Transpose::Validator->new;
+        $validator->prepare(
+            username => {
+                required  => 1,
+                validator => 'EmailValid'
+            },
+        );
+
+        my $valid = $validator->transpose( \%params );
+
+        if ( !$valid ) {
+            my $v_hash = $validator->errors_hash;
+
+            while ( my ( $key, $value ) = each %$v_hash ) {
+                my $error = $value->[0]->{value};
+                $error = "invalid email address" if $error eq "mxcheck";
+                $errors{$key} = $error;
+
+                # flag the field with error using has-error class
+                $errors{ $key . '_input' } = 'has-error';
+            }
+
+            my $saved = $form->errors(\%errors);
+            $form->to_session;
+
+            return redirect uri_for($action);
+        }
 
         # new registration
         try {
