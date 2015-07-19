@@ -2,6 +2,14 @@ package PerlDance::Schema;
 
 our $VERSION = 5;
 
+use Interchange6::Schema::Result::Product;
+package Interchange6::Schema::Result::Product;
+
+__PACKAGE__->might_have(
+    conference_ticket => "PerlDance::Schema::Result::ConferenceTicket",
+    "sku",
+);
+
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;
 use URI::Escape;
