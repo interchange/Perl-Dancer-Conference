@@ -81,4 +81,26 @@ Related object: L<PerlDance::Schema::Result::Talk>
 
 has_many talks => 'PerlDance::Schema::Result::Talk', "conferences_id";
 
+=head2 tickets
+
+Type: many_to_many
+
+Composing rels: L</conference_tickets> -> ticket
+
+=cut
+
+many_to_many tickets => "conference_tickets", "ticket";
+
+=head2 conference_tickets
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::ConferenceTicket>
+
+=cut
+
+has_many
+  conference_tickets => 'PerlDance::Schema::Result::ConferenceTicket',
+  "conferences_id";
+
 1;
