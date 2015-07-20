@@ -14,11 +14,13 @@ use Try::Tiny;
 
 use PerlDance::Routes::Account;
 use PerlDance::Routes::Admin;
+use PerlDance::Routes::Profile;
 use PerlDance::Routes::Talk;
 
 =head1 ROUTES
 
-See also: L<PerlDance::Routes::Account>, L<PerlDance::Routes::Talk>
+See also: L<PerlDance::Routes::Account>, L<PerlDance::Routes::Admin>, 
+L<PerlDance::Routes::Profile>, L<PerlDance::Routes::Talk>
 
 =head2 get /
 
