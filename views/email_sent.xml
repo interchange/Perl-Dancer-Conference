@@ -1,3 +1,4 @@
 <specification>
+  <value name="title"/>
   <value name="username"/>
 </specification>
