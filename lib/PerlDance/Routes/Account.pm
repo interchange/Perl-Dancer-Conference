@@ -839,6 +839,22 @@ any [ 'get', 'post' ] => qr{
     my $name        = $action eq 'register' ? 'register' : 'reset password';
     my $user;
 
+    try {
+        $user = shop_user->find_user_with_reset_token($reset_token);
+    };
+
+    if ( !$user ) {
+        $tokens = {
+            title       => "Sorry",
+            description => "This $name link is not valid",
+            action      => "/$action",
+            action_name => $name,
+            text =>
+"I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
+        };
+        return template "register_reset", $tokens;
+    }
+
     if ( request->is_post ) {
 
         my %params = params('body');
@@ -846,16 +862,12 @@ any [ 'get', 'post' ] => qr{
 
         my $validator = Data::Transpose::Validator->new;
         $validator->prepare(
-            username => {
-                required  => 1,
-                validator => 'EmailValid'
-            },
             password => {
                 required  => 1,
                 validator => {
                     class   => 'PasswordPolicy',
                     options => {
-                        username      => $params{username},
+                        username      => $user->username,
                         minlength     => 8,
                         maxlength     => 70,
                         patternlength => 4,
@@ -877,107 +889,51 @@ any [ 'get', 'post' ] => qr{
 
         my $valid = $validator->transpose( \%params );
 
-        if ( !$valid ) {
-            my $v_hash = $validator->errors_hash;
+        if ($valid) {
 
-            while ( my ( $key, $value ) = each %$v_hash ) {
+            # all good so set password, add to attendees, login and
+            # redirect to /profile
 
-                my $error = $value->[0]->{value};
-                $error = "invalid email address" if $error eq "mxcheck";
-                $errors{$key} = $error;
+            $user->update( { password => $params{password} } );
 
-                # flag the field with error using has-error class
-                $errors{ $key . '_input' } = 'has-error';
-            }
+            $user->find_or_create_related( 'conferences_attended',
+                { conferences_id => setting('conferences_id') } );
+
+            my ( undef, $realm ) =
+              authenticate_user( $user->username, $params{password} );
+            session logged_in_user       => $user->username;
+            session logged_in_user_id    => $user->id;
+            session logged_in_user_realm => $realm;
+
+            return redirect '/profile';
         }
 
-        $user = shop_user( { username => $params{username} } );
+        # some problem so drop through to showing template with errors added
 
-        if ($user) {
+        my $v_hash = $validator->errors_hash;
 
-            if ( !$user->reset_token_verify($reset_token) ) {
-                $tokens = {
-                    title       => "Sorry",
-                    description => "This $name link is no longer valid",
-                    action      => "/$action",
-                    action_name => $name,
-                    text =>
-"I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired - please retry $name.",
-                };
-                return template "register_reset", $tokens;
-            }
-            if ( !%errors ) {
+        while ( my ( $key, $value ) = each %$v_hash ) {
 
-                # all good so set password, add to attendees, login and
-                # redirect to /profile
-                $user->update( { password => $params{password} } );
+            my $error = $value->[0]->{value};
+            $error = "invalid email address" if $error eq "mxcheck";
+            $errors{$key} = $error;
 
-                $user->find_or_create_related( 'conferences_attended',
-                    { conferences_id => setting('conferences_id') } );
-
-                my ( undef, $realm ) =
-                  authenticate_user( $params{username}, $params{password} );
-                session logged_in_user       => $user->username;
-                session logged_in_user_id    => $user->id;
-                session logged_in_user_realm => $realm;
-
-                return redirect '/profile';
-            }
+            # flag the field with error using has-error class
+            $errors{ $key . '_input' } = 'has-error';
         }
-        else {
-            $errors{username}       = "invalid email address";
-            $errors{username_input} = "has-error";
-        }
+        $tokens->{errors} =  \%errors,
 
-        # go back and try again
-
-        $tokens = {
-            username    => $params{username},
-            title       => $name,
-            description => "Please complete the $name process",
-            action_name => "Complete \u$name",
-            text =>
-              "There appears to have been a problem.\n\nPlease try again.",
-            errors => \%errors,
-        };
-        return template "password_reset", $tokens;
+        $tokens->{text} =
+          "There appears to have been a problem.\n\nPlease try again.",
     }
-    else {
 
-        # get /register/:token
+    $name = 'registration' if $name eq 'register';
 
-        try {
-            $user = shop_user->find_user_with_reset_token($reset_token);
-        };
+    $tokens->{title}       = "\u$name";
+    $tokens->{description} = "Please complete the $name process";
+    $tokens->{action_name} = "Complete \u$name";
 
-        if ($user) {
-
-            # look good so ask for password
-
-            $name = 'registration' if $name eq 'register';
-
-            $tokens = {
-                title       => "\u$name",
-                description => "Please complete the $name process",
-                action_name => "Complete \u$name",
-            };
-            return template "password_reset", $tokens;
-        }
-        else {
-
-            # token not found
-
-            $tokens = {
-                title       => "Sorry",
-                description => "This $name link is not valid",
-                action      => "/$action",
-                action_name => $name,
-                text =>
-"I am sorry but the $name link you entered is invalid.\n\nMaybe the link has expired or it was copied incorrectly from the email.",
-            };
-            return template "register_reset", $tokens;
-        }
-    }
+    return template "password_reset", $tokens;
 };
 
 =head1 METHODS
