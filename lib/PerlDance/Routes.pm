@@ -208,24 +208,12 @@ Conference tickets
 
 get '/tickets' => sub {
     my $tokens = {};
-    my @for_sale;
 
     add_navigation_tokens($tokens);
 
-    # get conference
-    my $conf = shop_schema->resultset('Conference')->find(
-        {name => config->{conference_name}}
-    );
-
-    # collect active tickets
-    my $ticket_rs = $conf->tickets;
-
-    while (my $ticket = $ticket_rs->next) {
-        next if ! $ticket->active;
-        push @for_sale, $ticket;
-    }
-
-    $tokens->{tickets} = \@for_sale;
+    $tokens->{tickets} =
+      [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
+          ->tickets->active->hri->all ];
 
     template 'tickets', $tokens;
 };
