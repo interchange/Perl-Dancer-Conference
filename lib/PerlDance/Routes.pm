@@ -310,4 +310,30 @@ sub add_speakers_tokens {
     $tokens->{speakers} = \@grid;
 }
 
+=head2 add_validator_error_tokens( $validator, $tokens )
+
+Given a transposed L<Data::Transpose::Validator> object and template
+C<$tokens> hash references as args adds C<errors> token to C<$tokens>.
+
+=cut
+
+sub add_validator_errors_token {
+    my ( $validator, $tokens ) = @_;
+
+    my %errors;
+    my $v_hash = $validator->errors_hash;
+    while ( my ( $key, $value ) = each %$v_hash ) {
+        my $error = $value->[0]->{value};
+
+        # in case we're doing EmailValid the mxcheck error is not clear
+        $error = "invalid email address" if $error eq "mxcheck";
+
+        $errors{$key} = $error;
+
+        # flag the field with error using has-error class
+        $errors{ $key . '_input' } = 'has-error';
+    }
+    $tokens->{errors} = \%errors;
+}
+
 true;

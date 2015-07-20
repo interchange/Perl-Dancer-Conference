@@ -290,13 +290,9 @@ post '/profile/password' => require_login sub {
         redirect '/profile';
     }
     else {
-        my %errors;
-        my $v_hash = $validator->errors_hash;
-        while ( my ( $key, $value ) = each %$v_hash ) {
-            $errors{$key} = $value->[0]->{value};
-            $errors{ $key . '_input' } = 'has-error';
-        }
-        template 'profile/password', { %errors, title => "Change Password " };
+        my $tokens = { title => "Change Password " };
+        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
+        template 'profile/password', $tokens;
     }
 };
 
@@ -496,15 +492,8 @@ post '/profile/talk/create' => require_login sub {
             error "Talk submission error: $_";
         };
     }
-    else {
-        my %errors;
-        my $v_hash = $validator->errors_hash;
-        while ( my ( $key, $value ) = each %$v_hash ) {
-            $errors{$key} = $value->[0]->{value};
-            $errors{ $key . '_input' } = 'has-error';
-        }
-        $tokens->{errors} = \%errors;
-    }
+
+    PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
 
     $tokens->{form} = $form;
 
@@ -637,15 +626,8 @@ post '/profile/talk/:id' => require_login sub {
                 error "Talk submission error: $_";
             };
         }
-        else {
-            my %errors;
-            my $v_hash = $validator->errors_hash;
-            while ( my ( $key, $value ) = each %$v_hash ) {
-                $errors{$key} = $value->[0]->{value};
-                $errors{ $key . '_input' } = 'has-error';
-            }
-            $tokens->{errors} = \%errors;
-        }
+
+        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
 
         $tokens->{form}     = $form;
         $tokens->{accepted} = $talk->accepted;
@@ -743,18 +725,11 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         my $valid = $validator->transpose( \%params );
 
         if ( !$valid ) {
-            my $v_hash = $validator->errors_hash;
+            my $tokens = {};
 
-            while ( my ( $key, $value ) = each %$v_hash ) {
-                my $error = $value->[0]->{value};
-                $error = "invalid email address" if $error eq "mxcheck";
-                $errors{$key} = $error;
-
-                # flag the field with error using has-error class
-                $errors{ $key . '_input' } = 'has-error';
-            }
-
-            my $saved = $form->errors(\%errors);
+            PerlDance::Routes::add_validator_errors_token( $validator,
+                $tokens );
+            my $saved = $form->errors( $tokens->{errors} );
             $form->to_session;
 
             return redirect uri_for($action);
@@ -908,20 +883,7 @@ any [ 'get', 'post' ] => qr{
             return redirect '/profile';
         }
 
-        # some problem so drop through to showing template with errors added
-
-        my $v_hash = $validator->errors_hash;
-
-        while ( my ( $key, $value ) = each %$v_hash ) {
-
-            my $error = $value->[0]->{value};
-            $error = "invalid email address" if $error eq "mxcheck";
-            $errors{$key} = $error;
-
-            # flag the field with error using has-error class
-            $errors{ $key . '_input' } = 'has-error';
-        }
-        $tokens->{errors} =  \%errors,
+        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
 
         $tokens->{text} =
           "There appears to have been a problem.\n\nPlease try again.",
