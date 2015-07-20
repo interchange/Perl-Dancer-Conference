@@ -142,6 +142,9 @@ h4.subscribe {
   margin: 20px 0;
 }
 /* amerikahaus map */
+#map {
+  height:400px;
+}
 #wgmpmap, #confmap {
   width:100%;
   height:200px;

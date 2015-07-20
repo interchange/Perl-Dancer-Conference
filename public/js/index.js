@@ -1,111 +1,12 @@
-/* amerikahaus map */
-var confinfoWindows=[];
-function conf_closeAllInfoWindows(){
-    for (var i=0;i<confinfoWindows.length;i++){
-        confinfoWindows[i].close();
-    }
-    confinfoWindows=[];
-};
-function init_confmap(){
-    var conflatlng = new google.maps.LatLng(48.1824134,16.3812668);
-    var confmapOptions={
-        zoom: 16,
-        scrollwheel:false,
-        panControl:true,
-        zoomControl:true,
-        mapTypeControl:true,
-        scaleControl:true,
-        streetViewControl:true,
-        overviewMapControl:true,
-        overviewMapControlOptions:{opened:true},
-        center: conflatlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    confmap=new google.maps.Map(document.getElementById("confmap"),confmapOptions);
-    marker0confmap=new google.maps.Marker({
-        map: confmap,
-        draggable:false,
-        position: conflatlng,
-        title:"Hotel Schani Wien",
-        clickable:true,
-        icon:""
-    });
-    infowindow0confmap =new google.maps.InfoWindow({
-        content:"Karl-Popper-Straße 22, 1100 Wien, Austria"
-    });
-    google.maps.event.addListener(marker0confmap,'click',function(){ 
-        conf_closeAllInfoWindows();
-        confinfoWindows.push(infowindow0confmap);
-        infowindow0confmap.open(confmap,marker0confmap);
-        google.maps.event.addListener(confmap,'click',function(){
-            infowindow0confmap.close();
-        });
-    });
-};
-google.maps.event.addDomListener(window, 'load', init_confmap);
-
-var infoWindows=[];
-function wgmp_closeAllInfoWindows(){
-    for (var i=0;i<infoWindows.length;i++){
-        infoWindows[i].close();
-    }
-    infoWindows=[];
-};
-function init_map(){
-    var latlng = new google.maps.LatLng(48.210047,16.355743699999948);
-    var mapOptions={
-        zoom: 16,
-        scrollwheel:false,
-        panControl:true,
-        zoomControl:true,
-        mapTypeControl:true,
-        scaleControl:true,
-        streetViewControl:true,
-        overviewMapControl:true,
-        overviewMapControlOptions:{opened:true},
-        center: latlng,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
-    wgmpmap=new google.maps.Map(document.getElementById("wgmpmap"),mapOptions);
-    marker0wgmpmap=new google.maps.Marker({
-        map: wgmpmap,
-        draggable:false,
-        position: latlng,
-        title:"Amerikahaus, Wien",
-        clickable:true,
-        icon:""
-    });
-    infowindow0wgmpmap =new google.maps.InfoWindow({
-        content:"Friedrich-Schmidt-Platz 2 1010 Wien, Austria"
-    });
-    google.maps.event.addListener(marker0wgmpmap,'click',function(){ 
-        wgmp_closeAllInfoWindows();
-        infoWindows.push(infowindow0wgmpmap);
-        infowindow0wgmpmap.open(wgmpmap,marker0wgmpmap);
-        google.maps.event.addListener(wgmpmap,'click',function(){
-            infowindow0wgmpmap.close();
-        });
-    });
-};
-google.maps.event.addDomListener(window, 'load', init_map);
-
-$(document).ready(function() {
-  /* newsletter */
-  if (typeof newsletter_check !== "function") {
-    window.newsletter_check = function (f) {
-      var re = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-]{1,})+\.)+([a-zA-Z0-9]{2,})+$/;
-      if (!re.test(f.elements["ne"].value)) {
-        alert("The email is not correct");
-        return false;
-      }
-      if (f.elements["ny"] && !f.elements["ny"].checked) {
-        alert("You must accept the privacy statement");
-        return false;
-      }
-      return true;
-    }
-  };
-  $( "#newsletter-subscribe" ).submit(function( event ) {
-    return newsletter_check(this);
-  });
-});
+/* map */
+var map = L.map('map').setView([48.20078,16.36826], 13);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  maxZoom: 18,
+  id: 'petermottram.mp1dpak2',
+  accessToken: 'pk.eyJ1IjoicGV0ZXJtb3R0cmFtIiwiYSI6IjE1NWI5NjRjN2IxNjNkYTM1MzI3YzY5M2E0YjZjMDc0In0.T0bpnZGXCQBSW_SOv_nWHA'
+}).addTo(map);
+var marker1 = L.marker([48.21008, 16.35578]).addTo(map);
+var marker2 = L.marker([48.18246, 16.38075]).addTo(map);
+marker1.bindPopup("<b>Amerikaus</b><br>Friedrich-Schmidt-Platz 2<br>Training Venue<br>19/20 Oct");
+marker2.bindPopup("<b>Hotel Schani Wien</b><br>Karl-Popper-Straße 22<br>Conference Venue<br>21/22 Oct");
