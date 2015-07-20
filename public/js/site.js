@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+  $(".equal-height-container .equal-height-column").equalHeightColumns();
+
   /* menu dropdowns */
   $("#navbar ul li ul :first-child").parent().siblings("a")
     .addClass("dropdown-toggle").attr("data-toggle", "dropdown")
