@@ -10,3 +10,11 @@ var marker1 = L.marker([48.21008, 16.35578]).addTo(map);
 var marker2 = L.marker([48.18246, 16.38075]).addTo(map);
 marker1.bindPopup("<b>Amerikaus</b><br>Friedrich-Schmidt-Platz 2<br>Training Venue<br>19/20 Oct");
 marker2.bindPopup("<b>Hotel Schani Wien</b><br>Karl-Popper-Straße 22<br>Conference Venue<br>21/22 Oct");
+$("#marker1").click(function(){
+    marker1.openPopup();
+    return false;
+});
+$("#marker2").click(function(){
+    marker2.openPopup();
+    return false;
+});
