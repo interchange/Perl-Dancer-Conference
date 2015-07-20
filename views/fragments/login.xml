@@ -3,6 +3,5 @@
     target="class" op="append" joiner=" "/>
   <value name="login_error"/>
   <value name="username" field="params.username" target="value"/>
-  <value name="register" field="params.register" target="value"/>
   <value name="return_url" target="value"/>
 </specification>
