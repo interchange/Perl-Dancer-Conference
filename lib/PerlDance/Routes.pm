@@ -31,9 +31,6 @@ get '/' => sub {
 
     add_speakers_tokens($tokens);
 
-    my $nav = shop_navigation->find( { uri => 'tickets' } );
-    $tokens->{tickets} = [ $nav->products->active->hri->all ];
-
     $tokens->{title} = "Vienna Austria October 2015";
 
     $tokens->{news} = shop_schema->resultset('Message')->search(
