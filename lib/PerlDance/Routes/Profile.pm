@@ -692,13 +692,22 @@ post '/talk/:id' => sub {
     }
 };
 
+=head2 get /orders
+
+=cut
+
+get '/orders' => sub {
+    my $orders = logged_in_user->orders->order_by('!order_date');
+    template '/profile/orders', { title => "Your Orders", orders => $orders };
+};
+
 =head2 get /orders/:order_number
 
 display order information
 
 =cut
 
-get '/orders/:order_number' => require_login sub {
+get '/orders/:order_number' => sub {
     my $profile_url = uri_for('profile');
 
     # verify if order exists and belongs to current user
@@ -820,12 +829,21 @@ Send order receipt as email.
 sub order_receipt {
     my $order = shift;
 
-    email ({
-        subject => "Your Ticket for " . setting("conference_name"),
-        body    => "Thanks!",
-        type    => 'text',
-        to      => $order->email,
-    });
+    try {
+        PerlDance::Routes::send_email(
+            template => "email/receipt",
+            tokens => {
+                order   => $order,
+                link => uri_for( path( "/profile/orders", $order->id ) ),
+            },
+            to      => $order->email,
+            bcc     => '2015@perl.dance',
+            subject => "Your Ticket for " . setting("conference_name"),
+        );
+    }
+    catch {
+        error "Could not send email: $_";
+    };
 
     return 1;
 }

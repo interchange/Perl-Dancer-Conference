@@ -1,0 +1,8 @@
+<specification>
+  <list name="order" iterator="orders">
+    <param name="order_date" filter="date"/>
+    <param name="order_number"/>
+    <param name="total_cost" filter="currency"/>
+    <param name="btn" field="orders_id" target="href" op="append"/>
+  </list>
+</specification>

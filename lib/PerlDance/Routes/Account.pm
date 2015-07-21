@@ -154,37 +154,21 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         my $action_name =
           $action eq 'register' ? 'registration' : 'password reset';
 
-        my $html = template "email/generic",
-          {
-            "conference-logo" => uri_for(
-                shop_schema->resultset('Media')
-                  ->search( { label => "email-logo" } )->first->uri
-            ),
-            preamble =>
-"You are receiving this email because your email address was used to $reason for the "
-              . setting("conference_name")
-              . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
-            link => uri_for( path( request->uri, $token ) ),
-          },
-          { layout => 'email' };
-
-        my $f    = HTML::FormatText::WithLinks->new;
-        my $text = $f->parse($html);
         try {
-            email {
+            PerlDance::Routes::send_email(
+                template => "email/generic",
+                tokens   => {
+                    preamble => "You are receiving this email because your "
+                      . "email address was used to $reason for the "
+                      . setting("conference_name")
+                      . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
+                    link => uri_for( path( request->uri, $token ) ),
+                },
                 to      => $user->email,
                 cc      => '2015@perl.dance',
                 subject => "\u$action_name for the "
                   . setting("conference_name"),
-                body   => $text,
-                type   => 'text',
-                attach => {
-                    Data     => $html,
-                    Encoding => "quoted-printable",
-                    Type     => "text/html"
-                },
-                multipart => 'alternative',
-            };
+            );
         }
         catch {
             error "Could not send email: $_";
