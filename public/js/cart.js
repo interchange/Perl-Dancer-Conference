@@ -36,7 +36,7 @@ $(document).ready(function() {
           url: "/cart",
           data: { update: sku, quantity: qty, xsrf_token: xsrfMeta },
           success: function(json) {
-            el.closest("form").replaceWith(json.html);
+            el.closest("div.cart-fragment").replaceWith(json.html);
             updateCartQuantityDisplay();
           }
         });
