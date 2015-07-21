@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 4;
+our $VERSION = 5;
 
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;
@@ -34,6 +34,35 @@ __PACKAGE__->add_columns(
       { data_type => "varchar", size => 256, default_value => '' },
     pause_id => { data_type => "varchar", size => 128, default_value => '' },
 );
+
+=head2 METHODS
+
+=head3 insert
+
+Overloaded method. Add 'unknown user' image as initial photo.
+
+=cut
+
+sub insert {
+    my ($self, @args) = @_;
+    $self->next::method(@args);
+    if ( !$self->media_id ) {
+        my $schema = $self->result_source->schema;
+        my $photo = $schema->resultset('Media')->search(
+            {
+                'me.label'        => 'unknown user',
+                'media_type.type' => 'image',
+            },
+            {
+                join => 'media_type',
+                rows => 1,
+            }
+        )->single;
+        if ( $photo ) {
+            $self->update({ media_id => $photo->id });
+        }
+    }
+}
 
 =head2 METHODS
 

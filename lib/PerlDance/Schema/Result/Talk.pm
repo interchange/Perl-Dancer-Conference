@@ -31,11 +31,14 @@ Author of talk.
 
 FK on L<Interchange6::Schema::Result::User/users_id> for relation L</author>.
 
+Is nullable.
+
 =cut
 
 column author_id => {
     data_type      => "integer",
     is_foreign_key => 1,
+    is_nullable    => 1,
 };
 
 =head2 conferences_id
@@ -255,11 +258,14 @@ Type: belongs_to
 
 Related object: L<Interchange6::Schema::Result::User>
 
+LEFT JOIN due to FK being nullable.
+
 =cut
 
 belongs_to
   author => 'Interchange6::Schema::Result::User',
-  { 'foreign.users_id' => 'self.author_id' };
+  { 'foreign.users_id' => 'self.author_id' },
+  { join_type => 'left' };
 
 =head2 attendee_talks
 

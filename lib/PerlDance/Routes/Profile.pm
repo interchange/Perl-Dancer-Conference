@@ -306,6 +306,21 @@ get '/photo' => sub {
 
     PerlDance::Routes::add_javascript( $tokens, '/js/profile-photo.js' );
 
+    my $photo = logged_in_user->photo;
+    if ( !$photo ) {
+        $photo = rset('Media')->search(
+            {
+                'me.label'        => 'unknown user',
+                'media_type.type' => 'image',
+            },
+            {
+                join => 'media_type',
+                rows => 1,
+            }
+        )->single;
+    }
+    $tokens->{photo} = $photo;
+
     template 'profile/photo', $tokens;
 };
 
