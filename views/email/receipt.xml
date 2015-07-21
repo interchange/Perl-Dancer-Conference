@@ -1,0 +1,14 @@
+<specification>
+  <value name="order_date" field="order.order_date"/>
+  <value name="order_number" field="order.order_number"/>
+  <value name="email" field="order.email"/>
+  <value name="total_cost" field="order.total_cost"/>
+  <list name="orderline" iterator="order.orderlines">
+    <param name="sku"/>
+    <param name="name"/>
+    <param name="price"/>
+    <param name="quantity"/>
+    <param name="subtotal"/>
+  </list>
+  <value name="link" target="href"/>
+</specification>
