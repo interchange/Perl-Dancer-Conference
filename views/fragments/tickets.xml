@@ -4,5 +4,6 @@
     <param name="price" filter="currency"/>
     <param name="description" filter="markdown" op="hook"/>
     <param name="sku"/>
+    <param name="buy-ticket" field="cart_uri" target="href"/>
   </list>
 </specification>

@@ -65,7 +65,7 @@ get '/' => sub {
     ];
 
     # check whether user ordered a ticket
-    my $order_rs = $user->orders;
+    my $order_rs = logged_in_user->orders;
     my $order_number;
 
     while (my $order = $order_rs->next) {
@@ -692,6 +692,49 @@ post '/talk/:id' => sub {
     }
 };
 
+=head2 get /orders/:order_number
+
+display order information
+
+=cut
+
+get '/orders/:order_number' => require_login sub {
+    my $profile_url = uri_for('profile');
+
+    # verify if order exists and belongs to current user
+    my $order_number = param('order_number');
+    my $order = schema->resultset('Order')->find({
+        order_number => $order_number,
+    });
+
+    if (! $order) {
+        return redirect $profile_url;
+    }
+
+    my $order_user = $order->user;
+    my $current_user = logged_in_user;
+
+    if ($order_user->id != $current_user->id) {
+        # order belongs to other customer
+        return redirect $profile_url;
+    }
+
+    my $tokens = {order => $order};
+
+    # check whether this is a receipt for recent order
+    if (defined session->{order_receipt}
+            && session->{order_receipt} eq $order_number) {
+        $tokens->{receipt} = session->{order_receipt};
+
+        # send email receipt
+        order_receipt($order);
+    }
+
+    session order_receipt => undef;
+
+    template 'order', $tokens;
+};
+
 =head1 METHODS
 
 =head2 add_durations_token( $tokens )
@@ -765,6 +808,26 @@ sub validate_talk {
     );
 
     return ( $validator, $validator->transpose($values) );
+}
+
+
+=head2 order_receipt( $order )
+
+Send order receipt as email.
+
+=cut
+
+sub order_receipt {
+    my $order = shift;
+
+    email ({
+        subject => "Your Ticket for " . setting("conference_name"),
+        body    => "Thanks!",
+        type    => 'text',
+        to      => $order->email,
+    });
+
+    return 1;
 }
 
 # undef prefix - keep as last line before 'true'

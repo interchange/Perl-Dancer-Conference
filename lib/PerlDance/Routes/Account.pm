@@ -173,6 +173,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         try {
             email {
                 to      => $user->email,
+                cc      => '2015@perl.dance',
                 subject => "\u$action_name for the "
                   . setting("conference_name"),
                 body   => $text,
@@ -297,5 +298,3 @@ any [ 'get', 'post' ] => qr{
 
     return template "password_reset", $tokens;
 };
-
-true;

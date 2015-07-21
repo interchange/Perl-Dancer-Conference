@@ -1,3 +1,4 @@
 <specification>
+  <container name="paypal-error" value="session.cart_paypal_error"/>
   <value name="cart-container" op="hook" include="fragments/cart.html"/>
 </specification>

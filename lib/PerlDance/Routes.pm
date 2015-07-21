@@ -15,6 +15,7 @@ use Try::Tiny;
 use PerlDance::Routes::Account;
 use PerlDance::Routes::Admin;
 use PerlDance::Routes::Profile;
+use PerlDance::Routes::PayPal;
 use PerlDance::Routes::Talk;
 
 =head1 ROUTES
@@ -217,12 +218,17 @@ get '/tickets' => sub {
       [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
           ->tickets->active->hri->all ];
 
+    for my $ticket (@{$tokens->{tickets}}) {
+        $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
+    }
+
     template 'tickets', $tokens;
 };
 
 =head2 shop_setup_routes
 
 L<Dancer::Plugin::Interchange6::Routes/shop_setup_routes>
+
 
 =cut
 
