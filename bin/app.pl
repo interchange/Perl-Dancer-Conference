@@ -1,4 +1,23 @@
 #!/usr/bin/env perl
+use Plack::Builder;
 use Dancer;
 use PerlDance;
-dance;
+use lib 'lib';
+
+my $app = sub {
+    load_app "PerlDance";
+    Dancer::App->set_running_app("PerlDance");
+    my $env = shift;
+    Dancer::Handler->init_request_headers($env);
+    my $req = Dancer::Request->new( env => $env );
+    Dancer->dance($req);
+};
+
+builder {
+    enable 'Session';
+    enable 'XSRFBlock',
+      cookie_name    => 'PerlDance-XSRF-Token',
+      meta_tag       => 'xsrf-meta',
+      cookie_options => { httponly => 1, };
+    $app;
+}
