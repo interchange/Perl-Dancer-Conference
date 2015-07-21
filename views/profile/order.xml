@@ -1,0 +1,17 @@
+<specification>
+  <pattern name="order-number" type="string">0815</pattern>
+  <value name="order-number" class="order-header" pattern="order-number"
+         field="order.order_number"/>
+  <value name="order-email" field="order.email"/>
+  <value name="order-date" field="order.order_date" filter="date"/>
+  <container name="receipt" value="receipt">
+  </container>
+  <list name="orderline" iterator="order.orderlines">
+    <param name="sku"/>
+    <param name="name"/>
+    <param name="price" filter="currency"/>
+    <param name="quantity"/>
+    <param name="subtotal" filter="currency"/>
+  </list>
+  <value name="total_cost" field="order.total_cost" filter="currency"/>
+</specification>

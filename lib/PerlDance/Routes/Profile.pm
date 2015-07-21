@@ -741,7 +741,7 @@ get '/orders/:order_number' => sub {
 
     session order_receipt => undef;
 
-    template 'order', $tokens;
+    template 'profile/order', $tokens;
 };
 
 =head1 METHODS
