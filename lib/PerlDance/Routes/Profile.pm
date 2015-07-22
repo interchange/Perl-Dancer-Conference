@@ -10,6 +10,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
@@ -257,7 +258,7 @@ post '/edit' => sub {
         }
     }
 
-    # FIXME: flash 'done'?
+    flash success => "Profile updated.";
     $form->reset;
     redirect '/profile';
 };
@@ -319,7 +320,7 @@ post '/password' => sub {
 
     if ( $valid ) {
         logged_in_user->update({ password => $valid->{password} });
-        # FIXME: flash success message?
+        flash success => "Password changed.";
         redirect '/profile';
     }
     else {
@@ -532,6 +533,7 @@ post '/talk/create' => sub {
             debug "sent email/talk_submitted";
 
             $form->reset;
+            flash success => "Thankyou for submitting your talk. We will be in contact soon";
 
             return redirect '/profile';
         }
