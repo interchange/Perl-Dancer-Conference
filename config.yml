@@ -101,6 +101,10 @@ plugins:
       from: "Perl Dancer 2015 <2015@perl.dance>"
       to: "Perl Dancer 2015 <2015@perl.dance>"
       X-Mailer: "PerlDance2015 1.0"
+  Flash::Note:
+    queue: key_multiple
+    arguments: array
+    dequeue: by_key
   Interchange6::Routes:
     navigation:
       template: product-listing

@@ -26,6 +26,7 @@ WriteMakefile(
         'Dancer::Plugin::Auth::Extensible' => '0.40',
         'Dancer::Plugin::DBIC'             => '0.2102',
         'Dancer::Plugin::Email'            => '1.0400',
+        'Dancer::Plugin::FlashNote'        => 0,
         'Dancer::Plugin::Interchange6'     => '0.086',
         'Dancer::Template::TemplateFlute'  => '0.0142',
         'Data::Transpose'                  => '0.0015',
