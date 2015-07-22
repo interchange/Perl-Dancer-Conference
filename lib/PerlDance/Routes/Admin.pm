@@ -146,4 +146,20 @@ post '/admin/news/edit/:id' => require_role admin => sub {
     return redirect '/admin/news';
 };
 
+get '/admin/talks' => require_role admin => sub {
+    my $tokens = {};
+
+    $tokens->{title} = "Talk Admin";
+
+    $tokens->{talks} = rset('Talk')->search(
+        {
+            conferences_id => setting('conferences_id'),
+        },
+    );
+
+    PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
+
+    template 'admin/talks', $tokens;
+};
+
 true;
