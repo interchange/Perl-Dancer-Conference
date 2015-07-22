@@ -1,47 +1,65 @@
 <div class="container">
-
-  <h2 class="order-header">Your Order #0815</h2>
-
-  <div class="receipt">
-       Thanks for buying a ticket for the Perl Dancer Conference.
-  </div>
-
-  <div class="table-responsive">
-    <table class="table table-responsive table-hover">
-      <tbody>
-        <tr><th>Email</th><td class="order-email">foo@nevairbe.de</td></tr>
-        <tr><th>Order Date</th><td class="order-date">date</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-
-  <div class="table-responsive">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>SKU</th>
-          <th>Name</th>
-          <th>Unit Price</th>
-          <th>Quantity</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="orderline">
-          <td class="sku">sku</td>
-          <td class="name">name</td>
-          <td class="price">$0.00</td>
-          <td class="quantity">0</td>
-          <td class="subtotal">$0.00</td>
-        </tr>
-        <tr>
-          <td colspan="4" class="text-right">TOTAL:</td>
-          <td class="total_cost">$0.00</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <a href="/profile">Back to your profile</a>
+<div class="alert alert-success receipt" role="alert">
+    Thanks for buying a ticket for the Perl Dancer Conference.
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Order Details</h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-responsive table-hover">
+                    <tbody>
+                        <tr>
+                            <th>Order Number</th>
+                            <td>#<span class="order-number">0815</span></td>
+                        </tr>
+                        <tr>
+                            <th>Order Email</th>
+                            <td class="order-email">foo@nevairbe.de</td>
+                        </tr>
+                        <tr>
+                            <th>Order Date</th>
+                            <td class="order-date">date</td>
+                        </tr>
+                        <tr>
+                            <th>Payment Method</th>
+                            <td class="order-payment-method">payment</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-12">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Name</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="orderline">
+                    <td class="sku">sku</td>
+                    <td class="name">name</td>
+                    <td class="price">$0.00</td>
+                    <td class="quantity">0</td>
+                    <td class="subtotal">$0.00</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-right">TOTAL:</td>
+                    <td class="total_cost">$0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="/profile">Back to your profile</a>
+</div>
 </div>
