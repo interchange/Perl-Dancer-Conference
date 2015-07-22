@@ -41,6 +41,7 @@ WriteMakefile(
         'Interchange6'                     => '0.080',
         'Interchange6::Schema'             => '0.085',
         'Number::Format'                   => 0,
+        'Plack::Middleware::XForwardedFor' => 0,
         'Plack::Middleware::XSRFBlock'     => 0,
         'Plack::Session'                   => 0,
         'Template::Flute'                  => '0.0184',
