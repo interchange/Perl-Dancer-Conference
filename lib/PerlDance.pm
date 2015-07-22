@@ -120,11 +120,16 @@ hook 'before_layout_render' => sub {
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
     # flash alerts
-    my $flash_flush = flash_flush;
-    $tokens->{flash} = {};
-    foreach my $flash (@$flash_flush) {
-        push @{ $tokens->{flash}->{ $flash->[0] } }, { message => $flash->[1] };
+    my $flash = flash_flush;
+    foreach my $key ( keys %$flash ) {
+        foreach my $message ( @{$flash->{$key}} ) {
+            push @{$tokens->{alerts}->{$key}}, { message => $message };
+        }
     }
+};
+
+hook after_layout_render => sub {
+    flash_flush;
 };
 
 =head1 ROUTES

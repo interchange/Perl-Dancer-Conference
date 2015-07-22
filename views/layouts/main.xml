@@ -35,16 +35,16 @@
     </list>
   </list>
 
-  <list name="alerts-success" iterator="flash.success">
+  <list name="alerts-success" iterator="alerts.success">
     <param name="message" op="hook"/>
   </list>
-  <list name="alerts-info" iterator="flash.info">
+  <list name="alerts-info" iterator="alerts.info">
     <param name="message" op="hook"/>
   </list>
-  <list name="alerts-warning" iterator="flash.warning">
+  <list name="alerts-warning" iterator="alerts.warning">
     <param name="message" op="hook"/>
   </list>
-  <list name="alerts-error" iterator="flash.error">
+  <list name="alerts-error" iterator="alerts.error">
     <param name="message" op="hook"/>
   </list>
 

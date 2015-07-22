@@ -487,6 +487,8 @@ post '/talk/create' => sub {
 
         ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
 
+        my $success;
+
         try {
             my $talk = shop_schema->resultset('Talk')->create(
                 {
@@ -534,13 +536,16 @@ post '/talk/create' => sub {
 
             $form->reset;
             flash success => "Thankyou for submitting your talk. We will be in contact soon";
-
-            return redirect '/profile';
+            $success = 1;
         }
         catch {
             # FIXME: handle errors
             error "Talk submission error: $_";
         };
+        # we can't return inside the try block so we do it based on $success
+        if ( $success ) {
+            return redirect '/profile';
+        }
     }
 
     PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
