@@ -20,6 +20,6 @@ builder {
       meta_tag       => 'xsrf-meta',
       cookie_options => { httponly => 1, };
     enable 'XForwardedFor',
-      trust => [qw( 10.0.0.0/8 172.16.0.0/20 192.168.0.0/16 )];
+      trust => [qw( 127.0.0.1 10.0.0.0/8 172.16.0.0/20 192.168.0.0/16 )];
     $app;
 }
