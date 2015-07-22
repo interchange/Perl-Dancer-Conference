@@ -50,8 +50,7 @@ get '/' => sub {
         }
     );
 
-    add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
-        "/js/index.js" );
+    add_javascript( $tokens, "/js/index.js" );
 
     var no_title_wrapper => 1;
 
