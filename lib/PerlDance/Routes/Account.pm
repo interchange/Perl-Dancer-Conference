@@ -166,7 +166,6 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
                     link => uri_for( path( request->uri, $token ) ),
                 },
                 to      => $user->email,
-                cc      => '2015@perl.dance',
                 subject => "\u$action_name for the "
                   . setting("conference_name"),
             );
