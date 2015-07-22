@@ -4,6 +4,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 
 use DateTime;

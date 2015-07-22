@@ -9,6 +9,7 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
