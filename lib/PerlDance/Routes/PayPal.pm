@@ -80,7 +80,7 @@ post '/paypal/setrequest' => sub {
         return redirect $ppurl;
     }
     else {
-        session cart_paypal_error => 1;
+        flash error => 'Payment with PayPal failed. Please contact <a href="mailto:2015@perl.dance">2015@perl.dance</a> for assistance.';
         warning "No PayPal token: ", \%ppresponse;
         return redirect uri_for('cart');
     }

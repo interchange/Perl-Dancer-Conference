@@ -265,6 +265,13 @@ any [ 'get', 'post' ] => qr{
             session logged_in_user_id    => $user->id;
             session logged_in_user_realm => $realm;
 
+            if ( $action eq 'register' ) {
+                flash success => "Welcome to the " . setting('conference_name');
+            }
+            else {
+                flash success => "Password changed";
+            }
+
             return redirect '/profile';
         }
 
