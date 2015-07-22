@@ -1,9 +1,8 @@
 <specification>
-  <pattern name="order-number" type="string">0815</pattern>
-  <value name="order-number" class="order-header" pattern="order-number"
-         field="order.order_number"/>
+  <value name="order-number" field="order.order_number"/>
   <value name="order-email" field="order.email"/>
   <value name="order-date" field="order.order_date" filter="date"/>
+  <value name="order-payment-method" field="order.payment_method"/>
   <container name="receipt" value="receipt">
   </container>
   <list name="orderline" iterator="order.orderlines">
