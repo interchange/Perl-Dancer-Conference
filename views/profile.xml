@@ -1,4 +1,5 @@
 <specification>
+  <container name="has_talks" value="has_talks"/>
   <value name="conference_name"/>
   <list name="profile" iterator="profile_nav">
     <param name="name" class="link"/>

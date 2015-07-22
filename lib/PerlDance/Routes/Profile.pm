@@ -89,6 +89,7 @@ get '/' => sub {
     my $tokens = {
         title       => 'Profile',
         description => 'Update profile',
+        has_talks   => scalar(@$talks),
         profile_nav =>
           [ $nav->active_children->search({'me.uri' => { '!=' => 'profile/photo' }})->order_by('!priority')->hri->all ],
         talks => $talks,
