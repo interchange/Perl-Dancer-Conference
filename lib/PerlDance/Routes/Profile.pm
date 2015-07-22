@@ -96,7 +96,13 @@ get '/' => sub {
     };
 
     # Ticket link
-    if ($order_number) {
+    if ($order_rs->count > 1) {
+        push @{$tokens->{profile_nav}}, {
+            name => 'View your conference tickets',
+            uri => "profile/orders",
+        }
+    }
+    elsif ($order_number) {
         push @{$tokens->{profile_nav}}, {
             name => 'View your conference ticket',
             uri => "profile/orders/$order_number",
