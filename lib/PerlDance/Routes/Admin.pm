@@ -146,6 +146,10 @@ post '/admin/news/edit/:id' => require_role admin => sub {
     return redirect '/admin/news';
 };
 
+=head2 admin/talks
+
+=cut
+
 get '/admin/talks' => require_role admin => sub {
     my $tokens = {};
 
@@ -160,6 +164,135 @@ get '/admin/talks' => require_role admin => sub {
     PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
 
     template 'admin/talks', $tokens;
+};
+
+get '/admin/talks/create' => require_role admin => sub {
+    my $tokens = {};
+
+    $tokens->{title} = "Create Talk";
+
+    my $form = form('update_create_talk');
+    $form->reset;
+    $form->fill(
+        {
+            accepted   => 1,
+            confirmed  => 0,
+            lightning  => 0,
+            start_time => schema->format_datetime( DateTime->now )
+        }
+);
+    $tokens->{form} = $form;
+    $tokens->{author} = [ rset('User')->all];
+    template 'admin/talks/create_update', $tokens;
+};
+
+post '/admin/talks/create' => require_role admin => sub {
+    my $tokens = {};
+
+    my $form   = form('update_create_talk');
+    my %values = %{ $form->values };
+    debug "values", \%values;
+    $values{abstract} =~ s/\r\n/\n/g;
+
+    # TODO: validate values and if OK then try create
+    rset('Talk')->create(
+        {
+            author_id => $values{author},
+            conferences_id  => setting('conferences_id'),
+            duration        => $values{duration},
+            title           => $values{title},
+            tags            => $values{tags},
+            abstract        => $values{abstract},
+            url             => $values{url} || undef,
+            comments        => $values{comments},
+            accepted        => $values{accepted} || 0,
+            confirmed       => $values{confirmed},
+            lightning       => $values{lightning} || 0,
+            start_time      => $values{start_time},
+            room            => $values{room}
+        }
+    );
+    return redirect '/admin/talks';
+};
+
+get '/admin/talks/delete/:id' => require_role admin => sub {
+    try {
+        rset('Talk')->find( param('id') )->delete;
+    };
+    redirect '/admin/talks';
+};
+
+get '/admin/talks/edit/:id' => require_role admin => sub {
+    my $tokens = {};
+
+    my $talk = rset('Talk')->find( param('id') );
+
+    if ( !$talk ) {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        return template '404', $tokens;
+    }
+
+    my $form = form('update_create_talk');
+    $form->reset;
+
+    $form->fill(
+        {
+            author_id       => $talk->author_id,
+            duration        => $talk->duration,
+            title           => $talk->title,
+            tags            => $talk->tags,
+            abstract        => $talk->abstract,
+            url             => $talk->url,
+            comments        => $talk->comments,
+            accepted        => $talk->accepted,
+            confirmed       => $talk->confirmed,
+            lightning       => $talk->lightning,
+            start_time      => schema->format_datetime($talk->start_time),
+            room            => $talk->room
+        }
+    );
+    $tokens->{author} = [ rset('User')->all];
+    $tokens->{form}    = $form;
+    $tokens->{title}   = "Edit Talk";
+
+    template 'admin/talks/create_update', $tokens;
+};
+
+post '/admin/talks/edit/:id' => require_role admin => sub {
+    my $tokens = {};
+
+    my $talk = rset('Talk')->find( param('id') );
+
+    if ( !$talk ) {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        return template '404', $tokens;
+    }
+
+    my $form   = form('update_create_talk');
+    my %values = %{ $form->values };
+    $values{abstract} =~ s/\r\n/\n/g;
+
+    # TODO: validate values and if OK then try update
+    $talk->update(
+        {
+            author_id       => $values{author},
+            duration        => $values{duration},
+            title           => $values{title},
+            tags            => $values{tags},
+            abstract        => $values{abstract},
+            url             => $values{url} || undef,
+            comments        => $values{comments},
+            accepted        => $values{accepted} || 0,
+            confirmed       => $values{confirmed},
+            lightning       => $values{lightning} || 0,
+            start_time      => $values{start_time},
+            room            => $values{room}
+
+        }
+    );
+    return redirect '/admin/talks';
 };
 
 true;
