@@ -191,7 +191,6 @@ post '/admin/talks/create' => require_role admin => sub {
 
     my $form   = form('update_create_talk');
     my %values = %{ $form->values };
-    debug "values", \%values;
     $values{abstract} =~ s/\r\n/\n/g;
 
     # TODO: validate values and if OK then try create
