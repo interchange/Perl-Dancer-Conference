@@ -178,11 +178,16 @@ get '/admin/talks/create' => require_role admin => sub {
             accepted   => 1,
             confirmed  => 0,
             lightning  => 0,
-            start_time => schema->format_datetime( DateTime->now )
         }
 );
     $tokens->{form} = $form;
     $tokens->{author} = [ rset('User')->all];
+
+    my @js_urls = ('/js/bootstrap-datetimepicker.min.js',
+        '/js/bootstrap-datetimepicker.config.js');
+
+    PerlDance::Routes::add_javascript( $tokens, @js_urls );
+
     template 'admin/talks/create_update', $tokens;
 };
 
@@ -204,9 +209,9 @@ post '/admin/talks/create' => require_role admin => sub {
             abstract        => $values{abstract},
             url             => $values{url} || undef,
             comments        => $values{comments},
-            accepted        => $values{accepted} || 0,
+            accepted        => $values{accepted},
             confirmed       => $values{confirmed},
-            lightning       => $values{lightning} || 0,
+            lightning       => $values{lightning},
             start_time      => $values{start_time},
             room            => $values{room}
         }
@@ -247,13 +252,18 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             accepted        => $talk->accepted,
             confirmed       => $talk->confirmed,
             lightning       => $talk->lightning,
-            start_time      => schema->format_datetime($talk->start_time),
+            start_time      => $talk->start_time,
             room            => $talk->room
         }
     );
-    $tokens->{author} = [ rset('User')->all];
+    $tokens->{author} = [ rset('User')->all ];
     $tokens->{form}    = $form;
     $tokens->{title}   = "Edit Talk";
+
+    my @js_urls = ('/js/bootstrap-datetimepicker.min.js',
+        '/js/bootstrap-datetimepicker.config.js');
+
+    PerlDance::Routes::add_javascript( $tokens, @js_urls );
 
     template 'admin/talks/create_update', $tokens;
 };
@@ -283,9 +293,9 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
             abstract        => $values{abstract},
             url             => $values{url} || undef,
             comments        => $values{comments},
-            accepted        => $values{accepted} || 0,
+            accepted        => $values{accepted},
             confirmed       => $values{confirmed},
-            lightning       => $values{lightning} || 0,
+            lightning       => $values{lightning},
             start_time      => $values{start_time},
             room            => $values{room}
 
