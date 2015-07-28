@@ -142,7 +142,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
-            'addresses.type'                      => 'primary',
+            'addresses.type'                      => [undef, 'primary'],
         },
         {
             prefetch =>
