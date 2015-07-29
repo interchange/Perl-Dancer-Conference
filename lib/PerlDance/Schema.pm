@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 6;
+our $VERSION = 7;
 
 use Interchange6::Schema::Result::Message;
 package Interchange6::Schema::Result::Message;
