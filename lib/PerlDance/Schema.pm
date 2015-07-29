@@ -1,6 +1,21 @@
 package PerlDance::Schema;
 
-our $VERSION = 5;
+our $VERSION = 6;
+
+use Interchange6::Schema::Result::Message;
+package Interchange6::Schema::Result::Message;
+
+__PACKAGE__->add_columns(
+    tags => { data_type => "varchar", size => "256", default_value => '' },
+);
+
+use Interchange6::Schema::Result::Product;
+package Interchange6::Schema::Result::Product;
+
+__PACKAGE__->might_have(
+    conference_ticket => "PerlDance::Schema::Result::ConferenceTicket",
+    "sku",
+);
 
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;

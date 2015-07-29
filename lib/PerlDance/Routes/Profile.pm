@@ -10,6 +10,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
@@ -64,14 +65,55 @@ get '/' => sub {
         )->hri->all
     ];
 
+    # check whether user ordered a ticket
+    my $order_rs = logged_in_user->orders;
+    my $order_number;
+
+    while (my $order = $order_rs->next) {
+        my $orderline_rs = $order->orderlines;
+
+        while (my $orderline = $orderline_rs->next) {
+            my ($ct, $conf);
+
+            if ($ct = $orderline->product->conference_ticket) {
+                if (($conf = $ct->conference)
+                        && $conf->name eq config->{'conference_name'}) {
+                    $order_number = $order->order_number;
+                    last;
+                }
+            }
+        }
+    }
+
     # *** HACK *** - temporarily remove photo update until working correctly
     my $tokens = {
         title       => 'Profile',
         description => 'Update profile',
+        has_talks   => scalar(@$talks),
         profile_nav =>
           [ $nav->active_children->search({'me.uri' => { '!=' => 'profile/photo' }})->order_by('!priority')->hri->all ],
         talks => $talks,
     };
+
+    # Ticket link
+    if ($order_rs->count > 1) {
+        push @{$tokens->{profile_nav}}, {
+            name => 'View your conference tickets',
+            uri => "profile/orders",
+        }
+    }
+    elsif ($order_number) {
+        push @{$tokens->{profile_nav}}, {
+            name => 'View your conference ticket',
+            uri => "profile/orders/$order_number",
+        }
+    }
+    else {
+        push @{$tokens->{profile_nav}}, {
+            name => 'Buy your conference ticket',
+            uri => 'tickets',
+        }
+    }
 
     template 'profile', $tokens;
 };
@@ -223,7 +265,7 @@ post '/edit' => sub {
         }
     }
 
-    # FIXME: flash 'done'?
+    flash success => "Profile updated.";
     $form->reset;
     redirect '/profile';
 };
@@ -285,7 +327,7 @@ post '/password' => sub {
 
     if ( $valid ) {
         logged_in_user->update({ password => $valid->{password} });
-        # FIXME: flash success message?
+        flash success => "Password changed.";
         redirect '/profile';
     }
     else {
@@ -452,6 +494,8 @@ post '/talk/create' => sub {
 
         ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
 
+        my $success;
+
         try {
             my $talk = shop_schema->resultset('Talk')->create(
                 {
@@ -498,13 +542,17 @@ post '/talk/create' => sub {
             debug "sent email/talk_submitted";
 
             $form->reset;
-
-            return redirect '/profile';
+            flash success => "Thankyou for submitting your talk. We will be in contact soon";
+            $success = 1;
         }
         catch {
             # FIXME: handle errors
             error "Talk submission error: $_";
         };
+        # we can't return inside the try block so we do it based on $success
+        if ( $success ) {
+            return redirect '/profile';
+        }
     }
 
     PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
@@ -658,6 +706,58 @@ post '/talk/:id' => sub {
     }
 };
 
+=head2 get /orders
+
+=cut
+
+get '/orders' => sub {
+    my $orders = logged_in_user->orders->order_by('!order_date');
+    template '/profile/orders', { title => "Your Orders", orders => $orders };
+};
+
+=head2 get /orders/:order_number
+
+display order information
+
+=cut
+
+get '/orders/:order_number' => sub {
+    my $profile_url = uri_for('profile');
+
+    # verify if order exists and belongs to current user
+    my $order_number = param('order_number');
+    my $order = schema->resultset('Order')->find({
+        order_number => $order_number,
+    });
+
+    if (! $order) {
+        return redirect $profile_url;
+    }
+
+    my $order_user = $order->user;
+    my $current_user = logged_in_user;
+
+    if ($order_user->id != $current_user->id) {
+        # order belongs to other customer
+        return redirect $profile_url;
+    }
+
+    my $tokens = {order => $order};
+
+    # check whether this is a receipt for recent order
+    if (defined session->{order_receipt}
+            && session->{order_receipt} eq $order_number) {
+        $tokens->{receipt} = session->{order_receipt};
+
+        # send email receipt
+        order_receipt($order);
+    }
+
+    session order_receipt => undef;
+
+    template 'profile/order', $tokens;
+};
+
 =head1 METHODS
 
 =head2 add_durations_token( $tokens )
@@ -731,6 +831,35 @@ sub validate_talk {
     );
 
     return ( $validator, $validator->transpose($values) );
+}
+
+
+=head2 order_receipt( $order )
+
+Send order receipt as email.
+
+=cut
+
+sub order_receipt {
+    my $order = shift;
+
+    try {
+        PerlDance::Routes::send_email(
+            template => "email/receipt",
+            tokens => {
+                order   => $order,
+                link => uri_for( path( "/profile/orders", $order->id ) ),
+            },
+            to      => $order->email,
+            bcc     => '2015@perl.dance',
+            subject => "Your Ticket for " . setting("conference_name"),
+        );
+    }
+    catch {
+        error "Could not send email: $_";
+    };
+
+    return 1;
 }
 
 # undef prefix - keep as last line before 'true'

@@ -1,0 +1,8 @@
+<specification>
+  <container name="show_preview" value="preview"/>
+  <value name="title" class="panel-title"/>
+  <value name="preview" filter="wiki" op="hook"/>
+  <value name="content"/>
+  <value name="tags" target="value"/>
+  <value name="cancel" field="uri" target="href" op="append"/>
+</specification>

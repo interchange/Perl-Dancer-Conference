@@ -43,7 +43,9 @@ get '/talks' => sub {
       $talks_accepted->get_column('tags')->all;
     my $cloud = HTML::TagCloud->new;
     foreach my $tag ( sort keys %tags ) {
-        $cloud->add( $tag, "/talks/tag/$tag", $tags{$tag} );
+        # add space to tag to force wrapping since TF removes the line breaks
+        # added by HTML::TagCloud
+        $cloud->add( "$tag ", "/talks/tag/$tag", $tags{$tag} );
     }
     $tokens->{cloud} = $cloud->html;
 

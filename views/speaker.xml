@@ -1,12 +1,31 @@
 <specification>
+
+  <container name="has_nickname" value="user.nickname"/>
+  <container name="has_company" value="user.company"/>
+  <container name="has_city" value="user.addresses.first.city"/>
+  <container name="has_country" value="user.addresses.first.country"/>
+  <container name="has_pause_id" value="user.pause_id"/>
+  <container name="has_talks" value="has_talks"/>
+  <container name="has_monger_groups" value="monger_groups"/>
+
   <value name="name" field="user.name"/>
+  <value name="nickname" field="user.nickname"/>
   <value name="company" field="user.addresses.first.company"/>
   <value name="city" field="user.addresses.first.city"/>
   <value name="country" field="user.addresses.first.country.name"/>
   <value name="photo" target="src" field="user.photo.uri"/>
   <value name="bio" field="user.bio" op="hook" filter="markdown"/>
   <value name="pause_id" field="user.pause_id"/>
-  <container name="has_talks" value="has_talks"/>
+  <value name="pause_link" class="pause_id" field="user.pause_id" target="href"
+    op="append"/>
+
+  <pattern name="wwwpm" type="string">www.pm</pattern>
+  <list name="monger_group" iterator="monger_groups">
+    <param name="monger" field="name" target="href" pattern="wwwpm"/>
+    <param name="text" class="monger" field="name"/>
+    <separator name="sep"/>
+  </list>
+
   <list name="talks" iterator="talks">
     <param name="talk-link" target="href" op="append" field="seo_uri"/>
     <param name="title" class="talk-link"/>

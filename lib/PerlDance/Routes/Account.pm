@@ -9,6 +9,7 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
@@ -154,36 +155,20 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         my $action_name =
           $action eq 'register' ? 'registration' : 'password reset';
 
-        my $html = template "email/generic",
-          {
-            "conference-logo" => uri_for(
-                shop_schema->resultset('Media')
-                  ->search( { label => "email-logo" } )->first->uri
-            ),
-            preamble =>
-"You are receiving this email because your email address was used to $reason for the "
-              . setting("conference_name")
-              . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
-            link => uri_for( path( request->uri, $token ) ),
-          },
-          { layout => 'email' };
-
-        my $f    = HTML::FormatText::WithLinks->new;
-        my $text = $f->parse($html);
         try {
-            email {
+            PerlDance::Routes::send_email(
+                template => "email/generic",
+                tokens   => {
+                    preamble => "You are receiving this email because your "
+                      . "email address was used to $reason for the "
+                      . setting("conference_name")
+                      . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
+                    link => uri_for( path( request->uri, $token ) ),
+                },
                 to      => $user->email,
                 subject => "\u$action_name for the "
                   . setting("conference_name"),
-                body   => $text,
-                type   => 'text',
-                attach => {
-                    Data     => $html,
-                    Encoding => "quoted-printable",
-                    Type     => "text/html"
-                },
-                multipart => 'alternative',
-            };
+            );
         }
         catch {
             error "Could not send email: $_";
@@ -280,6 +265,13 @@ any [ 'get', 'post' ] => qr{
             session logged_in_user_id    => $user->id;
             session logged_in_user_realm => $realm;
 
+            if ( $action eq 'register' ) {
+                flash success => "Welcome to the " . setting('conference_name');
+            }
+            else {
+                flash success => "Password changed";
+            }
+
             return redirect '/profile';
         }
 
@@ -297,5 +289,3 @@ any [ 'get', 'post' ] => qr{
 
     return template "password_reset", $tokens;
 };
-
-true;

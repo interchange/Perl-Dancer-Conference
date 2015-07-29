@@ -35,6 +35,19 @@
     </list>
   </list>
 
+  <list name="alerts-success" iterator="alerts.success">
+    <param name="message" op="hook"/>
+  </list>
+  <list name="alerts-info" iterator="alerts.info">
+    <param name="message" op="hook"/>
+  </list>
+  <list name="alerts-warning" iterator="alerts.warning">
+    <param name="message" op="hook"/>
+  </list>
+  <list name="alerts-error" iterator="alerts.error">
+    <param name="message" op="hook"/>
+  </list>
+
   <list name="extra-js" iterator="extra-js">
     <param name="src" target="src"/>
   </list>

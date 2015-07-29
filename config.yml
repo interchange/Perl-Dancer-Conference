@@ -34,6 +34,8 @@ logger_format: "%t [%P] %L @%D> %m in %f l. %l"
 template: "template_flute"
 
 engines:
+  JSON:
+    allow_blessed: '1'
   template_flute:
     filters:
       boolean:
@@ -65,6 +67,8 @@ engines:
           format: '%R'
           strict:
             empty: 0
+      wiki:
+        class: "PerlDance::Filter::Wiki"
 plugins:
   Auth::Extensible:
     disable_roles: 0
@@ -101,6 +105,10 @@ plugins:
       from: "Perl Dancer 2015 <2015@perl.dance>"
       to: "Perl Dancer 2015 <2015@perl.dance>"
       X-Mailer: "PerlDance2015 1.0"
+  FlashNote:
+    queue: key_multiple
+    arguments: single
+    dequeue: never
   Interchange6::Routes:
     navigation:
       template: product-listing

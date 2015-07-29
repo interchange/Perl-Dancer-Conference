@@ -8,14 +8,18 @@ PerlDance::Routes - routes for PerlDance conference application
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::Email;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
+use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
 use PerlDance::Routes::Account;
 use PerlDance::Routes::Admin;
 use PerlDance::Routes::Profile;
+use PerlDance::Routes::PayPal;
 use PerlDance::Routes::Talk;
+use PerlDance::Routes::Wiki;
 
 =head1 ROUTES
 
@@ -47,8 +51,7 @@ get '/' => sub {
         }
     );
 
-    add_javascript( $tokens, "//maps.google.com/maps/api/js?sensor=false",
-        "/js/index.js" );
+    add_javascript( $tokens, "/js/index.js" );
 
     var no_title_wrapper => 1;
 
@@ -138,7 +141,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     var no_title_wrapper => 1;
 
-    $tokens->{user} = shop_user->search(
+    $tokens->{user} = shop_user->find(
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -148,12 +151,11 @@ get qr{/speakers/(?<id>\d+).*} => sub {
             prefetch =>
               [ { addresses => 'country', }, 'photo' ],
             join => 'conferences_attended',
-            rows => 1,
         }
-    )->first;
+    );
 
     if ( !$tokens->{user} ) {
-        $tokens->{title} = "Speaker Not Found";
+        $tokens->{title} = "Not Found";
         status 'not_found';
         return template '404', $tokens;
     }
@@ -169,9 +171,28 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     $tokens->{has_talks} = 1 if $tokens->{talks}->has_rows;
 
+    my $monger_groups = $tokens->{user}->monger_groups;
+    if ( $monger_groups ) {
+        $monger_groups =~ s/,/ /g;
+        $monger_groups =~ s/(^\s+|\s+$)//g;
+        $tokens->{monger_groups} =
+          [ map { { name => $_ } } split( /\s+/, $monger_groups ) ];
+    }
+
     $tokens->{title} = $tokens->{user}->name;
 
     template 'speaker', $tokens;
+};
+
+=head2 get /users/*
+
+=cut
+
+get '/users/:name' => sub {
+    my $name = param('name');
+    my $user = shop_user->find({ nickname => $name });
+    $name = $user->id if $user;
+    forward "/speakers/$name";
 };
 
 =head2 get /sponsors
@@ -217,12 +238,17 @@ get '/tickets' => sub {
       [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
           ->tickets->active->hri->all ];
 
+    for my $ticket (@{$tokens->{tickets}}) {
+        $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
+    }
+
     template 'tickets', $tokens;
 };
 
 =head2 shop_setup_routes
 
 L<Dancer::Plugin::Interchange6::Routes/shop_setup_routes>
+
 
 =cut
 
@@ -336,6 +362,57 @@ sub add_validator_errors_token {
         $errors{ $key . '_input' } = 'has-error';
     }
     $tokens->{errors} = \%errors;
+}
+
+=head2 send_email( $args_hash );
+
+The following keys are required:
+
+=over 4
+
+=item template
+
+=item tokens
+
+=item to
+
+=item subject
+
+=back
+
+=cut
+
+sub send_email {
+    my %args = @_;
+
+    my $template = delete $args{template};
+    die "template not supplied to send_email" unless $template;
+
+    my $tokens = delete $args{tokens};
+    die "tokens hashref not supplied to send_email"
+      unless ref($tokens) eq 'HASH';
+
+    $tokens->{"conference-logo"} =
+      uri_for(
+        shop_schema->resultset('Media')->search( { label => "email-logo" } )
+          ->first->uri );
+
+    my $html = template $template, $tokens, { layout => 'email' };
+
+    my $f    = HTML::FormatText::WithLinks->new;
+    my $text = $f->parse($html);
+
+    email {
+        %args,
+        body => $text,
+        type => 'text',
+        attach => {
+            Data     => $html,
+            Encoding => "quoted-printable",
+            Type     => "text/html"
+        },
+        multipart => 'alternative',
+    };
 }
 
 true;

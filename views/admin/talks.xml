@@ -1,0 +1,9 @@
+<specification>
+  <list name="talks-item" iterator="talks">
+    <param name="title"/>
+    <param name="accepted" filter="boolean"/>
+    <param name="author" field="author.name"/>
+    <param name="edit" field="talks_id" target="href" op="append"/>
+    <param name="delete" field="talks_id" target="href" op="append"/>
+  </list>
+</specification>

@@ -13,6 +13,8 @@ $(document).ready(function() {
   var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
   updateCartQuantityDisplay();
 
+  var htmlFragment = "div.cart-fragment";
+
   // cart product quantity change
   $(".cart-container").on( "change keypress", ".product .quantity", function() {
     var el = $(this);
@@ -36,7 +38,7 @@ $(document).ready(function() {
           url: "/cart",
           data: { update: sku, quantity: qty, xsrf_token: xsrfMeta },
           success: function(json) {
-            el.closest("table").replaceWith(json.html);
+            el.closest(htmlFragment).replaceWith(json.html);
             updateCartQuantityDisplay();
           }
         });
@@ -54,10 +56,11 @@ $(document).ready(function() {
       url: "/cart",
       data: { update: sku, quantity: qty, xsrf_token: xsrfMeta },
       success: function(json) {
-        el.closest("table").replaceWith(json.html);
+        el.closest(htmlFragment).replaceWith(json.html);
         updateCartQuantityDisplay();
       }
     });
+    return false;
   });
 
   // delete product from cart
@@ -67,7 +70,7 @@ $(document).ready(function() {
       type: "GET",
       url: el.attr("href"),
       success: function(json) {
-        el.closest("table").replaceWith(json.html);
+        el.closest(htmlFragment).replaceWith(json.html);
         updateCartQuantityDisplay();
       }
     });

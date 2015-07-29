@@ -1,0 +1,4 @@
+<specification>
+  <value name="cloud" op="hook"/>
+  <value name="title" class="panel-title"/>
+</specification>

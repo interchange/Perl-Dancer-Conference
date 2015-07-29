@@ -15,5 +15,4 @@ my $dh     = DBIx::Class::DeploymentHandler->new(
         sql_translator_args => { add_drop_table => 0 }
     }
 );
-$dh->prepare_version_storage_install;
-$dh->prepare_deploy;
+$dh->install;

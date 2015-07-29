@@ -1,0 +1,18 @@
+<specification>
+  <form name="update_create_talk" link="name">
+    <field name="talks_id"/>
+    <field name="author" iterator="author"
+       iterator_value_key="users_id" iterator_name_key="name"/>
+    <field name="duration"/>
+    <field name="title"/>
+    <field name="tags"/>
+    <field name="abstract"/>
+    <field name="url"/>
+    <field name="comments"/>
+    <field name="accepted"/>
+    <field name="confirmed"/>
+    <field name="lightning"/>
+    <field name="start_time"/>
+    <field name="room"/>
+  </form>
+</specification>

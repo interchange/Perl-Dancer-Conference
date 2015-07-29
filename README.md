@@ -13,21 +13,3 @@ On a Debian system install the following packages:
 ```
 geoip-bin libgeoip-dev geoip-database-contrib
 ```
-
-If your Dancer app is behind a proxy then you will also need:
-
-```
-  Plack::Middleware::XForwardedFor
-```
-
-and add environment something like:
-
-```
-plack_middlewares:
-  -
-    - XForwardedFor
-    - trust
-    -
-      - 10.17.17.0/24
-```
-

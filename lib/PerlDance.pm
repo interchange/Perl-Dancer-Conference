@@ -8,6 +8,7 @@ PerlDance - Perl Dancer 2015 conference site
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
 use PerlDance::Routes;
@@ -117,6 +118,18 @@ hook 'before_layout_render' => sub {
     $tokens->{"meta-description"} =
       setting('conference_name') . ". " . ( $tokens->{description} || '' );
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
+
+    # flash alerts
+    my $flash = flash_flush;
+    foreach my $key ( keys %$flash ) {
+        foreach my $message ( @{$flash->{$key}} ) {
+            push @{$tokens->{alerts}->{$key}}, { message => $message };
+        }
+    }
+};
+
+hook after_layout_render => sub {
+    flash_flush;
 };
 
 =head1 ROUTES
