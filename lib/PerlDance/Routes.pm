@@ -141,7 +141,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     var no_title_wrapper => 1;
 
-    $tokens->{user} = shop_user->search(
+    $tokens->{user} = shop_user->find(
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -151,12 +151,11 @@ get qr{/speakers/(?<id>\d+).*} => sub {
             prefetch =>
               [ { addresses => 'country', }, 'photo' ],
             join => 'conferences_attended',
-            rows => 1,
         }
-    )->first;
+    );
 
     if ( !$tokens->{user} ) {
-        $tokens->{title} = "Speaker Not Found";
+        $tokens->{title} = "Not Found";
         status 'not_found';
         return template '404', $tokens;
     }
@@ -171,6 +170,14 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     );
 
     $tokens->{has_talks} = 1 if $tokens->{talks}->has_rows;
+
+    my $monger_groups = $tokens->{user}->monger_groups;
+    if ( $monger_groups ) {
+        $monger_groups =~ s/,/ /g;
+        $monger_groups =~ s/(^\s+|\s+$)//g;
+        $tokens->{monger_groups} =
+          [ map { { name => $_ } } split( /\s+/, $monger_groups ) ];
+    }
 
     $tokens->{title} = $tokens->{user}->name;
 
