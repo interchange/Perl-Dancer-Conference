@@ -242,7 +242,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
 
     $form->fill(
         {
-            author_id       => $talk->author_id,
+            author          => $talk->author_id,
             duration        => $talk->duration,
             title           => $talk->title,
             tags            => $talk->tags,
@@ -256,7 +256,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             room            => $talk->room
         }
     );
-    $tokens->{author} = [ rset('User')->all ];
+    $tokens->{authors} = [ rset('User')->all ];
     $tokens->{form}    = $form;
     $tokens->{title}   = "Edit Talk";
 

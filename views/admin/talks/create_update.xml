@@ -1,7 +1,7 @@
 <specification>
   <form name="update_create_talk" link="name">
     <field name="talks_id"/>
-    <field name="author" iterator="author"
+    <field name="author" iterator="authors"
        iterator_value_key="users_id" iterator_name_key="name"/>
     <field name="duration"/>
     <field name="title"/>
