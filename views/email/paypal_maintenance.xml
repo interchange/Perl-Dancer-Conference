@@ -1,0 +1,12 @@
+<specification>
+  <value name="email"/>
+
+  <list name="orderline" iterator="cart.products">
+    <param name="sku"/>
+    <param name="name"/>
+    <param name="price"/>
+    <param name="quantity"/>
+    <param name="subtotal"/>
+  </list>
+
+</specification>

@@ -7,6 +7,8 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 
+use Try::Tiny;
+use Data::Transpose::Validator;
 use DateTime;
 use Business::PayPal::API::ExpressCheckout;
 
@@ -188,6 +190,48 @@ get '/paypal/getrequest' => sub {
         paypal_notify_url => request->base . 'paypal-notify',
         expand_credit_card_tab => undef,
     };
+};
+
+post '/paypal/maintenance' => sub {
+    my %params = params('body');
+    my %errors;
+    my $form = form('paypal-maintenance');
+    my $valid;
+    my $validator = Data::Transpose::Validator->new;
+    my $tokens = {form => $form};
+
+    if ($params{form_submit}) {
+        $validator->prepare(
+            email => {
+                required  => 1,
+                validator => 'EmailValid'
+            },
+        );
+
+        $valid = $validator->transpose( \%params );
+
+        PerlDance::Routes::add_validator_errors_token( $validator,
+                                                       $tokens );
+    }
+
+    if ($valid) {
+        my $email = $params{email};
+
+        PerlDance::Routes::send_email(
+                template => "email/paypal_maintenance",
+                tokens   => {
+                    email => $email,
+                    cart => shop_cart(),
+                },
+                subject => "Request for payment from $email",
+            );
+
+        $form->reset;
+
+        return template 'paypal_sent',
+    }
+
+    template 'paypal_maintenance', $tokens;
 };
 
 sub complete_transaction {

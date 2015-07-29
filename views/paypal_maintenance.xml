@@ -1,0 +1,8 @@
+<specification>
+  <form name="paypal-maintenance" link="name">
+    <field name="email"/>
+  </form>
+  <value name="email_input" field="errors.email_input" target="class"
+    op="append" joiner=" "/>
+  <value name="email_error" field="errors.email"/>
+</specification>

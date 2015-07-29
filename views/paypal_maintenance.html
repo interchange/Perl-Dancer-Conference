@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="center-block">
+    <h2 class="text-center">PayPal Maintenance</h2>
+  <div class="center-block">
+  <div class="text text-center">We are sorry, but PayPal payment is currently not available.<br>Please enter your email address in the field below, so we can inform you when payment is available again.</div>
+  <form class="text-center form-inline form" name="paypal-maintenance" method="post" action="/paypal/maintenance">
+  <input type="hidden" name="form_submit" value="1"/>
+    <div class="form-group email_input">
+      <input class="form-control" type="email" name="email" size="30" required placeholder="Please enter your email address">
+      <div class="help-block email_error"></div>
+      <input class="btn btn-primary submit" type="submit" value="Submit">
+    </div>
+  </form>
+</div>
