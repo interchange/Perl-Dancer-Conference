@@ -67,6 +67,8 @@ engines:
           format: '%R'
           strict:
             empty: 0
+      wiki:
+        class: "PerlDance::Filter::Wiki"
 plugins:
   Auth::Extensible:
     disable_roles: 0

@@ -1,0 +1,11 @@
+<specification>
+  <pattern name="nickpat" type="string">NickName</pattern>
+  <list name="node" iterator="nodes">
+    <param name="title_text" class="title" field="title"/>
+    <param name="title" target="href" op="append"/>
+    <param name="created" filter="date"/>
+    <param name="user_link" target="href" op="append" field="author.id"/>
+    <param name="author_name" field="author.name"/>
+    <param name="nickname" field="author.nickname" pattern="nickpat"/>
+  </list>
+</specification>

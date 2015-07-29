@@ -19,6 +19,7 @@ use PerlDance::Routes::Admin;
 use PerlDance::Routes::Profile;
 use PerlDance::Routes::PayPal;
 use PerlDance::Routes::Talk;
+use PerlDance::Routes::Wiki;
 
 =head1 ROUTES
 
@@ -174,6 +175,17 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     $tokens->{title} = $tokens->{user}->name;
 
     template 'speaker', $tokens;
+};
+
+=head2 get /users/*
+
+=cut
+
+get '/users/:name' => sub {
+    my $name = param('name');
+    my $user = shop_user->find({ nickname => $name });
+    $name = $user->id if $user;
+    forward "/speakers/$name";
 };
 
 =head2 get /sponsors

@@ -1,0 +1,21 @@
+<specification>
+  <pattern name="namepat" type="string">name</pattern>
+  <pattern name="nickpat" type="string">NickName</pattern>
+  <pattern name="verpat" type="string">12</pattern>
+  <value name="panel-title" field="title"/>
+  <value name="latest-link" field="count"/>
+  <value name="title" field="latest.title" class="latest-link" target="href" op="append"/>
+  <value name="created" field="latest.created" filter="date"/>
+  <value name="user_link" target="href" op="append" field="latest.author.id"/>
+  <value name="author_name" field="latest.author.name"/>
+  <value name="nickname" field="latest.author.nickname" pattern="nickpat"/>
+  <list name="history" iterator="history">
+    <param name="version" class="vlink"/>
+    <param name="vlink" field="version" class="link" target="href" pattern="verpat"/>
+    <param name="link" field="node.title" target="href" pattern="namepat"/>
+    <param name="created" field="node.created" filter="date"/>
+    <param name="user_link" target="href" op="append" field="node.author.id"/>
+    <param name="author_name" field="node.author.name"/>
+    <param name="nickname" field="node.author.nickname" pattern="nickpat"/>
+  </list>
+</specification>

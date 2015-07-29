@@ -1,0 +1,13 @@
+<specification>
+  <pattern name="nickpat" type="string">NickName</pattern>
+  <container name="has_node" value="node"/>
+  <container name="no_node" value="!node"/>
+  <container name="has_history" value="has_history"/>
+  <value name="content" field="node.content" filter="wiki" op="hook"/>
+  <value name="title" class="panel-title"/>
+  <value name="created" field="node.created" filter="date"/>
+  <value name="author_name" field="node.author.name"/>
+  <value name="nickname" field="node.author.nickname" pattern="nickpat"/>
+  <value name="edit" field="uri" target="href" op="append"/>
+  <value name="history" field="uri" target="href" op="append"/>
+</specification>

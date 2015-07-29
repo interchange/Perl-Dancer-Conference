@@ -49,8 +49,6 @@ get '/talks' => sub {
     }
     $tokens->{cloud} = $cloud->html;
 
-    print STDERR $cloud->css;
-
     my $conditions = {};
 
     if (! user_has_role('admin')) {
