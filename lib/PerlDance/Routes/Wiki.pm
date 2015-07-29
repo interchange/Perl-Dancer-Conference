@@ -381,7 +381,7 @@ get '/wiki/tags/:tag' => sub {
     }
 
     $tokens->{nodes} = \@nodes;
-    $tokens->{title} = "Wiki - Pages with Tag $tag";
+    $tokens->{title} = "Wiki - Pages tagged $tag";
 
     template 'wiki/tagged_pages', $tokens;
 };
