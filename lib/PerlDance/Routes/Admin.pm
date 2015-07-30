@@ -12,6 +12,8 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 use Try::Tiny;
 
+use PerlDance::Routes::Admin::Users;
+
 =head1 ROUTES 
 
 =head2 get /admin

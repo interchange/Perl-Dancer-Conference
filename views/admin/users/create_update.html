@@ -1,0 +1,76 @@
+<div class="container">
+  <form class="form-horizontal" method="post" name="update_create_users">
+    <input type="hidden" name="users_id">
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <a class="btn btn-default" href="/admin/users">User List</a>
+      </div>
+    </div>
+
+    <div class="form-group email_input">
+      <label for="inputEmail" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputEmail" name="email" required placeholder="Email">
+        <div class="help-block first_name_error"></div>
+      </div>
+    </div> 
+
+    <div class="form-group first_name_input">
+      <label for="inputFirstName" class="col-sm-2 control-label">First Name</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="inputFirstName" name="first_name" required placeholder="First Name">
+        <div class="help-block first_name_error"></div>
+      </div>
+    </div> 
+
+
+        <div class="form-group last_name_input">
+          <label for="inputLastName" class="col-sm-2 control-label">Last Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputLastName" name="last_name" placeholder="Last Name">
+            <div class="help-block last_name_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group nickname_input">
+          <label for="inputNickname" class="col-sm-2 control-label">Nickname</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputNickname" name="nickname" placeholder="Nickname">
+            <div class="help-block nickname_error"></div>
+          </div>
+        </div>
+        <div class="form-group monger_groups_input">
+          <label for="inputMongerGroups" class="col-sm-2 control-label">Monger Groups</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputMongerGroups" name="monger_groups" placeholder="Monger Groups">
+            <div class="help-block monger_groups_error"></div>
+            <div class="help-block">City.pm, drinkers.pm, etc</div>
+          </div>
+        </div>
+
+        <div class="form-group pause_id_input">
+          <label for="inputPauseId" class="col-sm-2 control-label">PAUSE id</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPauseId" name="pause_id" placeholder="PauseId">
+            <div class="help-block pause_id_error"></div>
+          </div>
+        </div>
+
+        <div class="form-group bio_input">
+          <label for="inputBio" class="col-sm-2 control-label">Bio</label>
+          <div class="col-sm-10">
+            <textarea rows="4" class="form-control" id="inputBio" name="bio" required placeholder="Short bio"></textarea>
+            <div class="help-block bio_error"></div>
+          </div>
+        </div>
+
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary submit">Submit</button>
+      </div>
+    </div>
+
+  </form>
+</div>

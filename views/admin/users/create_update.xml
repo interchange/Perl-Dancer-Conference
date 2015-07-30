@@ -1,0 +1,11 @@
+<specification>
+  <form name="update_create_users" link="name">
+    <field name="email"/>
+    <field name="first_name"/>
+    <field name="last_name"/>
+    <field name="nickname"/>
+    <field name="monger_groups"/>
+    <field name="pause_id"/>
+    <field name="bio"/>
+  </form>
+</specification>
