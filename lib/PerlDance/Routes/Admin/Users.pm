@@ -123,10 +123,14 @@ post '/admin/users/edit/:id' => require_role admin => sub {
     my %values = %{ $form->values };
     $values{bio} =~ s/\r\n/\n/g;
 
+    if ($values{nickname} !~ /\S/) {
+        $values{nickname} = undef;
+    }
+
     # TODO: validate values and if OK then try update
     $user->update(
         {
-            username => $values{email},
+            username => lc($values{email}),
             email => $values{email},
             first_name => $values{first_name},
             last_name => $values{last_name},
