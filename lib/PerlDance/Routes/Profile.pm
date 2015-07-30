@@ -85,13 +85,12 @@ get '/' => sub {
         }
     }
 
-    # *** HACK *** - temporarily remove photo update until working correctly
     my $tokens = {
         title       => 'Profile',
         description => 'Update profile',
         has_talks   => scalar(@$talks),
         profile_nav =>
-          [ $nav->active_children->search({'me.uri' => { '!=' => 'profile/photo' }})->order_by('!priority')->hri->all ],
+          [ $nav->active_children->order_by('!priority')->hri->all ],
         talks => $talks,
     };
 
@@ -368,23 +367,40 @@ get '/photo' => sub {
 
 post '/photo/upload' => sub {
     if ( request->is_ajax ) {
+
         # FIXME: upload dir from config
         my $file = upload('photo');
+
+        # copy file to uploads dir
         my $upload_dir = path( setting('public'), 'img', 'uploads' );
-        my ( undef, undef, $tempname ) = File::Spec->splitpath( $file->tempname );
+
+        my ( undef, undef, $tempname ) =
+          File::Spec->splitpath( $file->tempname );
+        $tempname = "temp-$tempname";
+
         my $target = path( $upload_dir, $tempname );
+        $file->copy_to($target);
+
+        # stash path to new file location in session
         session new_photo => $target;
-        $file->copy_to($target); 
+
+        # return url of image
+        my $url = uri_for( path( '/', 'img', 'uploads', $tempname ) );
+        debug "image url: $url";
+
+        # force stringification of url since it is a URI object
         content_type('application/json');
-        to_json( { src => path( '/', 'img', 'uploads', $tempname ) } );
+        return to_json({ src => "$url" });
     }
     else {
         # TODO: handle non-ajax post
     }
 };
+
 post '/photo/crop' => sub {
     use Imager;
     my $file = session('new_photo');
+    my $user = logged_in_user;
 
     my $ft = File::Type->new;
     my $mime_type = $ft->checktype_filename($file);
@@ -394,7 +410,8 @@ post '/photo/crop' => sub {
     ( my $type = $mime_type ) =~ s/^.+?\///;
 
     my $img = Imager->new;
-    $img->read( file => $file ) or die "Cannot read photo $file: ", $img->errstr;
+    $img->read( file => $file )
+      or die "Cannot read photo $file: ", $img->errstr;
 
     debug "cropping photo";
 
@@ -418,21 +435,30 @@ post '/photo/crop' => sub {
 
     $img->write( %options ) or die "image write failed";
 
-    my $user = logged_in_user;
+    ( my $file_ext = $file ) =~ s/^.+\.//;
+
+    my $target = lc( $user->name );
+    $target =~ s/(^\s+|\s+$)//g;
+    $target =~ s/\s+/-/g;
+    $target = "img/uploads/user-" . $user->id . "-$target.$file_ext";
+
     my $photo = $user->photo;
-    if ( !$photo ) {
+
+    if ( $photo ) {
+        debug "updating existing photo record";
+        $photo->update(
+            {
+                file           => $target,
+                uri            => "/$target",
+                mime_type      => $mime_type,
+            }
+        ) or die "failed to update photo record in database";
+    }
+    else {
 
         debug "creating new photo record";
 
         my $media_type_image = rset('MediaTyp')->find( { type => 'image' } );
-
-        ( my $file_ext = $file ) =~ s/^.+?\.//;
-
-        my $target = lc($user->name);
-        $target =~ s/(^\s+|\s+$)//g;
-        $target =~ s/\s+/-/g;
-        $target = "img/people/$target.$file_ext";
-
         $user->create_related(
             'photo',
             {
@@ -444,11 +470,11 @@ post '/photo/crop' => sub {
         ) or die "failed to create photo record in database";
     }
 
-    my $target = path( setting('public'), $photo->file );
+    my $fullpath = path( setting('public'), $target );
 
-    debug "moving temp file to: $target";
+    debug "moving temp file to: $fullpath";
 
-    move( $file, $target );
+    move( $file, $fullpath );
 
     redirect '/profile/photo';
 };

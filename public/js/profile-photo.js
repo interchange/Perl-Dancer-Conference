@@ -15,22 +15,30 @@ $(document).on('ready', function(){
         maxFileSize: 10240
     });
     $("#photo-upload").on('fileuploaded', function(e, data) {
+        
+        var $src = data.response.src;
+
         $(".upload-panel").addClass('hidden');
-        console.log(data);
+        $(".crop-panel").removeClass('hidden');
+
         function saveCoords(c) {
             $('#x').val(c.x);
             $('#y').val(c.y);
             $('#h').val(c.h);
             $('#w').val(c.w);
         };
-        $("#new-photo").attr('src', data.response.src).Jcrop({
-            aspectRatio: 1,
-            minSize: [ 300, 300 ],
-            boxWidth: 500,
-            onChange: saveCoords,
-            onSelect: saveCoords
+        $("#new-photo").attr("src", $src).load(function(){
+            $(this).Jcrop({
+                aspectRatio: 1,
+                minSize: [ 300, 300 ],
+                boxWidth: 400,
+                onChange: saveCoords,
+                onSelect: saveCoords,
+                setSelect: [ 50, 50, 200, 200]
+            });
         });
-        $(".crop-panel").removeClass('hidden');
+        console.log($("#new-photo").attr('src'));
+        console.log("end");
     });
 });
 
