@@ -12,9 +12,14 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 use Try::Tiny;
 
+use PerlDance::Routes::Admin::Navigation;
 use PerlDance::Routes::Admin::Users;
 
 =head1 ROUTES 
+
+See also:
+
+L<PerlDance::Routes::Admin::Navigation>, L<PerlDance::Routes::Admin::Users>
 
 =head2 get /admin
 
@@ -41,7 +46,7 @@ get '/admin/news' => require_role admin => sub {
         }
     );
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
+    PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
 
     template 'admin/news', $tokens;
 };
@@ -163,7 +168,7 @@ get '/admin/talks' => require_role admin => sub {
         },
     );
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
+    PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
 
     template 'admin/talks', $tokens;
 };

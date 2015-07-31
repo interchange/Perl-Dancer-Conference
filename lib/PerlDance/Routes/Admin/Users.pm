@@ -29,7 +29,7 @@ get '/admin/users' => require_role admin => sub {
         }
     );
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/admin_news.js' );
+    PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
 
     template 'admin/users', $tokens;
 };

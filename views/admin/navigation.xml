@@ -1,0 +1,16 @@
+<specification>
+  <list name="nav-item" iterator="navigation_list">
+    <param name="navigation_id"/>
+    <param name="parent_id"/>
+    <param name="uri"/>
+    <param name="type"/>
+    <param name="scope"/>
+    <param name="name"/>
+    <param name="description"/>
+    <param name="alias"/>
+    <param name="priority"/>
+    <param name="isactive" field="active" filter="boolean"/>
+    <param name="edit" field="navigation_id" target="href" op="append"/>
+    <param name="delete" field="navigation_id" target="href" op="append"/>
+  </list>
+</specification>
