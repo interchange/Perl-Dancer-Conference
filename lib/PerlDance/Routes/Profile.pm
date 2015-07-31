@@ -408,6 +408,7 @@ post '/photo/crop' => sub {
     die "Not an image" unless $mime_type =~ /^image\//;
 
     ( my $type = $mime_type ) =~ s/^.+?\///;
+    $type = 'png' if lc($type) eq 'x-png';
 
     my $img = Imager->new;
     $img->read( file => $file )
@@ -433,7 +434,7 @@ post '/photo/crop' => sub {
 
     debug "saving image";
 
-    $img->write( %options ) or die "image write failed";
+    $img->write( %options ) or die "image write failed: ", $img->errstr;
 
     ( my $file_ext = $file ) =~ s/^.+\.//;
 
@@ -618,9 +619,10 @@ get '/talk/:id' => sub {
             comments   => $talk->comments,
             confirmed  => $talk->confirmed,
         );
-        $tokens->{form}     = $form;
-        $tokens->{accepted} = $talk->accepted;
-        $tokens->{title}    = "Edit Talk",
+        $tokens->{form}      = $form;
+        $tokens->{accepted}  = $talk->accepted;
+        $tokens->{confirmed} = $talk->confirmed;
+        $tokens->{title}     = "Edit Talk",
 
         add_durations_token($tokens);
 
@@ -650,6 +652,7 @@ post '/talk/:id' => sub {
         # all good so validate
 
         my $form = form('create_update_talk');
+        my $values = $form->values;
 
         my ( $validator, $valid ) = validate_talk($form);
 
@@ -672,7 +675,7 @@ post '/talk/:id' => sub {
                         duration  => $valid->{duration},
                         url       => $valid->{url} || '',
                         comments  => $valid->{comments} || '',
-                        confirmed => $valid->{confirmed} ? 1 : 0,
+                        confirmed => $valid->{confirmed},
                     }
                 );
 
@@ -713,6 +716,9 @@ post '/talk/:id' => sub {
                 # FIXME: handle errors
                 error "Talk submission error: $_";
             };
+        }
+        else {
+            debug "errors: ", $validator->errors_as_hashref_for_humans;
         }
 
         PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
@@ -852,7 +858,7 @@ sub validate_talk {
             required => 0,
         },
         confirmed => {
-            required => 0,
+            required => 1,
         },
     );
 

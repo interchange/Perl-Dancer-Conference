@@ -9,10 +9,12 @@
     <field name="duration" iterator="durations"/>
     <field name="url"/>
     <field name="comments"/>
-    <field name="comfirmed"/>
+    <field name="confirmed"/>
   </form>
 
   <container name="accepted" value="accepted"/>
+  <container name="is_confirmed" value="confirmed"/>
+  <container name="not_confirmed" value="!confirmed"/>
 
   <value name="talk_title_input" field="errors.talk_title_input" target="class"
     op="append" joiner=" "/>
