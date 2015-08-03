@@ -1,6 +1,25 @@
 package PerlDance::Schema;
 
-our $VERSION = 7;
+our $VERSION = 8;
+
+use Interchange6::Schema::Result::Address;
+package Interchange6::Schema::Result::Address;
+use Geo::Coder::OSM;
+
+=head1 L<Interchange6::Schema::Result::User>
+
+=head2 ACCESSORS
+
+=head3 latitude
+
+=head3 longitude
+
+=cut
+
+__PACKAGE__->add_columns(
+    latitude  => { data_type => "float", size => 20, is_nullable => 1 },
+    longitude => { data_type => "float", size => 30, is_nullable => 1 },
+);
 
 use Interchange6::Schema::Result::Message;
 package Interchange6::Schema::Result::Message;
