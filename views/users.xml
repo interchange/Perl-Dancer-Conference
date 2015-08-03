@@ -1,6 +1,8 @@
 <specification>
   <pattern name="nickpat" type="string">NickName</pattern>
   <value name="panel-title" field="title"/>
+  <value name="total_users"/>
+  <value name="count" field="users.count"/>
   <list name="user" iterator="users">
     <param name="latitude" field="addresses.first.latitude"/>
     <param name="longitude" field="addresses.first.longitude"/>

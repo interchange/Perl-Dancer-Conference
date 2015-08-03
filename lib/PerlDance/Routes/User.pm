@@ -91,16 +91,25 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 get '/users' => sub {
     my $tokens = {};
 
-    $tokens->{users} = shop_user->search(
+    my $users = shop_user->search(
         {
-            'addresses.type'                      => 'primary',
             'conferences_attended.conferences_id' => setting('conferences_id'),
-            'addresses.latitude'                  => { '!=' => undef },
-            'addresses.longitude'                 => { '!=' => undef },
+        },
+        {
+            join => 'conferences_attended',
+        }
+    );
+
+    $tokens->{total_users} = $users->count;
+
+    $tokens->{users} = $users->search(
+        {
+            'addresses.type'      => 'primary',
+            'addresses.latitude'  => { '!=' => undef },
+            'addresses.longitude' => { '!=' => undef },
         },
         {
             prefetch => [ 'addresses', 'photo' ],
-            join     => 'conferences_attended',
         }
     );
 
