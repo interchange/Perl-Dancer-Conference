@@ -65,7 +65,7 @@ post '/admin/users/create' => require_role admin => sub {
             email         => $values{email},
             first_name    => $values{first_name},
             last_name     => $values{last_name},
-            nickname      => $values{nickname},
+            nickname      => $values{nickname} || undef,
             monger_groups => $values{monger_groups},
             pause_id      => $values{pause_id},
             bio           => $values{bio},
