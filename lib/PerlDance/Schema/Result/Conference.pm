@@ -71,6 +71,16 @@ has_many
   conferences_attendees => 'PerlDance::Schema::Result::ConferenceAttendee',
   "conferences_id";
 
+=head2 events
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::Event>
+
+=cut
+
+has_many events => 'PerlDance::Schema::Result::Event', "conferences_id";
+
 =head2 talks
 
 Type: has_many
