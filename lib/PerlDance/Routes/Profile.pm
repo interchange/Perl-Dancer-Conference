@@ -582,6 +582,8 @@ post '/talk/create' => sub {
         }
     }
 
+    debug "talk submission errors: ", $validator->errors_as_hashref_for_humans;
+
     PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
 
     $tokens->{form} = $form;
@@ -858,7 +860,7 @@ sub validate_talk {
             required => 0,
         },
         confirmed => {
-            required => 1,
+            required => 0,
         },
     );
 
