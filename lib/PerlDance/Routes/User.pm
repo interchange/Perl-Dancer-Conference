@@ -106,7 +106,8 @@ get '/users' => sub {
 
     $tokens->{title} = "User Map";
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/usermap.js' );
+    PerlDance::Routes::add_javascript( $tokens, '/js/usermap.js',
+        '/js/leaflet.markercluster.js' );
 
     template 'users', $tokens;
 

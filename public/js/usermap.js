@@ -7,11 +7,13 @@ $(document).ready(function() {
     id: 'petermottram.mp1dpak2',
     accessToken: 'pk.eyJ1IjoicGV0ZXJtb3R0cmFtIiwiYSI6IjE1NWI5NjRjN2IxNjNkYTM1MzI3YzY5M2E0YjZjMDc0In0.T0bpnZGXCQBSW_SOv_nWHA'
   }).addTo(map);
+  var markers = new L.MarkerClusterGroup();
   $("#user-list").children().each(function() {
-    var marker = L.marker([
+    markers.addLayer(new L.marker([
       $(this).find(".latitude").text(),
       $(this).find(".longitude").text()
-    ]).addTo(map);
-    marker.bindPopup($(this).find(".html").html());
+    ]));
+    //marker.bindPopup($(this).find(".html").html());
   });
+  map.addLayer(markers);
 });
