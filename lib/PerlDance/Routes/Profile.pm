@@ -17,6 +17,7 @@ use Data::Transpose::Validator;
 use File::Copy;
 use File::Spec;
 use File::Type;
+use Geo::Coder::OSM;
 use Geo::IP;
 use HTML::FormatText::WithLinks;
 use Imager;
@@ -153,10 +154,12 @@ get '/edit' => sub {
     )->first;
 
     if ($address) {
-        $values{company} = $address->company;
-        $values{city}    = $address->city;
-        $values{country} = $address->country_iso_code;
-        $values{company} = $address->company;
+        $values{company}   = $address->company;
+        $values{city}      = $address->city;
+        $values{country}   = $address->country_iso_code;
+        $values{company}   = $address->company;
+        $values{latitude}  = $address->latitude;
+        $values{longitude} = $address->longitude;
     }
     else {
 
@@ -173,9 +176,11 @@ get '/edit' => sub {
 
                 if ( my $g = Geo::IP->open( $geoipdb->{city} ) ) {
                     my $record = $g->record_by_addr($ipaddress);
-                    if ( $record ) {
-                        $values{city}    = $record->city;
-                        $values{country} = $record->country_code;
+                    if ($record) {
+                        $values{city}      = $record->city;
+                        $values{country}   = $record->country_code;
+                        $values{latitude}  = $record->latitude;
+                        $values{longitude} = $record->longitude;
                     }
                 }
                 elsif ( $g = Geo::IP->open( $geoipdb->{country4} ) ) {
@@ -206,6 +211,8 @@ get '/edit' => sub {
     $form->reset;
     $form->fill( \%values );
     $tokens->{form} = $form;
+
+    PerlDance::Routes::add_javascript( $tokens, '/js/profile-edit.js' );
 
     template 'profile/edit', $tokens;
 };
@@ -248,6 +255,8 @@ post '/edit' => sub {
                 company => $values{company} || '',
                 city    => $values{city}    || '',
                 country_iso_code => $values{country},
+                latitude         => $values{latitude},
+                longitude        => $values{longitude},
             }
         );
     }
@@ -260,6 +269,8 @@ post '/edit' => sub {
                     company          => $values{company} || '',
                     city             => $values{city} || '',
                     country_iso_code => $values{country},
+                    latitude         => $values{latitude},
+                    longitude        => $values{longitude},
                 }
             );
         }
@@ -268,6 +279,32 @@ post '/edit' => sub {
     flash success => "Profile updated.";
     $form->reset;
     redirect '/profile';
+};
+
+=head2 post /geocode
+
+Ajax route to geocode address data
+
+=cut
+
+post '/geocode' => sub {
+    my $address = param 'address';
+
+    debug "geocoding $address";
+
+    my ( $latitude, $longitude );
+    my $geocoder = Geo::Coder::OSM->new;
+    my $location = $geocoder->geocode( location => $address );
+
+    debug to_dumper($location);
+
+    if ($location) {
+        $latitude  = $location->{lat};
+        $longitude = $location->{lon};
+    }
+
+    content_type 'application/json';
+    return to_json( { latitude => $latitude, longitude => $longitude } );
 };
 
 =head2 get /password
