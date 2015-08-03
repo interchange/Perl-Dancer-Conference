@@ -228,6 +228,7 @@ post '/edit' => sub {
         $values{$field} ||= '';
         $user->$field($values{$field});
     }
+    $values{nickname} ||= undef;
     $user->update;
 
     my $address = $user->search_related(
