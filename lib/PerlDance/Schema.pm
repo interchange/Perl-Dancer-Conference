@@ -4,7 +4,6 @@ our $VERSION = 8;
 
 use Interchange6::Schema::Result::Address;
 package Interchange6::Schema::Result::Address;
-use Geo::Coder::OSM;
 
 =head1 L<Interchange6::Schema::Result::User>
 
