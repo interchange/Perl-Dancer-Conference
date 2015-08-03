@@ -1,8 +1,12 @@
 <specification>
+  <pattern name="nickpat" type="string">NickName</pattern>
   <value name="panel-title" field="title"/>
   <list name="user" iterator="users">
     <param name="latitude" field="addresses.first.latitude"/>
     <param name="longitude" field="addresses.first.longitude"/>
     <param name="name"/>
+    <param name="nickname" op="toggle" pattern="nickpat"/>
+    <param name="link" target="href" op="append" field="uri"/>
+    <param name="photo" target="src" field="photo.uri"/>
   </list>
 </specification>

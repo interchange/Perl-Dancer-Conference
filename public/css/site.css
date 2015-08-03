@@ -153,6 +153,9 @@ h4.subscribe {
   height: 100%;
   width: 100%;
 }
+#usermap img.photo {
+  max-height: 100px;
+}
 /* title wrapper */
 .title-wrapper {
   background-image: url("/img/meliavienna-carrusel51.jpg");
