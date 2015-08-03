@@ -99,6 +99,27 @@ sub insert {
 
 =head2 METHODS
 
+=head3 photo_uri
+
+Returns the uri of the related L</photo> if it exists or else the uri
+for the Media row where C<file> = C<img/people/unknown.jpg>.
+
+=cut
+
+sub photo_uri {
+    my $self  = shift;
+    my $photo = $self->photo;
+    if ( !$photo ) {
+        $photo = $self->result_source->schema->resultset('Media')->find(
+            {
+                file => 'img/people/unknown.jpg'
+            }
+        );
+        return undef unless $photo;
+    }
+    return $photo->uri;
+}
+
 =head3 uri
 
 uri component for user constructed from users_id and lower case name. We 

@@ -5,7 +5,7 @@
       <param name="company" field="addresses.first.company"/>
       <param name="city" field="addresses.first.city"/>
       <param name="country" field="addresses.first.country.name"/>
-      <param name="photo" target="src" field="photo.uri"/>
+      <param name="photo" target="src" field="photo_uri"/>
       <param name="speaker-link" target="href" op="append" field="uri"/>
     </list>
   </list>

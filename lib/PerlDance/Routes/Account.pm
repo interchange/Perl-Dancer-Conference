@@ -138,8 +138,15 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
 
         # new registration
         try {
+            my $media_id = shop_schema->resultset('Media')
+              ->find( { file => 'img/people/unknown.jpg' } )->id;
             $user = shop_user->create(
-                { username => $username, email => $email } );
+                {
+                    username => $username,
+                    email    => $email,
+                    media_id => $media_id,
+                }
+            );
         }
         catch {
             error "create user failed in $action: $_";

@@ -4,7 +4,7 @@
   <value name="photo-link" target="href" op="append" field="talk.author.uri"/>
   <value name="speaker-link" target="href" op="append" field="talk.author.uri"/>
   <value name="author" class="speaker-link" field="talk.author.name"/>
-  <value name="photo" target="src" field="talk.author.photo.uri"/>
+  <value name="photo" target="src" field="talk.author.photo_uri"/>
   <value name="date" field="talk.start_time" filter="date_only"/>
   <value name="duration_display" field="talk.duration_display"/>
   <container name="session-location" value="talk.room">

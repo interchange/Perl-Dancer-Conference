@@ -9,6 +9,6 @@
     <param name="name"/>
     <param name="nickname" op="toggle" pattern="nickpat"/>
     <param name="link" target="href" op="append" field="uri"/>
-    <param name="photo" target="src" field="photo.uri"/>
+    <param name="photo" target="src" field="photo_uri"/>
   </list>
 </specification>

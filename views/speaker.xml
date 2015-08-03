@@ -13,7 +13,7 @@
   <value name="company" field="user.addresses.first.company"/>
   <value name="city" field="user.addresses.first.city"/>
   <value name="country" field="user.addresses.first.country.name"/>
-  <value name="photo" target="src" field="user.photo.uri"/>
+  <value name="photo" target="src" field="user.photo_uri"/>
   <value name="bio" field="user.bio" op="hook" filter="markdown"/>
   <value name="pause_id" field="user.pause_id"/>
   <value name="pause_link" class="pause_id" field="user.pause_id" target="href"

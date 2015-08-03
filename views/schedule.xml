@@ -10,7 +10,7 @@
       <param name="speaker-name" class="speaker-link" field="author.name"/>
       <param name="speaker-link" target="href" op="append" field="author.uri"/>
       <param name="photo-link" target="href" op="append" field="author.uri"/>
-      <param name="photo" target="src" field="author.photo.uri"/>
+      <param name="photo" target="src" field="author.photo_uri"/>
       <param name="talk-title" class="talk-link" field="title"/>
       <param name="talk-link" target="href" op="append" field="seo_uri"/>
       <param name="short_abstract"/>
