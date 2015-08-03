@@ -84,6 +84,34 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     template 'speaker', $tokens;
 };
 
+=head2 get /users
+
+=cut
+
+get '/users' => sub {
+    my $tokens = {};
+
+    $tokens->{users} = shop_user->search(
+        {
+            'addresses.type'                      => 'primary',
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+            'addresses.latitude'                  => { '!=' => undef },
+            'addresses.longitude'                 => { '!=' => undef },
+        },
+        {
+            prefetch => [ 'addresses', 'photo' ],
+            join     => 'conferences_attended',
+        }
+    );
+
+    $tokens->{title} = "User Map";
+
+    PerlDance::Routes::add_javascript( $tokens, '/js/usermap.js' );
+
+    template 'users', $tokens;
+
+};
+
 =head2 get /users/*
 
 =cut

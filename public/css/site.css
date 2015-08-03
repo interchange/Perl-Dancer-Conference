@@ -148,6 +148,11 @@ h4.subscribe {
 #map {
   height:400px;
 }
+#usermap {
+  min-height:500px;
+  height: 100%;
+  width: 100%;
+}
 /* title wrapper */
 .title-wrapper {
   background-image: url("/img/meliavienna-carrusel51.jpg");
