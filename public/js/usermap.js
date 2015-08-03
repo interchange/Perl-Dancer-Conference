@@ -9,11 +9,12 @@ $(document).ready(function() {
   }).addTo(map);
   var markers = new L.MarkerClusterGroup();
   $("#user-list").children().each(function() {
-    markers.addLayer(new L.marker([
+    var marker = L.marker([
       $(this).find(".latitude").text(),
       $(this).find(".longitude").text()
-    ]));
-    //marker.bindPopup($(this).find(".html").html());
+    ]);
+    marker.bindPopup($(this).find(".html").html());
+    markers.addLayer(marker);
   });
   map.addLayer(markers);
 });
