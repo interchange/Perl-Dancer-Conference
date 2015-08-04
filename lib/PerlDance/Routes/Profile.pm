@@ -386,17 +386,23 @@ get '/photo' => sub {
     PerlDance::Routes::add_javascript( $tokens, '/js/profile-photo.js' );
 
     my $photo = logged_in_user->photo;
+
+    debug "User already has photo with id: ", $photo->id if $photo;
+
     if ( !$photo ) {
-        $photo = rset('Media')->search(
+        $photo = rset('Media')->find(
             {
-                'me.label'        => 'unknown user',
-                'media_type.type' => 'image',
-            },
-            {
-                join => 'media_type',
-                rows => 1,
+                file => 'img/people/unknown.jpg',
             }
-        )->single;
+        );
+
+        if ( $photo ) {
+            debug "Got anon user photo with id: ", $photo->id if $photo;
+        }
+        else {
+            debug "Anon user photo not found";
+        }
+
     }
     $tokens->{photo} = $photo;
 
@@ -498,8 +504,7 @@ post '/photo/crop' => sub {
         debug "creating new photo record";
 
         my $media_type_image = rset('MediaType')->find( { type => 'image' } );
-        $user->create_related(
-            'photo',
+        my $photo = rset('Media')->create(
             {
                 file           => $target,
                 uri            => "/$target",
@@ -507,6 +512,7 @@ post '/photo/crop' => sub {
                 media_types_id => $media_type_image->id,
             }
         ) or die "failed to create photo record in database";
+        $user->update({ media_id => $photo->id });
     }
 
     my $fullpath = path( setting('public'), $target );

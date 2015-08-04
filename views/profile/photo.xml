@@ -1,3 +1,3 @@
 <specification>
-  <value name="photo" target="src" field="photo_uri"/>
+  <value name="photo" target="src" field="photo.uri"/>
 </specification>
