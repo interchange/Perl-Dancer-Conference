@@ -497,7 +497,7 @@ post '/photo/crop' => sub {
 
         debug "creating new photo record";
 
-        my $media_type_image = rset('MediaTyp')->find( { type => 'image' } );
+        my $media_type_image = rset('MediaType')->find( { type => 'image' } );
         $user->create_related(
             'photo',
             {
