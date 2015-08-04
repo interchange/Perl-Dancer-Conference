@@ -13,6 +13,8 @@ use Dancer::Plugin::Form;
 
 =head1 ROUTES
 
+=head2 get /admin/navigation
+
 =cut
 
 get '/admin/navigation' => require_role admin => sub {
@@ -37,9 +39,31 @@ get '/admin/navigation' => require_role admin => sub {
 
     $tokens->{navigation_list} = $navs;
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
+    PerlDance::Routes::add_javascript( $tokens,
+        '//code.jquery.com/ui/1.11.4/jquery-ui.min.js',
+        '/js/admin.js', '/js/jquery.treetable.js', '/js/admin-navigation.js' );
 
     template 'admin/navigation', $tokens;
+};
+
+=head2 get /admin/navigation/move/:source/:target
+
+Move :source nav to be a child of :target
+
+=cut
+
+get '/admin/navigation/move/:source/:target' => require_role admin => sub {
+    my $source = param 'source';
+    my $target = param 'target';
+    my $response = 0;
+
+    my $parent = rset('Navigation')->find($target);
+    my $child = rset('Navigation')->find($source);
+    if ( $parent && $child ) {
+        $response = $parent->attach_child($child);
+    }
+    content_type('application/json');
+    return to_json({ response => $response });
 };
 
 sub add_nav {
