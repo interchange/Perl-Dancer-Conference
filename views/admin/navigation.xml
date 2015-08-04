@@ -12,9 +12,9 @@
     <param name="isactive" field="active" filter="boolean"/>
     <param name="edit" field="navigation_id" target="href" op="append"/>
     <param name="delete" field="navigation_id" target="href" op="append"/>
-    <param name="child" field="navigation_id" target="data-parent"/>
-    <param name="create-type" class="child" field="type" target="data-type"/>
-    <param name="create-scope" class="child" field="scope" target="data-scope"/>
+    <param name="create" field="navigation_id" target="data-parent"/>
+    <param name="create-type" class="create" field="type" target="data-type"/>
+    <param name="create-scope" class="create" field="scope" target="data-scope"/>
     <param name="data-id" class="uri" target="data-tt-id" field="navigation_id"/>
     <param name="parent-id" class="uri" target="data-tt-parent-id" field="parent_id"/>
   </list>

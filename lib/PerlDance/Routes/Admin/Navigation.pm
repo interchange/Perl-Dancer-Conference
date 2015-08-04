@@ -10,6 +10,7 @@ use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
+use Try::Tiny;
 
 =head1 ROUTES
 
@@ -64,6 +65,72 @@ get '/admin/navigation/move/:source/:target' => require_role admin => sub {
     }
     content_type('application/json');
     return to_json({ response => $response });
+};
+
+=head2 post /admin/navigation/create
+
+=cut
+
+post '/admin/navigation/create' => require_role admin => sub {
+    try {
+        rset('Navigation')->create(
+            {
+                uri         => param('uri')         || undef,
+                type        => param('type')        || '',
+                scope       => param('scope')       || '',
+                name        => param('name')        || '',
+                description => param('description') || '',
+                alias       => param('alias')       || undef,
+                parent_id   => param('parent_id')   || undef,
+                priority    => param('priority')    || 0,
+                active => defined param('active') ? param('active') : 1,
+            }
+        );
+    }
+    catch {
+        warning "Create nav failed: ", $_;
+    };
+    redirect '/admin/navigation';
+};
+
+=head2 get /admin/navigation/delete/:id
+
+=cut
+
+get '/admin/navigation/delete/:id' => require_role admin => sub {
+    my $id = param 'id';
+    my $nav = rset('Navigation')->find($id);
+    $nav->delete if $nav;
+    redirect '/admin/navigation';
+};
+
+=head2 post /admin/navigation/edit
+
+=cut
+
+post '/admin/navigation/edit' => require_role admin => sub {
+    my $nav = rset('Navigation')->find( param('navigation_id') );
+    if ($nav) {
+        try {
+            $nav->update(
+                {
+                    uri         => param('uri')         || undef,
+                    type        => param('type')        || '',
+                    scope       => param('scope')       || '',
+                    name        => param('name')        || '',
+                    description => param('description') || '',
+                    alias       => param('alias')       || undef,
+                    parent_id   => param('parent_id')   || undef,
+                    priority    => param('priority')    || 0,
+                    active => defined param('active') ? param('active') : 1,
+                }
+            );
+        }
+        catch {
+            warning "Update nav failed: ", $_;
+        };
+    }
+    redirect '/admin/navigation';
 };
 
 sub add_nav {

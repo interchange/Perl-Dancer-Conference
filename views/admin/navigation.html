@@ -2,9 +2,12 @@
 <link rel='stylesheet' href='/css/jquery.treetable.theme.default.css' type='text/css'>
 <div class="container">
 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Create Parent</a>
-  <button class="btn btn-default" id="expand">Expand All</button>
-  <button class="btn btn-default" id="collapse">Collapse All</button>
+  <div class="btn-group" role="group">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">Create Parent</a>
+    <button class="btn btn-default" id="expand">Expand All</button>
+    <button class="btn btn-default" id="collapse">Collapse All</button>
+  </div>
+
   <div class="table-responsive">
     <table class="treetable">
       <thead>
@@ -34,9 +37,9 @@
           <td class="alias"></td>
           <td class="priority"></td>
           <td class="isactive"></td>
-          <td><a class="edit" href="/admin/navigation/edit/"><i class="fa fa-edit"></i></a></td>
+          <td><a class="edit" href="#" data-toggle="modal" data-target="#createModal"><i class="fa fa-edit"></i></a></td>
           <td><a class="delete" href="/admin/navigation/delete/"><i class="fa fa-trash"></i></a></td>
-          <td><a class="child" href="#" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus-square"></i></a></td>
+          <td><a class="create" href="#" data-toggle="modal" data-target="#createModal"><i class="fa fa-plus-square"></i></a></td>
         </tr>
       </tbody>
     </table>
@@ -51,8 +54,9 @@
         <h4 class="modal-title" id="createLabel">Create Navigation Item</h4>
       </div>
       <div class="modal-body">
-        <form class="form-horizontal">
+        <form class="form-horizontal" method="post">
 
+          <input type="hidden" name="navigation_id">
           <input type="hidden" name="parent_id">
 
           <div class="form-group">
@@ -104,7 +108,22 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-primary">Submit</a>
+          <div class="form-group">
+              <label class="col-sm-2 control-label">Active</label>
+              <div class="col-sm-10">
+                  <label class="radio-inline">
+                      <input type="radio" name="active" class="isactive" value="1">Yes
+                  </label>
+                  <label class="radio-inline">
+                      <input type="radio" name="active" class="inactive" value="0">No
+                  </label>
+              </div>
+          </div>
+
+          <div class="btn-group" role="group">
+            <button id="#submit" type="submit" class="btn btn-primary">Submit</a>
+            <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">Cancel</span></button>
+          </div>
         </form>
       </div>
     </div>

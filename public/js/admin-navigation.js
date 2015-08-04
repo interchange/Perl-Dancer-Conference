@@ -2,31 +2,67 @@ $(document).ready(function() {
   var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
   $(".nav-item").each(function() {
     var navid = $(this).find(".navigation_id");
-    $(this).attr("data-tt-id", navid.text());
+    $(this).data("ttId", navid.text());
     navid.remove();
     var navpid = $(this).find(".parent_id");
     if ( navpid.text() ) {
-      $(this).attr("data-tt-parent-id", navpid.text());
+      $(this).data("ttParentId", navpid.text());
     }
     navpid.remove();
   });
 
   $("#createModal").on('show.bs.modal', function(event) {
-      var button = $(event.relatedTarget);
-      var parentId = button.data('parent');
-      var type = button.data('type');
-      var scope = button.data('scope');
-      var modal = $(this);
-      modal.find('input').val('');
-      if ( parentId ) {
-          modal.find("input[name='parent_id']").val(parentId);
-          modal.find("input[name='type']").val(type);
-          modal.find("input[name='scope']").val(scope);
+    var button = $(event.relatedTarget);
+    var action = button.attr('class');
+    var parentId = button.data('parent');
+    var type = button.data('type');
+    var scope = button.data('scope');
+    var modal = $(this);
+    // cleanup active whatever we do next
+    modal.find("input[name='active']").removeAttr('checked');
+    if ( action === 'edit' ) {
+      /* edit */
+      modal.find("h4").text('Edit Navigation Item');
+      modal.find("form").attr('action', '/admin/navigation/edit');
+      var tr = button.closest('tr.nav-item');
+      $.each([
+          'type', 'scope', 'name', 'uri', 'description', 'alias', 'priority'
+        ], function(i,v) {
+        var text = tr.find("." + v).text();
+        modal.find("input[name='" + v + "']").val(text);
+      });
+      var navigation_id = tr.data("ttId");
+      modal.find("input[name='navigation_id']").val(navigation_id);
+      var parent_id = tr.data("ttParentId");
+      modal.find("input[name='parent_id']").val(parent_id);
+      if ( tr.find(".isactive").text() === "Yes" ) {
+        modal.find("input.isactive").attr('checked', true);
       }
+      else {
+        modal.find("input.inactive").attr('checked', true);
+      }
+    }
+    else {
+      /* create */
+      modal.find("form").attr('action', '/admin/navigation/create');
+      // reset form
+      modal.find("input:not([name='xsrf_token'], [name='active'])").val('');
+      modal.find("input.isactive").attr('checked', true);
+
+      if ( parentId ) {
+        // creating a child so pre-fill some values
+        modal.find("input[name='parent_id']").val(parentId);
+        modal.find("input[name='type']").val(type);
+        modal.find("input[name='scope']").val(scope);
+      }
+    }
   });
 
+  $("#submit")
+
   $(".treetable").treetable({
-    expandable: true
+    expandable: true,
+    initialState: "expanded"
   });
   $("#expand").click(function(){
     $(".treetable").treetable('expandAll');
