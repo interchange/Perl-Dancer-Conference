@@ -255,8 +255,8 @@ post '/edit' => sub {
                 company => $values{company} || '',
                 city    => $values{city}    || '',
                 country_iso_code => $values{country},
-                latitude         => $values{latitude},
-                longitude        => $values{longitude},
+                latitude         => $values{latitude} || undef,
+                longitude        => $values{longitude} || undef,
             }
         );
     }
@@ -269,8 +269,8 @@ post '/edit' => sub {
                     company          => $values{company} || '',
                     city             => $values{city} || '',
                     country_iso_code => $values{country},
-                    latitude         => $values{latitude},
-                    longitude        => $values{longitude},
+                    latitude         => $values{latitude} || undef,
+                    longitude        => $values{longitude} || undef,
                 }
             );
         }
