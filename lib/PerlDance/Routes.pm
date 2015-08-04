@@ -9,6 +9,7 @@ PerlDance::Routes - routes for PerlDance conference application
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::Email;
+use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
 use HTML::FormatText::WithLinks;
@@ -37,6 +38,9 @@ Home page
 
 get '/' => sub {
     my $tokens = {};
+
+    my $form = form('register-email');
+    $form->reset;
 
     PerlDance::Routes::User::add_speakers_tokens($tokens);
 

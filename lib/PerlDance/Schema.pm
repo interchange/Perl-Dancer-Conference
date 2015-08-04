@@ -95,6 +95,7 @@ sub insert {
             $self->update({ media_id => $photo->id });
         }
     }
+    return $self;
 }
 
 =head2 METHODS

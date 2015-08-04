@@ -1,10 +1,11 @@
 <specification>
-  <form name="register-email" link="fname">
-    <field name="user"/>
+  <form name="register-email" link="name">
+    <field name="username"/>
   </form>
   <value name="action" class="form" target="action"/>
   <value name="action_name"/>
-  <value name="text" filter="markdown" op="hook"/>  <value name="username_input" field="errors.username_input" target="class"
+  <value name="text" filter="markdown" op="hook"/>
+  <value name="username_input" field="errors.username_input" target="class"
     op="append" joiner=" "/>
   <value name="username_error" field="errors.username"/>
 </specification>

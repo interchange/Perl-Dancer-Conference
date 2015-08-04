@@ -96,7 +96,7 @@ Register of request password reset.
 =cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
-    my $email = param('username') || param('register');
+    my $email = param('username');
     my $captures = captures;
     my $action   = $$captures{action};
     my $username = lc($email);
@@ -130,6 +130,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
 
             PerlDance::Routes::add_validator_errors_token( $validator,
                 $tokens );
+
             my $saved = $form->errors( $tokens->{errors} );
             $form->to_session;
 
@@ -138,6 +139,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
 
         # new registration
         try {
+
             my $media_id = shop_schema->resultset('Media')
               ->find( { file => 'img/people/unknown.jpg' } )->id;
             $user = shop_user->create(
@@ -156,6 +158,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     }
 
     if ($user) {
+
         my $token = $user->reset_token_generate;
 
         my $reason = $action eq 'register' ? 'register' : 'reset your password';

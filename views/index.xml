@@ -1,4 +1,7 @@
 <specification>
+  <form name="register-email" link="name">
+    <field name="username"/>
+  </form>
   <container name="main-carousel-container" value="!news.has_rows"/>
   <container name="has_news" value="news.has_rows">
     <value name="has_news" op="hook" include="news.html"/>
