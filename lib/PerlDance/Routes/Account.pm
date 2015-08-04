@@ -149,12 +149,15 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
                     media_id => $media_id,
                 }
             );
+
         }
         catch {
             error "create user failed in $action: $_";
 
             # TODO: send email to admins as well?
         }
+        # TODO: check that we have a user and do something sane if we don't
+        # since otherwise no email gets sent by later code
     }
 
     if ($user) {
