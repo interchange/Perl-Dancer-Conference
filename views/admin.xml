@@ -1,2 +1,7 @@
 <specification>
+  <value name="title"/>
+  <list name="nav" iterator="nav">
+    <param name="name" class="link"/>
+    <param name="uri" class="link" target="href" op="append"/>
+  </list>
 </specification>

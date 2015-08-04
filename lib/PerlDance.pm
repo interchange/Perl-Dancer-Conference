@@ -102,15 +102,10 @@ hook 'before_layout_render' => sub {
         }
         push @{ $tokens->{ 'nav-' . $record->{scope} } }, $record;
     }
-    if (logged_in_user) {
-        delete $tokens->{"nav-top-login"};
-        if ( user_has_role('admin') ) {
-            unshift @{ $tokens->{"nav-top-logout"} },
-              { name => "Admin", uri => "admin" };
-        }
-    }
-    else {
-        delete $tokens->{"nav-top-logout"};
+
+    # maybe add admin menu
+    if ( logged_in_user && user_has_role('admin') ) {
+        $tokens->{is_admin} = 1;
     }
 
     $tokens->{"head-title"} =

@@ -27,7 +27,14 @@ L<PerlDance::Routes::Admin::Navigation>, L<PerlDance::Routes::Admin::Users>
 
 get '/admin' => require_role admin => sub {
     my $tokens = {};
-    $tokens->{title} = "Admin";
+
+    my $nav = rset('Navigation')->find( { uri => 'admin' } );
+
+    $tokens->{title} = $nav->description;
+
+    $tokens->{nav} = $nav->children->search( { active => 1 },
+        { order_by => [ { -desc => 'priority' }, 'name' ] } );
+
     template 'admin', $tokens;
 };
 
