@@ -6,6 +6,8 @@
     <field name="nickname"/>
     <field name="company"/>
     <field name="city"/>
+    <field name="latitude"/>
+    <field name="longitude"/>
     <field name="country" iterator="countries"
       iterator_value_key="country_iso_code" iterator_name_key="name"/>
     <field name="monger_groups"/>
