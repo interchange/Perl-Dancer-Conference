@@ -483,7 +483,7 @@ post '/photo/crop' => sub {
 
     my $photo = $user->photo;
 
-    if ( $photo ) {
+    if ( $photo && $photo->file ne 'img/people/unknown.jpg' ) {
         debug "updating existing photo record";
         $photo->update(
             {
