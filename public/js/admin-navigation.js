@@ -10,6 +10,21 @@ $(document).ready(function() {
     }
     navpid.remove();
   });
+
+  $("#createModal").on('show.bs.modal', function(event) {
+      var button = $(event.relatedTarget);
+      var parentId = button.data('parent');
+      var type = button.data('type');
+      var scope = button.data('scope');
+      var modal = $(this);
+      modal.find('input').val('');
+      if ( parentId ) {
+          modal.find("input[name='parent_id']").val(parentId);
+          modal.find("input[name='type']").val(type);
+          modal.find("input[name='scope']").val(scope);
+      }
+  });
+
   $(".treetable").treetable({
     expandable: true
   });
@@ -19,6 +34,8 @@ $(document).ready(function() {
   $("#collapse").click(function(){
     $(".treetable").treetable('collapseAll');
   });
+
+
   // Highlight selected row
   $(".treetable tbody").on("mousedown", "tr", function() {
     $(".selected").not(this).removeClass("selected");
