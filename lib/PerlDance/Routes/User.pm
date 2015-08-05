@@ -200,6 +200,13 @@ any [ 'get', 'post' ] => '/users/search' => sub {
                             { dbic_colname => 'last_name' },
                             '%' . lc( $values{name} ) . '%'
                         ]
+                    ],
+                    \[
+                        'LOWER(me.nickname) LIKE ?',
+                        [
+                            { dbic_colname => 'nickname' },
+                            '%' . lc( $values{name} ) . '%'
+                        ]
                     ]
                 ],
             );
@@ -254,6 +261,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     }
 
     $tokens->{form} = $form;
+    $tokens->{title} = "User Search";
 
     template 'users/search', $tokens;
 };
