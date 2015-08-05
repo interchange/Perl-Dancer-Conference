@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Search for users</h3>
+    </div>
+    <div class="panel-body">
+      <form class="form-horizontal" method="post" name="users_search">
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">City</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" name="city">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Country</label>
+          <div class="col-sm-10">
+            <select name="country" class="form-control"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Monger Group</label>
+          <div class="col-sm-10">
+            <select name="monger_group" class="form-control"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary submit">Search</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+    <div class="user-list">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>City</th>
+            <th>Country</th>
+            <th>Monger Groups</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="user">
+            <td><a class="link" href="/users/"><span class="name">Namei</span> <span class="nickname">(NickName)</span></a></td>
+            <td class="city">City</td>
+            <td class="country">Country</td>
+            <td class="monger_groups">Monger.pm</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

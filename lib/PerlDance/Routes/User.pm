@@ -8,7 +8,7 @@ PerlDance::Routes::User - user/speaker pages
 
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Interchange6;
+use Dancer::Plugin::Form;
 
 =head1 ROUTES
 
@@ -41,7 +41,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     var no_title_wrapper => 1;
 
-    $tokens->{user} = shop_user->find(
+    $tokens->{user} = rset('User')->find(
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -91,7 +91,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 get '/users' => sub {
     my $tokens = {};
 
-    my $users = shop_user->search(
+    my $users = rset('User')->search(
         {
             'conferences_attended.conferences_id' => setting('conferences_id'),
         },
@@ -122,21 +122,163 @@ get '/users' => sub {
 
 };
 
-=head2 get /users/*
+=head2 get/post /users/search
+
+=cut
+
+any [ 'get', 'post' ] => '/users/search' => sub {
+    my $tokens = {};
+
+    my $form = form('users_search');
+
+    my $users = rset('User')->search(
+        {
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+        },
+        {
+            join     => 'conferences_attended',
+        }
+    );
+
+    # countries dropdown
+    $tokens->{countries} = [
+        $users->search_related(
+            'addresses',
+            {
+                type => 'primary',
+            },
+          )->search_related(
+            'country', undef,
+            {
+                columns  => [ 'country_iso_code', 'name' ],
+                distinct => 1,
+                order_by => 'country.name',
+            }
+          )->hri->all
+    ];
+    unshift @{ $tokens->{countries} },
+      { country_iso_code => undef, name => 'Any' };
+
+    # monger_groups dropdown
+    $tokens->{monger_groups} = [
+        map { { value => $_, label => $_ } }
+          split(
+            /[,\s]+/,
+            join( " ",
+                $users->search( { monger_groups => { '!=' => '' } } )
+                  ->get_column('monger_groups')->all )
+          )
+    ];
+    unshift @{ $tokens->{monger_groups} },
+      { value => undef, label => 'Any' };
+
+    if ( request->is_post ) {
+        my %values = %{ $form->values };
+
+        $users = $users->search(
+            {
+                'addresses.type' => 'primary',
+            },
+            {
+                prefetch => { addresses => 'country' },
+            }
+        );
+
+        if ( $values{name} ) {
+            $users = $users->search(
+                [
+                    \[
+                        'LOWER(me.first_name) LIKE ?',
+                        [
+                            { dbic_colname => 'first_name' },
+                            '%' . lc( $values{name} ) . '%'
+                        ]
+                    ],
+                    \[
+                        'LOWER(me.last_name) LIKE ?',
+                        [
+                            { dbic_colname => 'last_name' },
+                            '%' . lc( $values{name} ) . '%'
+                        ]
+                    ]
+                ],
+            );
+        }
+
+        if ( $values{city} ) {
+            $users = $users->search(
+                \[
+                    'LOWER(addresses.city) LIKE ?',
+                    [
+                        { dbic_colname => 'addresses.city' },
+                        '%' . lc( $values{city} ) . '%'
+                    ]
+                ]
+            );
+        }
+
+        if ( $values{country} ) {
+            $users = $users->search(
+                {
+                    'addresses.country_iso_code' => $values{country},
+                }
+            );
+        }
+
+        if ( $values{monger_group} ) {
+            $users = $users->search(
+                {
+                    'me.monger_groups' =>
+                      { like => '%' . $values{monger_group} . '%' }
+                }
+            );
+        }
+
+        my @users;
+        while ( my $user = $users->next ) {
+            my $address = $user->addresses->first;
+            push @users, {
+                uri => $user->uri,
+                name => $user->name,
+                nickname => $user->nickname,
+                city => $address->city,
+                country => $address->country->name,
+                monger_groups => $user->monger_groups,
+            };
+        }
+        $tokens->{users} = \@users;
+    }
+    else {
+        # GET
+        $form->reset;
+    }
+
+    $tokens->{form} = $form;
+
+    template 'users/search', $tokens;
+};
+
+=head2 get /users/:name
 
 =cut
 
 get '/users/:name' => sub {
     my $name = param('name');
-    my $user = shop_user->find({ nickname => $name });
+    my $user = rset('User')->find({ nickname => $name });
     $name = $user->id if $user;
     forward "/speakers/$name";
 };
 
+=head1 METHODS
+
+=head2 add_speakers_tokens
+
+=cut
+
 sub add_speakers_tokens {
     my $tokens = shift;
 
-    my @speakers = shop_user->search(
+    my @speakers = rset('User')->search(
         {
             'addresses.type'                      => 'primary',
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -221,9 +363,7 @@ sub send_email {
       unless ref($tokens) eq 'HASH';
 
     $tokens->{"conference-logo"} =
-      uri_for(
-        shop_schema->resultset('Media')->search( { label => "email-logo" } )
-          ->first->uri );
+      uri_for( rset('Media')->search( { label => "email-logo" } )->first->uri );
 
     my $html = template $template, $tokens, { layout => 'email' };
 
