@@ -33,9 +33,9 @@ $(document).ready(function() {
         var states_id = $('#inputState').val();
         var address = $("#inputCity").val();
         if ( countryIsoCode in countryStates ) {
-            address = address + ', ' + statesById[states_id];
+            address += ', ' + statesById[states_id];
         }
-        address = address + ', ' + countryIsoCode;
+        address += ', ' + countryIsoCode;
 
         $.ajax({
             type: "POST",

@@ -39,10 +39,21 @@ get '/admin/users/create' => require_role admin => sub {
 
     $tokens->{title} = "Create Users";
 
+    # countries dropdown
+    $tokens->{countries} = [
+        rset('Country')->search( undef,
+            { columns => [ 'country_iso_code', 'name' ], order_by => 'name' } )
+          ->hri->all
+    ];
+    unshift @{ $tokens->{countries} },
+      { country_iso_code => undef, name => "Select Country" };
+
     my $form = form('update_create_users');
     $form->reset;
-    $form->fill( { public => 1 } );
     $tokens->{form} = $form;
+
+    PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
+        '/js/profile-edit.js' );
 
     template 'admin/users/create_update', $tokens;
 };
@@ -52,25 +63,51 @@ post '/admin/users/create' => require_role admin => sub {
 
     my $form   = form('update_create_users');
     my %values = %{ $form->values };
-    $values{bio} =~ s/\r\n/\n/g;
 
-    if ($values{nickname} !~ /\S/) {
-        $values{nickname} = undef;
-    }
+    $values{bio} =~ s/\r\n/\n/g;
+    $values{nickname} = undef unless $values{nickname} =~ /\S/;
 
     # TODO: validate values and if OK then try create
-    rset('User')->create(
+    my $user = rset('User')->create(
         {
-            username      => $values{email},
+            username      => lc( $values{email} ),
             email         => $values{email},
-            first_name    => $values{first_name},
-            last_name     => $values{last_name},
-            nickname      => $values{nickname} || undef,
-            monger_groups => $values{monger_groups},
-            pause_id      => $values{pause_id},
-            bio           => $values{bio},
+            first_name    => $values{first_name} || '',
+            last_name     => $values{last_name} || '',
+            nickname      => $values{nickname} || '',
+            monger_groups => $values{monger_groups} || '',
+            pause_id      => $values{pause_id} || '',
+            bio           => $values{bio} || '',
+            conferences_attended => [
+                {
+                    conferences_id => setting('conferences_id'),
+                }
+            ],
         }
     );
+
+    my $country =
+      rset('Country')->find( { country_iso_code => uc( $values{country} ) } );
+
+    if ($country) {
+
+        $values{state} = undef unless $country->show_states;
+
+        $user->create_related(
+            'addresses',
+            {
+                type             => 'primary',
+                company          => $values{company} || '',
+                city             => $values{city} || '',
+                states_id        => $values{state},
+                country_iso_code => $values{country},
+                latitude         => $values{latitude} || undef,
+                longitude        => $values{longitude} || undef,
+            }
+        );
+
+    }
+
     return redirect '/admin/users';
 };
 
@@ -92,10 +129,14 @@ get '/admin/users/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form = form('update_create_users');
-    $form->reset;
+    # countries dropdown
+    $tokens->{countries} = [
+        rset('Country')->search( undef,
+            { columns => [ 'country_iso_code', 'name' ], order_by => 'name' } )
+          ->hri->all
+    ];
 
-    $form->fill({
+    my %values = (
         users_id      => $user->users_id,
         email         => $user->username,
         first_name    => $user->first_name,
@@ -104,9 +145,47 @@ get '/admin/users/edit/:id' => require_role admin => sub {
         monger_groups => $user->monger_groups,
         pause_id      => $user->pause_id,
         bio           => $user->bio,
-    });
+    );
 
+    my $address = $user->search_related(
+        'addresses',
+        {
+            'me.type' => 'primary',
+        },
+        {
+            prefetch => 'country',
+            rows     => 1,
+        }
+    )->first;
+
+    if ($address) {
+        $values{company}   = $address->company;
+        $values{city}      = $address->city;
+        $values{country}   = $address->country_iso_code;
+        $values{state}     = $address->states_id;
+        $values{company}   = $address->company;
+        $values{latitude}  = $address->latitude;
+        $values{longitude} = $address->longitude;
+    }
+    else {
+        # no address so add 'Select Country' option to countries
+        unshift @{ $tokens->{countries} },
+          { country_iso_code => undef, name => "Select Country" };
+    }
+
+    my $form = form('update_create_users');
+    $form->reset;
+    $form->fill( \%values );
     $tokens->{form}    = $form;
+
+    # if state is defined then we pass this to template where it gets inserted
+    # as data into state select so that on page load profile-edit.js can
+    # set the appropriate state as "selected"
+    $tokens->{state} = $values{state} if $values{state};
+
+    PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
+        '/js/profile-edit.js' );
+
     $tokens->{title}   = "Edit Users";
 
     template 'admin/users/create_update', $tokens;
@@ -125,25 +204,73 @@ post '/admin/users/edit/:id' => require_role admin => sub {
 
     my $form   = form('update_create_users');
     my %values = %{ $form->values };
-    $values{bio} =~ s/\r\n/\n/g;
 
-    if ($values{nickname} !~ /\S/) {
-        $values{nickname} = undef;
-    }
+    $values{bio} =~ s/\r\n/\n/g;
+    $values{nickname} = undef unless $values{nickname} =~ /\S/;
 
     # TODO: validate values and if OK then try update
     $user->update(
         {
-            username => lc($values{email}),
-            email => $values{email},
-            first_name => $values{first_name},
-            last_name => $values{last_name},
-            nickname => $values{nickname},
-            monger_groups => $values{monger_groups},
-            pause_id => $values{pause_id},
-            bio => $values{bio},
+            username      => lc( $values{email} ),
+            email         => $values{email},
+            first_name    => $values{first_name} || '',
+            last_name     => $values{last_name} || '',
+            nickname      => $values{nickname},
+            monger_groups => $values{monger_groups} || '',
+            pause_id      => $values{pause_id} || '',
+            bio           => $values{bio} || '',
         }
     );
+
+    my $address = $user->search_related(
+        'addresses',
+        {
+            'me.type' => 'primary',
+        },
+        {
+            prefetch => 'country',
+            rows     => 1,
+        }
+    )->first;
+
+    my $country =
+      rset('Country')->find( { country_iso_code => uc( $values{country} ) } );
+
+    #FIXME: if we have $values{country} but $country is undef then ??
+
+    if ($country) {
+
+        $values{state} = undef unless $country->show_states;
+
+        if ($address) {
+            $address->update(
+                {
+                    company => $values{company} || '',
+                    city    => $values{city}    || '',
+                    states_id        => $values{state},
+                    country_iso_code => $values{country},
+                    latitude         => $values{latitude} || undef,
+                    longitude        => $values{longitude} || undef,
+                }
+            );
+        }
+        else {
+            $user->create_related(
+                'addresses',
+                {
+                    type             => 'primary',
+                    company          => $values{company} || '',
+                    city             => $values{city} || '',
+                    states_id        => $values{state},
+                    country_iso_code => $values{country},
+                    latitude         => $values{latitude} || undef,
+                    longitude        => $values{longitude} || undef,
+                }
+            );
+        }
+    }
+
+    $form->reset;
     return redirect '/admin/users';
 };
 

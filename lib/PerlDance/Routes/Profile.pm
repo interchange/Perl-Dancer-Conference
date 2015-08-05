@@ -242,17 +242,23 @@ post '/edit' => sub {
 
     my $form   = form('edit_profile');
     my %values = %{ $form->values };
+
     $values{bio} =~ s/\r\n/\n/g;
+    $values{nickname} = undef unless $values{nickname} =~ /\S/;
 
     my $user = logged_in_user;
-    foreach
-      my $field (qw/first_name last_name nickname monger_groups pause_id bio/)
-    {
-        $values{$field} ||= '';
-        $user->$field($values{$field});
-    }
-    $values{nickname} ||= undef;
-    $user->update;
+
+    # TODO: validate values and if OK then try update
+    $user->update(
+        {
+            first_name    => $values{first_name}    || '',
+            last_name     => $values{last_name}     || '',
+            nickname      => $values{nickname},
+            monger_groups => $values{monger_groups} || '',
+            pause_id      => $values{pause_id}      || '',
+            bio           => $values{bio}           || ''
+        }
+    );
 
     my $address = $user->search_related(
         'addresses',

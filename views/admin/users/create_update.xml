@@ -4,8 +4,18 @@
     <field name="first_name"/>
     <field name="last_name"/>
     <field name="nickname"/>
+    <field name="company"/>
+    <field name="city"/>
+    <field name="state"/>
+    <field name="latitude"/>
+    <field name="longitude"/>
+    <field name="country" iterator="countries"
+      iterator_value_key="country_iso_code" iterator_name_key="name"/>
     <field name="monger_groups"/>
     <field name="pause_id"/>
     <field name="bio"/>
   </form>
+
+  <value name="data-state" class="state" field="state" target="data-state"/>
+
 </specification>
