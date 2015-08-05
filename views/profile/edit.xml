@@ -6,6 +6,7 @@
     <field name="nickname"/>
     <field name="company"/>
     <field name="city"/>
+    <field name="state"/>
     <field name="latitude"/>
     <field name="longitude"/>
     <field name="country" iterator="countries"
@@ -14,6 +15,8 @@
     <field name="pause_id"/>
     <field name="bio"/>
   </form>
+
+  <value name="data-state" class="state" field="state" target="data-state"/>
 
   <value name="first_name_input" field="errors.first_name_input" target="class"
     op="append" joiner=" "/>

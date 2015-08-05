@@ -17,6 +17,7 @@ use Try::Tiny;
 
 use PerlDance::Routes::Account;
 use PerlDance::Routes::Admin;
+use PerlDance::Routes::Data;
 use PerlDance::Routes::PayPal;
 use PerlDance::Routes::Profile;
 use PerlDance::Routes::Talk;
@@ -26,6 +27,7 @@ use PerlDance::Routes::Wiki;
 =head1 ROUTES
 
 See also: L<PerlDance::Routes::Account>, L<PerlDance::Routes::Admin>, 
+L<PerlDance::Routes::Data>,
 L<PerlDance::Routes::PayPal>, L<PerlDance::Routes::Profile>,
 L<PerlDance::Routes::Talk>, L<PerlDance::Routes::User>,
 L<PerlDance::Routes::Wiki>

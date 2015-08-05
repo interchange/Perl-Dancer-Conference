@@ -157,6 +157,7 @@ get '/edit' => sub {
         $values{company}   = $address->company;
         $values{city}      = $address->city;
         $values{country}   = $address->country_iso_code;
+        $values{state}     = $address->states_id;
         $values{company}   = $address->company;
         $values{latitude}  = $address->latitude;
         $values{longitude} = $address->longitude;
@@ -178,9 +179,18 @@ get '/edit' => sub {
                     my $record = $g->record_by_addr($ipaddress);
                     if ($record) {
                         $values{city}      = $record->city;
-                        $values{country}   = $record->country_code;
+                        $values{country}   = uc($record->country_code);
                         $values{latitude}  = $record->latitude;
                         $values{longitude} = $record->longitude;
+
+                        my $country = rset('country')
+                          ->find( { country_iso_code => $values{country} } );
+
+                        if ( $country && $country->show_states ) {
+                            my $state = $country->states->search(
+                                { state_iso_code => uc( $record->region ) } );
+                            $values{state} = $state->id if $state;
+                        }
                     }
                 }
                 elsif ( $g = Geo::IP->open( $geoipdb->{country4} ) ) {
@@ -212,7 +222,13 @@ get '/edit' => sub {
     $form->fill( \%values );
     $tokens->{form} = $form;
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/profile-edit.js' );
+    # if state is defined then we pass this to template where it gets inserted
+    # as data into state select so that on page load profile-edit.js can
+    # set the appropriate state as "selected"
+    $tokens->{state} = $values{state} if $values{state};
+
+    PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
+        '/js/profile-edit.js' );
 
     template 'profile/edit', $tokens;
 };
@@ -249,25 +265,35 @@ post '/edit' => sub {
         }
     )->first;
 
-    if ( $address ) {
-        $address->update(
-            {
-                company => $values{company} || '',
-                city    => $values{city}    || '',
-                country_iso_code => $values{country},
-                latitude         => $values{latitude} || undef,
-                longitude        => $values{longitude} || undef,
-            }
-        );
-    }
-    else {
-        if ( $values{country} ) {
+    my $country =
+      rset('Country')->find( { country_iso_code => uc( $values{country} ) } );
+
+    #FIXME: if we have $values{country} but $country is undef then ??
+
+    if ($country) {
+
+        $values{state} = undef unless $country->show_states;
+
+        if ($address) {
+            $address->update(
+                {
+                    company => $values{company} || '',
+                    city    => $values{city}    || '',
+                    states_id        => $values{state},
+                    country_iso_code => $values{country},
+                    latitude         => $values{latitude} || undef,
+                    longitude        => $values{longitude} || undef,
+                }
+            );
+        }
+        else {
             $user->create_related(
                 'addresses',
                 {
                     type             => 'primary',
                     company          => $values{company} || '',
                     city             => $values{city} || '',
+                    states_id        => $values{state},
                     country_iso_code => $values{country},
                     latitude         => $values{latitude} || undef,
                     longitude        => $values{longitude} || undef,
