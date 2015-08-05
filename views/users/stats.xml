@@ -1,0 +1,12 @@
+<specification>
+  <list name="country" iterator="countries">
+    <param name="country_iso_code" class="name" target="href" op="append"/>
+    <param name="name"/>
+    <param name="count"/>
+  </list>
+  <list name="group" iterator="monger_groups">
+    <param name="link" class="name" field="name" target="href" op="append"/>
+    <param name="name"/>
+    <param name="count"/>
+  </list>
+</specification>

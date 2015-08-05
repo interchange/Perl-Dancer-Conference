@@ -172,8 +172,10 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     unshift @{ $tokens->{monger_groups} },
       { value => undef, label => 'Any' };
 
-    if ( request->is_post ) {
-        my %values = %{ $form->values };
+    my %values = %{ params() };
+    if ( %values ) {
+
+        $form->fill(\%values);
 
         $users = $users->search(
             {
@@ -261,7 +263,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
         }
     }
     else {
-        # GET
+        # no params so reset form
         $form->reset;
     }
 
@@ -269,6 +271,64 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     $tokens->{title} = "User Search";
 
     template 'users/search', $tokens;
+};
+
+=head2 get /users/statistics
+
+=cut
+
+get '/users/statistics' => sub {
+    my $tokens = {};
+
+    my $users = rset('User')->search(
+        {
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+        },
+        {
+            join => 'conferences_attended',
+        }
+    );
+
+    $tokens->{countries} = [
+        $users->search_related(
+            'addresses',
+            {
+                type => 'primary',
+            },
+          )->search_related(
+            'country',
+            undef,
+            {
+                select => [
+                    'country.country_iso_code',
+                    'country.name',
+                    {
+                        count => 'country.country_iso_code',
+                        -as   => 'count'
+                    },
+                ],
+                group_by => [ 'country.country_iso_code', 'country.name' ],
+                order_by => { -desc => 'count' },
+            }
+          )->hri->all
+    ];
+
+    my ( %groups, @groups );
+    map { $groups{$_}++ } split(
+        /[,\s]+/,
+        join( " ",
+            $users->search( { monger_groups => { '!=' => '' } } )
+              ->get_column('monger_groups')->all )
+    );
+    my @keys = sort { $groups{$b} <=> $groups{$a} } keys %groups;
+    foreach my $name ( @keys ) {
+        push @groups, { name => $name, count => $groups{$name} };
+    }
+    $tokens->{monger_groups} = \@groups;
+
+    $tokens->{title} = "User Stastics";
+
+    template 'users/stats', $tokens;
 };
 
 =head2 get /users/:name
