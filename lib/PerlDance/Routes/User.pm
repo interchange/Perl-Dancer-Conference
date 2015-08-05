@@ -253,7 +253,12 @@ any [ 'get', 'post' ] => '/users/search' => sub {
                 monger_groups => $user->monger_groups,
             };
         }
-        $tokens->{users} = \@users;
+        if ( @users ) {
+            $tokens->{users} = \@users;
+        }
+        else {
+            $tokens->{no_results} = 1;
+        }
     }
     else {
         # GET

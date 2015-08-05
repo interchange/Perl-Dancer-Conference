@@ -1,5 +1,7 @@
 <specification>
   <pattern name="nickpat" type="string">NickName</pattern>
+  <container name="no_results" value="no_results"/>
+  <container name="user-list" value="users"/>
   <form name="users_search" link="name">
     <field name="name"/>
     <field name="city"/>
@@ -7,14 +9,12 @@
       iterator_value_key="country_iso_code" iterator_name_key="name"/>
     <field name="monger_group" iterator="monger_groups"/>
   </form>
-  <container name="user-list" value="users">
-    <list name="user" iterator="users">
-      <param name="link" field="uri" target="href" op="append"/>
-      <param name="name"/>
-      <param name="nickname" pattern="nickpat" op="toggle"/>
-      <param name="city"/>
-      <param name="country"/>
-      <param name="monger_groups" filter="monger_groups" op="hook"/>
-    </list>
-  </container>
+  <list name="user" iterator="users">
+    <param name="link" field="uri" target="href" op="append"/>
+    <param name="name"/>
+    <param name="nickname" pattern="nickpat" op="toggle"/>
+    <param name="city"/>
+    <param name="country"/>
+    <param name="monger_groups" filter="monger_groups" op="hook"/>
+  </list>
 </specification>
