@@ -61,6 +61,8 @@ engines:
         class: "PerlDance::Filter::Markdown"
         options:
           unsafe: 1
+      monger_groups:
+        class: "PerlDance::Filter::MongerGroups"
       time_only:
         class: "Template::Flute::Filter::Date"
         options:
