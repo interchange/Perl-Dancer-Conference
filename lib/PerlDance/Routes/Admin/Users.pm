@@ -97,7 +97,7 @@ get '/admin/users/edit/:id' => require_role admin => sub {
 
     $form->fill({
         users_id      => $user->users_id,
-        email         => $user->email,
+        email         => $user->username,
         first_name    => $user->first_name,
         last_name     => $user->last_name,
         nickname      => $user->nickname,
