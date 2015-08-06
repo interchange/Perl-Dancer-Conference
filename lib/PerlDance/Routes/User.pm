@@ -334,7 +334,7 @@ get '/users/statistics' => sub {
     }
     $tokens->{monger_groups} = \@groups;
 
-    $tokens->{title} = "User Stastics";
+    $tokens->{title} = "User Statistics";
 
     template 'users/stats', $tokens;
 };
