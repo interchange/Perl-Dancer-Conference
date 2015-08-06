@@ -21,13 +21,16 @@ get '/admin/users' => require_role admin => sub {
 
     $tokens->{title} = "Users Admin";
 
-    $tokens->{users} = rset('User')->search(
+    $tokens->{users} = [ rset('User')->search(
         {
-         },
+            'conferences_attended.conferences_id' =>
+              [ undef, setting('conferences_id') ],
+        },
         {
+            prefetch => 'conferences_attended',
             order_by => "created",
         }
-    );
+    )->all ];
 
     PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
 
