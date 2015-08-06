@@ -136,7 +136,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
             'conferences_attended.conferences_id' => setting('conferences_id'),
         },
         {
-            join     => 'conferences_attended',
+            join => 'conferences_attended',
         }
     );
 
@@ -182,7 +182,8 @@ any [ 'get', 'post' ] => '/users/search' => sub {
                 'addresses.type' => 'primary',
             },
             {
-                prefetch => { addresses => 'country' },
+                prefetch =>
+                  [ 'conferences_attended', { addresses => 'country' } ],
             }
         );
 
@@ -253,6 +254,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
                 city => $address->city,
                 country => $address->country->name,
                 monger_groups => $user->monger_groups,
+                confirmed => $user->conferences_attended->first->confirmed,
             };
         }
         if ( @users ) {
