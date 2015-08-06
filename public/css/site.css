@@ -19,6 +19,9 @@ a:focus, a:hover {
   text-decoration: none;
   color: #0749bc;
 }
+.panel-primary .panel-heading a:hover {
+  color: black;
+}
 h1, h2, h3, h4, h5, h6 {
   font-family: "Raleway", Sans-Serif;
   text-transform: uppercase;
