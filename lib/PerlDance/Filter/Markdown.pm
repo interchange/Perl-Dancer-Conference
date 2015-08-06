@@ -29,7 +29,26 @@ sub filter {
     my $m = Text::Markdown->new;
     return $m->markdown($value) if $self->{unsafe};
 
-    my $s = HTML::Scrubber->new( allow => [qw/p b i u hr br ul ol li/] );
+    my $s = HTML::Scrubber->new(
+        allow => [
+            qw/
+              a abbr b blockquote br caption cite colgroup dd del dl dt em
+              h1 h2 h3 h4 h5 h6 hr i img ins li ol p pre q small strong sub
+              sup table tbody td tfoot th thead tr u ul
+              /
+        ]
+    );
+    $s->rules(
+        a => {
+            href => 1,
+            '*' => 0,
+        },
+        img => {
+            src => 1,
+            alt => 1,
+            '*' => 0,
+        },
+    );
     return $s->scrub( $m->markdown($value) );
 }
 
