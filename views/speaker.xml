@@ -31,5 +31,6 @@
     <param name="title" class="talk-link"/>
     <param name="start_time" filter="date_only"/>
     <param name="duration_display"/>
+    <param name="short_abstract"/>
   </list>
 </specification>
