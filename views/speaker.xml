@@ -6,7 +6,7 @@
   <container name="has_country" value="user.addresses.first.country"/>
   <container name="has_pause_id" value="user.pause_id"/>
   <container name="has_talks" value="has_talks"/>
-  <container name="has_monger_groups" value="monger_groups"/>
+  <container name="has_monger_groups" value="user.monger_groups"/>
 
   <value name="name" field="user.name"/>
   <value name="nickname" field="user.nickname"/>
@@ -19,12 +19,8 @@
   <value name="pause_link" class="pause_id" field="user.pause_id" target="href"
     op="append"/>
 
-  <pattern name="wwwpm" type="string">www.pm</pattern>
-  <list name="monger_group" iterator="monger_groups">
-    <param name="monger" field="name" target="href" pattern="wwwpm"/>
-    <param name="text" class="monger" field="name"/>
-    <separator name="sep"/>
-  </list>
+  <value name="monger_groups" field="user.monger_groups" filter="monger_groups"
+    op="hook"/>
 
   <list name="talks" iterator="talks">
     <param name="talk-link" target="href" op="append" field="seo_uri"/>

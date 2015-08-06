@@ -31,11 +31,11 @@ sub filter {
         if ( exists $lookup{ $groups[$i] } ) {
             if ( defined $lookup{ $groups[$i] } ) {
                 $groups[$i] =
-                  qq{<a href="http://$lookup{ $groups[$i] }/">$groups[$i]</a>};
+                  qq{<a href="http://$lookup{ $groups[$i] }/" target="_blank">$groups[$i]</a>};
             }
         }
         else {
-            $groups[$i] = qq{<a href="http://$groups[$i].org/">$groups[$i]</a>};
+            $groups[$i] = qq{<a href="http://$groups[$i].org/" target="_blank">$groups[$i]</a>};
         }
     }
     return join( ", ", @groups );

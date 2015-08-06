@@ -71,14 +71,6 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     $tokens->{has_talks} = 1 if $tokens->{talks}->has_rows;
 
-    my $monger_groups = $tokens->{user}->monger_groups;
-    if ( $monger_groups ) {
-        $monger_groups =~ s/,/ /g;
-        $monger_groups =~ s/(^\s+|\s+$)//g;
-        $tokens->{monger_groups} =
-          [ map { { name => $_ } } split( /\s+/, $monger_groups ) ];
-    }
-
     $tokens->{title} = $tokens->{user}->name;
 
     template 'speaker', $tokens;
