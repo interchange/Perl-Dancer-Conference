@@ -57,10 +57,6 @@ engines:
             empty: 0
       markdown:
         class: "PerlDance::Filter::Markdown"
-      markdown_unsafe:
-        class: "PerlDance::Filter::Markdown"
-        options:
-          unsafe: 1
       monger_groups:
         class: "PerlDance::Filter::MongerGroups"
       time_only:

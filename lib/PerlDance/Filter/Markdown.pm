@@ -18,17 +18,10 @@ use base 'Template::Flute::Filter';
 use HTML::Scrubber;
 use Text::Markdown;
 
-sub init {
-    my ( $self, %args ) = @_;
-    $self->{unsafe} = $args{options}->{unsafe};
-}
-
 sub filter {
     my ( $self, $value ) = @_;
 
     my $m = Text::Markdown->new;
-    return $m->markdown($value) if $self->{unsafe};
-
     my $s = HTML::Scrubber->new(
         allow => [
             qw/
