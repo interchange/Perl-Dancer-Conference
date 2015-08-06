@@ -8,8 +8,8 @@ PerlDance::Routes::Talk - Talk routes for PerlDance conference application
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
-use Dancer::Plugin::Interchange6;
 use Data::Transpose::Validator;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
@@ -28,7 +28,7 @@ get '/talks' => sub {
 
     PerlDance::Routes::add_navigation_tokens($tokens);
 
-    my $talks = shop_schema->resultset('Talk')->search(
+    my $talks = rset('Talk')->search(
         {
             conferences_id => setting('conferences_id'),
         },
@@ -79,9 +79,69 @@ get '/talks' => sub {
         }
     }
 
-    $tokens->{talks} = $talks;
+    if ( my $user = logged_in_user ) {
+        $talks = $talks->search(
+            {
+                'attendee_talks.users_id' =>  [ undef, $user->id ],
+            },
+            {
+                prefetch => 'attendee_talks',
+            }
+        );
+    }
+
+    $tokens->{talks} = [ $talks->all ];
 
     template 'talks', $tokens;
+};
+
+=head2 get /talks/{add|remove}/:id
+
+Add/remove talks from personal schedule
+
+=cut
+
+get '/talks/:action/:id' => require_login sub {
+
+    content_type 'application/json';
+
+    my $action   = param 'action';
+    my $talks_id = param 'id';
+    my $json = { result => "fail" };
+
+    if ( $action =~ /^(add|remove)$/ ) {
+        if ( my $talk = rset('Talk')->find($talks_id) ) {
+            my $users_id = logged_in_user->id;
+            if ( $action eq 'add' ) {
+                try {
+                    $talk->create_related( 'attendee_talks',
+                        { users_id => $users_id } );
+                    debug "add user $users_id to talk $talks_id";
+                    $json = {
+                        result => "success",
+                        href   => "/talks/remove/$talks_id",
+                        src    => "/img/picked.gif",
+                        title  => "remove from personal schedule",
+                    };
+                };
+            }
+            else {
+                try {
+                    $talk->delete_related( 'attendee_talks',
+                        { users_id => $users_id } );
+                    debug "remove user $users_id from talk $talks_id";
+                    $json = {
+                        result => "success",
+                        href   => "/talks/add/$talks_id",
+                        src    => "/img/unpicked.gif",
+                        title  => "add to personal schedule",
+                    };
+                };
+            }
+        }
+    }
+
+    return to_json($json);
 };
 
 =head2 get /talks/schedule
@@ -95,7 +155,7 @@ get '/talks/schedule' => sub {
 
     PerlDance::Routes::add_navigation_tokens($tokens);
 
-    my $talks = shop_schema->resultset('Talk')->search(
+    my $talks = rset('Talk')->search(
         {
             accepted       => 1,
             confirmed      => 1,
@@ -164,7 +224,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
     my $tokens = {};
 
-    my $talk = shop_schema->resultset('Talk')->find(
+    my $talk = rset('Talk')->find(
         {
             talks_id       => $talks_id,
             accepted       => 1,

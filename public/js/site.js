@@ -2,6 +2,22 @@ $(document).ready(function() {
 
   $(".equal-height-container .equal-height-column").equalHeightColumns();
 
+  /* picked/unpicked stars against talks */
+  $("a.picked,a.unpicked").on("click", function() {
+    var thisLink = $(this);
+    $.ajax({
+        type: "GET",
+        url: thisLink.attr('href'),
+        success: function(json) {
+          if ( json.result === "success" ) {
+            thisLink.attr('href', json.href);
+            thisLink.children("img").attr('src', json.src).attr('title', json.title);
+          }
+        }
+    });
+    return false;
+  });
+
   /* menu dropdowns */
   $("#navbar ul li ul :first-child").parent().siblings("a")
     .addClass("dropdown-toggle").attr("data-toggle", "dropdown")

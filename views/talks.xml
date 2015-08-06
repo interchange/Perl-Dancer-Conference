@@ -1,10 +1,15 @@
 <specification>
   <container name="has_tag" value="tag"/>
+  <container name="show-stars" value="logged_in_user"/>
   <value name="tag"/>
   <value name="talks_submitted"/>
   <value name="talks_accepted"/>
   <value name="cloud" op="hook"/>
   <list name="talks" iterator="talks">
+    <container name="remove_talk" value="attendee_talks.first.users_id"/>
+    <container name="add_talk" value="!attendee_talks.first.users_id"/>
+    <param name="picked" field="id" target="href" op="append"/>
+    <param name="unpicked" field="id" target="href" op="append"/>
     <param name="name" field="author.name"/>
     <param name="author-link" class="name" target="href" op="append" field="author.uri"/>
     <param name="title"/>
