@@ -108,6 +108,8 @@ post '/admin/users/create' => require_role admin => sub {
 
     }
 
+    # clear form before redirect
+    $form->reset;
     return redirect '/admin/users';
 };
 
