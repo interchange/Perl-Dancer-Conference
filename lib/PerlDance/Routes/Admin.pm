@@ -195,7 +195,7 @@ get '/admin/talks/create' => require_role admin => sub {
         }
 );
     $tokens->{form} = $form;
-    $tokens->{author} = [ rset('User')->all];
+    $tokens->{authors} = [ rset('User')->all];
 
     my @js_urls = ('/js/bootstrap-datetimepicker.min.js',
         '/js/bootstrap-datetimepicker.config.js');
