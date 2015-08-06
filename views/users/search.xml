@@ -16,5 +16,7 @@
     <param name="city"/>
     <param name="country"/>
     <param name="monger_groups" filter="monger_groups" op="hook"/>
+    <param name="confirmed" op="toggle" args="tree"/>
+    <param name="unconfirmed" op="toggle" args="tree"/>
   </list>
 </specification>

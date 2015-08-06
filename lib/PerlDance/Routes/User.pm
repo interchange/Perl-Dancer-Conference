@@ -247,15 +247,21 @@ any [ 'get', 'post' ] => '/users/search' => sub {
         my @users;
         while ( my $user = $users->next ) {
             my $address = $user->addresses->first;
-            push @users, {
+            my $data = {
                 uri => $user->uri,
                 name => $user->name,
                 nickname => $user->nickname,
                 city => $address->city,
                 country => $address->country->name,
                 monger_groups => $user->monger_groups,
-                confirmed => $user->conferences_attended->first->confirmed,
             };
+            if ( $user->conferences_attended->first->confirmed ) {
+                $data->{confirmed} = 1;
+            }
+            else {
+                $data->{unconfirmed} = 1;
+            }
+            push @users, $data;
         }
         if ( @users ) {
             $tokens->{users} = \@users;
