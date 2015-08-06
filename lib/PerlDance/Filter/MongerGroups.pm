@@ -2,11 +2,11 @@ package PerlDance::Filter::MongerGroups;
 
 =head1 NAME
 
-PerlDance::Filter::Boolean - bool filter
+PerlDance::Filter::MongerGroups
 
 =head1 DESCRIPTION
 
-Turns true/false values into Yes/No.
+Translate Perl Monger group names into html link snippets
 
 =cut
 
@@ -15,6 +15,8 @@ use warnings;
 
 use base 'Template::Flute::Filter';
 
+# pm groups NOT in %lookup get translated to Group.pm.org
+# undef value means no website
 my %lookup = (
     'drinkers.pm' => undef,
     'Hannover.pm' => 'Hannover.pm',
