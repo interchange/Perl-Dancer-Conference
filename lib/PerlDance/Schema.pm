@@ -37,6 +37,7 @@ __PACKAGE__->might_have(
 
 use Interchange6::Schema::Result::User;
 package Interchange6::Schema::Result::User;
+use Class::Method::Modifiers;
 use URI::Escape;
 
 =head1 L<Interchange6::Schema::Result::User>
@@ -76,9 +77,9 @@ Overloaded method. Add 'unknown user' image as initial photo.
 
 =cut
 
-sub insert {
-    my ($self, @args) = @_;
-    $self->next::method(@args);
+around insert => sub {
+    my $orig = shift;
+    my $self = $orig->(@_);
     if ( !$self->media_id ) {
         my $schema = $self->result_source->schema;
         my $photo = $schema->resultset('Media')->search(
@@ -96,7 +97,7 @@ sub insert {
         }
     }
     return $self;
-}
+};
 
 =head2 METHODS
 
