@@ -144,6 +144,32 @@ get '/talks/:action/:id' => require_login sub {
     return to_json($json);
 };
 
+=head2 get /talks/favourite
+
+Talks order by number of attendees
+
+=cut
+
+get '/talks/favourite' => sub {
+    my $tokens = {};
+
+    PerlDance::Routes::add_navigation_tokens($tokens);
+
+    my $talks = rset('Talk');
+    $talks = $talks->search(
+        {
+            conferences_id => setting('conferences_id'),
+            accepted => 1,
+            confirmed => 1,
+        },
+    )->with_attendee_count;
+
+    $tokens->{talks} =
+      [ sort { $b->attendee_count <=> $a->attendee_count } $talks->all ];
+
+    template 'talks/favourite', $tokens;
+};
+
 =head2 get /talks/schedule
 
 Talks schedule
@@ -233,6 +259,11 @@ get qr{/talks/(?<id>\d+).*} => sub {
         },
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
     );
+
+    if ( my $user = logged_in_user ) {
+        $tokens->{picked} = rset('AttendeeTalk')
+          ->find( { users_id => $user->id, talks_id => $talks_id } );
+    }
 
     if ($talk) {
         $tokens->{talk}  = $talk;

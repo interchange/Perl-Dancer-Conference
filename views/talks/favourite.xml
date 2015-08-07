@@ -1,0 +1,11 @@
+<specification>
+  <list name="talks" iterator="talks">
+    <param name="stars" field="attendee_count"/>
+    <param name="name" field="author.name"/>
+    <param name="author-link" class="name" target="href" op="append" field="author.uri"/>
+    <param name="title"/>
+    <param name="author-link" class="title" target="href" op="append" field="seo_uri"/>
+    <param name="duration"/>
+    <param name="start_time" filter="date"/>
+  </list>
+</specification>

@@ -236,6 +236,7 @@ use base 'Interchange6::Schema';
 Interchange6::Schema->load_namespaces(
     default_resultset_class => 'ResultSet',
     result_namespace        => [ 'Result', '+PerlDance::Schema::Result' ],
+    resultset_namespace     => [ 'ResultSet', '+PerlDance::Schema::ResultSet' ],
 );
 
 1;

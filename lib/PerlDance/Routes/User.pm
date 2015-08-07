@@ -7,6 +7,7 @@ PerlDance::Routes::User - user/speaker pages
 =cut
 
 use Dancer ':syntax';
+use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 
@@ -60,7 +61,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         return template '404', $tokens;
     }
 
-    $tokens->{talks} = $tokens->{user}->search_related(
+    my $talks = $tokens->{user}->search_related(
         'talks_authored',
         {
             conferences_id => setting('conferences_id'),
@@ -69,7 +70,23 @@ get qr{/speakers/(?<id>\d+).*} => sub {
         }
     );
 
-    $tokens->{has_talks} = 1 if $tokens->{talks}->has_rows;
+    if ( $talks->has_rows ) {
+
+        $tokens->{has_talks} = 1;
+
+        if ( my $user = logged_in_user ) {
+            $talks = $talks->search(
+                {
+                    'attendee_talks.users_id' => [ undef, $user->id ],
+                },
+                {
+                    prefetch => 'attendee_talks',
+                }
+            );
+        }
+
+        $tokens->{talks} = $talks;
+    }
 
     $tokens->{title} = $tokens->{user}->name;
 

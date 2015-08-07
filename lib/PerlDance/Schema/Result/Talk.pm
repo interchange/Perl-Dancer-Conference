@@ -181,6 +181,27 @@ column room => {
 
 =head1 METHODS
 
+=head2 attendee_count
+
+Returns the attendee count for this talk.
+
+If the query was constructed using
+L<PerlDance::Schema::ResultSet::Talk/with_attendee_count> then the cached
+value will be used rather than running a new query.
+
+=cut
+
+sub attendee_count {
+    my $self = shift;
+
+    if ( $self->has_column_loaded('attendee_count') ) {
+        return $self->get_column('attendee_count');
+    }
+    else {
+        return $self->attendee_talks->count;
+    }
+}
+
 =head2 duration_display
 
 If L</start_time> is defined returns a string with start and end times such as:

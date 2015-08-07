@@ -12,6 +12,10 @@ $(document).ready(function() {
           if ( json.result === "success" ) {
             thisLink.attr('href', json.href);
             thisLink.children("img").attr('src', json.src).attr('title', json.title);
+            var actionText = thisLink.parent().children("span.text");
+            if ( actionText ) {
+                actionText.text(json.title);
+            }
           }
         }
     });
