@@ -8,5 +8,9 @@
     <param name="confirmed" field="conferences_attended.first.confirmed" filter="boolean"/>
     <param name="edit" field="users_id" target="href" op="append"/>
     <param name="delete" field="users_id" target="href" op="append"/>
+    <list name="role" iterator="user_roles">
+      <param name="name" field="role.label"/>
+      <separator name="sep"/>
+    </list>
   </list>
 </specification>

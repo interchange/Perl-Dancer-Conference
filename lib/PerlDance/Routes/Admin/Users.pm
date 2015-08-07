@@ -27,8 +27,8 @@ get '/admin/users' => require_role admin => sub {
               [ undef, setting('conferences_id') ],
         },
         {
-            prefetch => 'conferences_attended',
-            order_by => "created",
+            prefetch => [ 'conferences_attended', { user_roles => 'role' } ],
+            order_by => [ 'me.created', 'role.label' ],
         }
     )->all ];
 
