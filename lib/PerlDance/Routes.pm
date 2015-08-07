@@ -12,6 +12,7 @@ use Dancer::Plugin::Email;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Interchange6::Routes;
+use DateTime;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
@@ -48,7 +49,7 @@ get '/' => sub {
 
     $tokens->{title} = "Vienna Austria October 2015";
 
-    $tokens->{news} = shop_schema->resultset('Message')->search(
+    my $news = shop_schema->resultset('Message')->search(
         {
             'message_type.name' => 'news_item',
             'me.public'         => 1,
@@ -59,6 +60,24 @@ get '/' => sub {
             order_by => { -desc => 'me.created' },
         }
     );
+
+    my $news_count = $news->count;
+
+    # we want to display at most 2 news items
+    my @news = $news->rows(2)->all;
+
+    # but we don't want the second item if it is more than 7 days old
+    pop @news
+      if ( $news_count > 1
+        && $news[1]->created < DateTime->today->subtract( days => 7 ) );
+
+    # and if we have old news we're not displaying then we add a link
+    # to news archive
+    if ( $news_count > scalar(@news) ) {
+        $tokens->{old_news} = 1;
+    }
+
+    $tokens->{news} = \@news;
 
     add_javascript( $tokens, "/js/index.js" );
 

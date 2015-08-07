@@ -9,5 +9,5 @@
     <param name="created" filter="date_only"/>
     <param name="content" filter="markdown" op="hook"/>
   </list>
-  <container name="all-news" value="vars.uri"/>
+  <container name="all-news" value="old_news|vars.uri"/>
 </specification>
