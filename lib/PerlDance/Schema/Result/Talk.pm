@@ -202,6 +202,34 @@ sub attendee_count {
     }
 }
 
+=head2 attendee_status( $users_id )
+
+Returns the attendee status (1/0) for this talk.
+
+If the query was constructed using
+L<PerlDance::Schema::ResultSet::Talk/with_attendee_status> then the cached
+value will be used rather than running a new query any argument is ignored.
+
+If no cached value exists and $users_id is not defined then return 0;
+
+=cut
+
+sub attendee_status {
+    my ( $self, $users_id ) = @_;
+
+    if ( $self->has_column_loaded('attendee_status') ) {
+        return $self->get_column('attendee_status');
+    }
+    else {
+        return 0 unless $users_id;
+        return $self->attendee_talks->search(
+            {
+                users_id => $users_id
+            }
+        )->count;
+    }
+}
+
 =head2 duration_display
 
 If L</start_time> is defined returns a string with start and end times such as:

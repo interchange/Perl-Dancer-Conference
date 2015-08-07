@@ -24,8 +24,8 @@
     op="hook"/>
 
   <list name="talks" iterator="talks">
-    <container name="remove_talk" value="attendee_talks.first.users_id"/>
-    <container name="add_talk" value="!attendee_talks.first.users_id"/>
+    <container name="remove_talk" value="attendee_status"/>
+    <container name="add_talk" value="!attendee_status"/>
     <param name="picked" field="id" target="href" op="append"/>
     <param name="unpicked" field="id" target="href" op="append"/>
     <param name="talk-link" target="href" op="append" field="seo_uri"/>

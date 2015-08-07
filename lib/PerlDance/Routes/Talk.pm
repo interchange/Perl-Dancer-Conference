@@ -80,14 +80,7 @@ get '/talks' => sub {
     }
 
     if ( my $user = logged_in_user ) {
-        $talks = $talks->search(
-            {
-                'attendee_talks.users_id' =>  [ undef, $user->id ],
-            },
-            {
-                prefetch => 'attendee_talks',
-            }
-        );
+        $talks = $talks->with_attendee_status( $user->id );
     }
 
     $tokens->{talks} = [ $talks->all ];
