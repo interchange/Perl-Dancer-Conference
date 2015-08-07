@@ -264,8 +264,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     $tokens->{has_attendees} = $talk->attendee_talks->count;
 
     if ( my $user = logged_in_user ) {
-        $tokens->{picked} = rset('AttendeeTalk')
-          ->find( { users_id => $user->id, talks_id => $talks_id } );
+        $tokens->{attendee_status} = $talk->attendee_status($user->id);
     }
 
     template 'talk', $tokens;

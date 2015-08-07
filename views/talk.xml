@@ -3,11 +3,11 @@
   <container name="has_attendees" value="has_attendees"/>
   <container name="show-stars" value="logged_in_user"/>
   <container name="session-location" value="talk.room"/>
-  <container name="remove_talk" value="picked"/>
-  <container name="add_talk" value="!picked"/>
+  <container name="remove_talk" value="attendee_status"/>
+  <container name="add_talk" value="!attendee_status"/>
   <value name="picked" field="talk.id" target="href" op="append"/>
   <value name="unpicked" field="talk.id" target="href" op="append"/>
-  <value name="title" class="page-title" field="talk.title"/>
+  <value name="title" class="panel-title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" op="hook" filter="markdown"/>
   <value name="photo-link" target="href" op="append" field="talk.author.uri"/>
   <value name="speaker-link" target="href" op="append" field="talk.author.uri"/>
