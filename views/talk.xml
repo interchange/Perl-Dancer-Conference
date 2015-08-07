@@ -1,5 +1,6 @@
 <specification>
   <pattern name="nickpat" type="string">NickName</pattern>
+  <container name="has_attendees" value="has_attendees"/>
   <container name="show-stars" value="logged_in_user"/>
   <container name="session-location" value="talk.room"/>
   <container name="remove_talk" value="picked"/>

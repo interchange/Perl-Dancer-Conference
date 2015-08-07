@@ -248,7 +248,7 @@ Individual talk
 
 get qr{/talks/(?<id>\d+).*} => sub {
     my $talks_id = captures->{id};
-    my $tokens = {};
+    my $tokens   = {};
 
     my $talk = rset('Talk')->find(
         {
@@ -260,21 +260,22 @@ get qr{/talks/(?<id>\d+).*} => sub {
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
     );
 
+    if ( !$talk ) {
+        $tokens->{title} = "Talk Not Found";
+        status 'not_found';
+        template '404', $tokens;
+    }
+
+    $tokens->{talk}          = $talk;
+    $tokens->{title}         = $talk->title;
+    $tokens->{has_attendees} = $talk->attendee_talks->count;
+
     if ( my $user = logged_in_user ) {
         $tokens->{picked} = rset('AttendeeTalk')
           ->find( { users_id => $user->id, talks_id => $talks_id } );
     }
 
-    if ($talk) {
-        $tokens->{talk}  = $talk;
-        $tokens->{title} = $talk->title;
-        template 'talk', $tokens;
-    }
-    else {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        template '404', $tokens;
-    }
+    template 'talk', $tokens;
 };
 
 true;
