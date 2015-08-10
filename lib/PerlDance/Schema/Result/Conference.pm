@@ -47,6 +47,17 @@ column start_date => {
     is_nullable => 1,
 };
 
+=head2 end_date
+
+End date of conference
+
+=cut
+
+column end_date => {
+    data_type => "date",
+    is_nullable => 1,
+};
+
 =head1 RELATIONS
 
 =head2 attendees

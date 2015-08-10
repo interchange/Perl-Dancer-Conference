@@ -154,6 +154,17 @@ column lightning => {
     default_value => 0,
 };
 
+=head2 scheduled
+
+Whether or not talk time/date should be displayed in public schedules.
+
+=cut
+
+column scheduled => {
+    data_type     => "boolean",
+    default_value => 0,
+};
+
 =head2 start_time
 
 L<DateTime> object representing start time of talk.

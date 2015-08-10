@@ -204,6 +204,9 @@ get '/talks/schedule' => sub {
           };
     }
 
+    $tokens->{nav_days} = [
+    ];
+
     template 'schedule', $tokens;
 };
 

@@ -1,4 +1,7 @@
 <specification>
+  <list name="nav_day" iterator="nav_days">
+
+  </list>
   <list name="talks" iterator="talks">
     <param name="panel-title" field="day"/>
     <param name="date" filter="date_only"/>
