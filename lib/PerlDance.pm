@@ -60,6 +60,13 @@ hook 'before_cart_display' => sub {
     else {
         PerlDance::Routes::add_javascript( $tokens, "/js/cart.js" );
         $tokens->{title} = "Cart";
+
+        if (config->{paypal}->{maintenance}) {
+            $tokens->{'paypal-action'} = 'maintenance';
+        }
+        else {
+            $tokens->{'paypal-action'} = 'setrequest';
+        }
     }
 };
 
