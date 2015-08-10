@@ -39,7 +39,7 @@ get '/talks' => sub {
     );
     $tokens->{talks_submitted} = $talks->count;
 
-    my $talks_accepted = $talks->search( { accepted => 1, confirmed => 1 } );
+    my $talks_accepted = $talks->search( { accepted => 1 } );
     $tokens->{talks_accepted} = $talks_accepted->count;
 
     my %tags;
@@ -54,18 +54,12 @@ get '/talks' => sub {
     }
     $tokens->{cloud} = $cloud->html;
 
-    my $conditions = {};
-
     if ( !user_has_role('admin') ) {
-        $conditions = {
-            'me.accepted'  => 1,
-            'me.confirmed' => 1,
-          },
-          ;
+        $talks = $talks_accepted;
     }
 
     $talks = $talks->search(
-        $conditions,
+        undef,
         {
             order_by => [ 'author.first_name', 'author.last_name' ],
             prefetch => 'author',
@@ -159,7 +153,6 @@ get '/talks/favourite' => sub {
         {
             conferences_id => setting('conferences_id'),
             accepted       => 1,
-            confirmed      => 1,
         },
     )->with_attendee_count;
 
@@ -197,6 +190,7 @@ get '/talks/schedule' => sub {
     my $dt    = $conference->start_date->clone;
     my $today = DateTime->today();
 
+    # one tab for each day of the conference
     my @days;
     while ( $dt <= $conference->end_date ) {
         my $data = {
@@ -221,6 +215,16 @@ get '/talks/schedule' => sub {
 
     $tokens->{days} = \@days;
 
+    my $events = rset('Event')->search(
+        {
+            conferences_id => setting('conferences_id'),
+            start_time     => { '!=' => undef },
+        },
+        {
+            order_by => 'start_time',
+        }
+    );
+
     my $talks = rset('Talk')->search(
         {
             conferences_id => setting('conferences_id'),
@@ -233,21 +237,12 @@ get '/talks/schedule' => sub {
     );
 
     if ( !user_has_role('admin') ) {
-        $talks =
-          $talks->search( { accepted => 1, confirmed => 1, scheduled => 1 } );
+        $events = $events->search( { scheduled => 1 } );
+        $talks  = $talks->search( { accepted => 1, scheduled => 1 } );
     }
 
-    my @talks = $talks->all;
-
-    my @events = rset('Event')->search(
-        {
-            conferences_id => setting('conferences_id'),
-            start_time     => { '!=' => undef },
-        },
-        {
-            order_by => 'start_time',
-        }
-    )->all;
+    my @events = $events->all;
+    my @talks  = $talks->all;
 
     my @tabs;
   DAY: foreach my $day (@days) {
@@ -425,7 +420,6 @@ get qr{/talks/(?<id>\d+).*} => sub {
         {
             talks_id       => $talks_id,
             accepted       => 1,
-            confirmed      => 1,
             conferences_id => setting('conferences_id'),
         },
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
