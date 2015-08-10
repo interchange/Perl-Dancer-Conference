@@ -11,6 +11,7 @@ PerlDance::Schema::Result::Event - conference events such as "Lunch break",
 
 use Interchange6::Schema::Candy -components =>
   [qw(InflateColumn::DateTime TimeStamp)];
+use URI::Escape;
 
 =head1 ACCESSORS
 

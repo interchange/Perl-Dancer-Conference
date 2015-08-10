@@ -14,7 +14,7 @@
         <tr>
           <td>Mon 19th - Tue 20th October 2015</td>
           <td>Amerikahaus</td>
-          <td>Two days of training Perl::Dancer training</td>
+          <td>Two days of Perl::Dancer training</td>
         </tr>
         <tr>
           <td>Wed 21st - Thu 22nd October 2015</td>
@@ -25,38 +25,50 @@
     </table>
   </div>
 
-  <div>
-    <ul class="nav nav-tabs nav_days" role="tablist">
-      <li role="presentation" class="nav_day"><a href="#" aria-controls="" role="tab" data-toggle="tab">Day</a></li>
-    </ul>
-  </div>
-
-  <div class="panel panel-primary talks">
-    <div class="panel-heading">
-      <h3 class="panel-title">day</h3>
-      <span class="date">date</span>
+  <div class="panel panel-default">
+    <div class="panel-heading no-border">
+      <ul class="nav nav-pills nav_days" role="tablist">
+        <li role="presentation" class="nav_day"><a class="link" href="#" aria-controls="" role="tab" data-toggle="pill">Day</a></li>
+      </ul>
     </div>
-    <div class="panel-body scheduled-talk">
-      <div class="row">
-        <div class="col-sm-3">
-          <div>
-            <i class="fa fa-clock-o"></i> <span class="duration_display">when</span>
-          </div>
-          <div class="session-info session-location">
-            <i class="fa fa-location-arrow"></i> <span class="location">where</span>
-          </div>
-          <div>
-            <i class="fa fa-user" ></i> <a class="speaker-link" href="/speakers/" >Speaker Name</a>
-          </div>
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane panel-default" id="">
+        <div class="panel-heading">
+          <h4 class="date">Date</h4>
         </div>
-        <div class="col-sm-1">
-          <a class="photo-link" href="/speakers/" ><img class="img-responsive img-rounded photo"></a>
+        <div class="panel-body no_rows">
+          Schedule for this day has not yet been finalised.
         </div>
-        <div class="col-sm-8">
-          <h4><a class="talk-link" href="/talks/">Talk Title</a></h4>
-          <div class="short_abstract">Short extract from abstract</div>
+        <div class="table-responsive has_rows">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th class="room-name"><span class="name">RoomName</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="timeslot">
+                <td class="time"></td>
+                <td class="slot">
+                  <span class="is_talk">
+                    <a class="author_uri" href="/speakers/"><span class="author_name">Author</span><span class="author_nickname"> (NickName)</span></a> - 
+                    <a class="title" href="/talks/">Talk Name</a>
+                    <span class="duration"> (10 min)</span>
+                  </span>
+                  <span class="is_event">
+                    <a class="title" href="/events/">Event Name</a>
+                    <span class="duration"> (10 min)</span>
+                  </span>
+                  <span class="is_empty">
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
+
 </div>

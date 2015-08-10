@@ -11,8 +11,12 @@ use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Data::Transpose::Validator;
+use DateTime;
+use DateTime::Span;
+use DateTime::SpanSet;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
+use Safe::Isa;
 use Try::Tiny;
 
 =head1 ROUTES
@@ -43,6 +47,7 @@ get '/talks' => sub {
       $talks_accepted->get_column('tags')->all;
     my $cloud = HTML::TagCloud->new;
     foreach my $tag ( sort keys %tags ) {
+
         # add space to tag to force wrapping since TF removes the line breaks
         # added by HTML::TagCloud
         $cloud->add( "$tag ", "/talks/tag/$tag", $tags{$tag} );
@@ -51,11 +56,12 @@ get '/talks' => sub {
 
     my $conditions = {};
 
-    if (! user_has_role('admin')) {
+    if ( !user_has_role('admin') ) {
         $conditions = {
             'me.accepted'  => 1,
             'me.confirmed' => 1,
-        },
+          },
+          ;
     }
 
     $talks = $talks->search(
@@ -100,7 +106,7 @@ get '/talks/:action/:id' => require_login sub {
 
     my $action   = param 'action';
     my $talks_id = param 'id';
-    my $json = { result => "fail" };
+    my $json     = { result => "fail" };
 
     if ( $action =~ /^(add|remove)$/ ) {
         if ( my $talk = rset('Talk')->find($talks_id) ) {
@@ -152,8 +158,8 @@ get '/talks/favourite' => sub {
     $talks = $talks->search(
         {
             conferences_id => setting('conferences_id'),
-            accepted => 1,
-            confirmed => 1,
+            accepted       => 1,
+            confirmed      => 1,
         },
     )->with_attendee_count;
 
@@ -172,12 +178,51 @@ Talks schedule
 get '/talks/schedule' => sub {
     my $tokens = {};
 
+    PerlDance::Routes::add_javascript( $tokens, '/js/schedule.js' );
     PerlDance::Routes::add_navigation_tokens($tokens);
+
+    my $conference = rset('Conference')->find( setting('conferences_id') );
+
+    if (   !$conference
+        || !$conference->start_date
+        || !$conference->end_date
+        || $conference->end_date < $conference->start_date )
+    {
+        warning "Conference record missing or start/end dates missing/broken";
+        $tokens->{title} = "Not found";
+        status 'not_found';
+        template '404', $tokens;
+    }
+
+    my $dt    = $conference->start_date->clone;
+    my $today = DateTime->today();
+
+    my @days;
+    while ( $dt <= $conference->end_date ) {
+        my $data = {
+            datetime => $dt->clone,
+            id       => lc( $dt->day_name ),
+            label    => $dt->day_name
+        };
+        if (   $today >= $conference->start_date
+            && $today <= $conference->start_date )
+        {
+            # during conference set active day to today
+            $data->{class} = "active" if $dt == $today;
+        }
+        elsif ( $dt == $conference->start_date ) {
+
+            # otherwise first day is active
+            $data->{class} = "active";
+        }
+        push @days, $data;
+        $dt->add( days => 1 );
+    }
+
+    $tokens->{days} = \@days;
 
     my $talks = rset('Talk')->search(
         {
-            accepted       => 1,
-            confirmed      => 1,
             conferences_id => setting('conferences_id'),
             start_time     => { '!=' => undef },
         },
@@ -186,26 +231,157 @@ get '/talks/schedule' => sub {
             prefetch => 'author',
         }
     );
-    my %days;
-    while ( my $talk = $talks->next ) {
-        my $day_zero = 18;
-        my $day_number = 0;
-        $day_number = $talk->start_time->day - $day_zero;
-        push @{ $days{$day_number} }, $talk;
-    };
-    foreach my $day ( sort keys %days ) {
-        my $value = $days{$day};
-        my $date  = $value->[0]->start_time;
-        push @{ $tokens->{talks} },
-          {
-            day   => "Day $day",
-            date  => $date,
-            talks => $value,
-          };
+
+    if ( !user_has_role('admin') ) {
+        $talks =
+          $talks->search( { accepted => 1, confirmed => 1, scheduled => 1 } );
     }
 
-    $tokens->{nav_days} = [
-    ];
+    my @talks = $talks->all;
+
+    my @events = rset('Event')->search(
+        {
+            conferences_id => setting('conferences_id'),
+            start_time     => { '!=' => undef },
+        },
+        {
+            order_by => 'start_time',
+        }
+    )->all;
+
+    my @tabs;
+  DAY: foreach my $day (@days) {
+        my $tab = { id => $day->{id}, date => $day->{datetime} };
+
+        # find all talks and events for this day and group them
+        # together in array @all
+        my $next_day = $day->{datetime}->clone->add( days => 1 );
+        my @talks = grep {
+                 $_->start_time >= $day->{datetime}
+              && $_->start_time < $next_day
+        } @talks;
+        my @events = grep {
+                 $_->start_time >= $day->{datetime}
+              && $_->start_time < $next_day
+        } @events;
+
+        my @all =
+          sort { $a->start_time cmp $b->start_time } ( @talks, @events );
+
+        # room names
+        my $i = 0;
+        my %rooms = map { $_->room => ++$i } @all;
+        if ( $rooms{''} ) {
+            $rooms{"room not defined"} = delete $rooms{''};
+        }
+        my @rooms = sort keys %rooms;
+        $tab->{rooms} = [ map { { name => $_ } } @rooms ];
+
+        # track overlapped cells due to rowspans
+        my %emptycell;
+
+        if (@all) {
+
+            my %times =
+              map { $_->strftime("%H:%M") => $_ }
+              map { $_->start_time, $_->end_time } @all;
+
+            my $i = 0;
+            %times =
+              map { $_ => { row => ++$i, datetime => $times{$_} } }
+              sort keys %times;
+
+            my @times = sort keys %times;
+
+            my @rows;
+            foreach my $time ( sort keys %times ) {
+
+                my $val = $times{$time};
+                my $dt  = $val->{datetime};
+                my $row = $val->{row};
+
+                my @slots;
+
+                my $col = 0;
+
+              ROOM: foreach my $room (@rooms) {
+
+                    my $data = {};
+                    $col++;
+
+                    next ROOM if ( $emptycell{"$row:$col"} );
+
+                    my $room_match = $room eq 'room not defined' ? '' : $room;
+
+                    my @found =
+                      grep { $_->start_time == $dt && $_->room eq $room_match }
+                      @all;
+
+                    if (@found) {
+                        if ( @found > 1 ) {
+
+                            # more than one talk at this time in this room
+                            # this is ** BAD **
+                            $data =
+                              {     title => "WARNING: "
+                                  . ( scalar @found )
+                                  . "talks clash: "
+                                  . join( " | ", map { $_->title } @found ) };
+
+                        }
+                        else {
+
+                            # a Talk or an Event
+                            my $e = $found[0];
+                            $data = {
+                                class    => "r" . $col,
+                                title    => $e->title,
+                                duration => $e->duration,
+                                uri      => $e->seo_uri,
+                            };
+
+                            my $last_row =
+                              $times{ $e->end_time->strftime("%H:%M") }->{row};
+
+                            if ( $last_row > $row ) {
+                                $data->{rowspan} = $last_row - $row;
+                                foreach my $i ( $row .. --$last_row ) {
+                                    $emptycell{"$i:$col"} = 1;
+                                }
+                            }
+
+                            if ( $e->$_can("talks_id") ) {
+
+                                # a Talk so add more stuff
+                                $data->{is_talk}         = 1;
+                                $data->{author_name}     = $e->author->name;
+                                $data->{author_nickname} = $e->author->nickname;
+                                $data->{author_uri}      = $e->author->uri;
+                            }
+                            else {
+                                $data->{is_event} = 1;
+                            }
+                        }
+                    }
+                    else {
+                        $data = { is_empty => 1 };
+                    }
+                    push @slots, $data;
+                }
+                push @rows, { time => $time, slots => \@slots };
+            }
+
+            #use DDP;
+            #p @rows;
+            $tab->{rows} = \@rows;
+
+            #print STDERR to_dumper \%times;
+        }
+
+        push @tabs, $tab;
+    }
+
+    $tokens->{tabs} = \@tabs;
 
     template 'schedule', $tokens;
 };
@@ -223,7 +399,6 @@ get '/talks/submit' => sub {
 
     template 'cfp', $tokens;
 };
-
 
 =head2 get /talks/tag/:tag
 
@@ -267,7 +442,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     $tokens->{has_attendees} = $talk->attendee_talks->count;
 
     if ( my $user = logged_in_user ) {
-        $tokens->{attendee_status} = $talk->attendee_status($user->id);
+        $tokens->{attendee_status} = $talk->attendee_status( $user->id );
     }
 
     template 'talk', $tokens;

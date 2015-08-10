@@ -433,3 +433,27 @@ span.tagcloud23 { font-size: 35px;}
 span.tagcloud23 a {text-decoration: none;}
 span.tagcloud24 { font-size: 36px;}
 span.tagcloud24 a {text-decoration: none;}
+.panel-heading.no-border {
+  border-bottom: 0px;
+}
+.panel table.table-bordered {
+  margin-bottom: 0;
+}
+.r1 {
+  background-color: #dff0d8;
+}
+.r2 {
+  background-color: #d9edf7;
+}
+.r3 {
+  background-color: #dff0d8;
+}
+.r4 {
+  background-color: #d9edf7;
+}
+.r5{
+  background-color: #dff0d8;
+}
+.r6 {
+  background-color: #d9edf7;
+}
