@@ -1,4 +1,5 @@
 <specification>
+  <container name="show-stars" value="logged_in_user"/>
   <pattern name="durationpat" type="string">10</pattern>
   <pattern name="nicknamepat" type="string">NickName</pattern>
   <list name="nav_day" iterator="days">
@@ -18,6 +19,10 @@
     <list name="timeslot" iterator="rows">
       <param name="time"/>
       <list name="slot" iterator="slots">
+        <container name="remove_talk" value="attendee_status"/>
+        <container name="add_talk" value="!attendee_status"/>
+        <param name="picked" field="id" target="href" op="append"/>
+        <param name="unpicked" field="id" target="href" op="append"/>
         <param name="rowspan" class="slot" target="rowspan"/>
         <param name="is_talk" field="author_name" op="toggle" args="tree"/>
         <param name="is_event" op="toggle" args="tree"/>
@@ -30,6 +35,7 @@
           target="href" op="append"/>
         <param name="class" class="slot" target="class" op="append" joiner=" "/>
         <param name="duration" pattern="durationpat"/>
+        <param name="stars"/>
       </list>
     </list>
   </list>

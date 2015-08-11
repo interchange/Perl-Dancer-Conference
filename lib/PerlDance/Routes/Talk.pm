@@ -237,7 +237,11 @@ get '/talks/schedule' => sub {
             order_by => 'start_time',
             prefetch => 'author',
         }
-    );
+    )->with_attendee_count;
+
+    if ( my $user = logged_in_user ) {
+        $talks = $talks->with_attendee_status( $user->id );
+    }
 
     if ( !user_has_role('admin') ) {
 
@@ -343,11 +347,10 @@ get '/talks/schedule' => sub {
                         }
                         else {
 
-
                             # a Talk or an Event
                             my $e = $found[0];
                             $data = {
-                                class => $classes{ $col % 4 },
+                                class    => $classes{ $col % 4 },
                                 title    => $e->title,
                                 duration => $e->duration,
                                 uri      => $e->seo_uri,
@@ -370,6 +373,12 @@ get '/talks/schedule' => sub {
                                 $data->{author_name}     = $e->author->name;
                                 $data->{author_nickname} = $e->author->nickname;
                                 $data->{author_uri}      = $e->author->uri;
+                                $data->{stars}           = $e->attendee_count;
+                                $data->{id}              = $e->id;
+                                if (logged_in_user) {
+                                    $data->{attendee_status} =
+                                      $e->attendee_status;
+                                }
                             }
                             else {
                                 $data->{is_event} = 1;
