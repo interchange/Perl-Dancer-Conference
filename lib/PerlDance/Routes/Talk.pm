@@ -171,11 +171,9 @@ Talks schedule
 get '/talks/schedule' => sub {
     my $tokens = {};
 
-    PerlDance::Routes::add_javascript( $tokens, '/js/schedule.js' );
-    PerlDance::Routes::add_navigation_tokens($tokens);
-
     my $conference = rset('Conference')->find( setting('conferences_id') );
 
+    # paranoia checks on conference
     if (   !$conference
         || !$conference->start_date
         || !$conference->end_date
@@ -186,6 +184,9 @@ get '/talks/schedule' => sub {
         status 'not_found';
         template '404', $tokens;
     }
+
+    PerlDance::Routes::add_javascript( $tokens, '/js/schedule.js' );
+    PerlDance::Routes::add_navigation_tokens($tokens);
 
     my $dt    = $conference->start_date->clone;
     my $today = DateTime->today();
@@ -215,6 +216,7 @@ get '/talks/schedule' => sub {
 
     $tokens->{days} = \@days;
 
+    # base Event and Talk searches
     my $events = rset('Event')->search(
         {
             conferences_id => setting('conferences_id'),
@@ -227,6 +229,7 @@ get '/talks/schedule' => sub {
 
     my $talks = rset('Talk')->search(
         {
+            accepted       => 1,
             conferences_id => setting('conferences_id'),
             start_time     => { '!=' => undef },
         },
@@ -237,14 +240,18 @@ get '/talks/schedule' => sub {
     );
 
     if ( !user_has_role('admin') ) {
+
+        # non-Admins can only see things that are 'scheduled'
         $events = $events->search( { scheduled => 1 } );
-        $talks  = $talks->search( { accepted => 1, scheduled => 1 } );
+        $talks = $talks->search( { scheduled => 1 } );
     }
 
     my @events = $events->all;
     my @talks  = $talks->all;
 
     my @tabs;
+
+    # process talks/evenst one day at a time
   DAY: foreach my $day (@days) {
         my $tab = { id => $day->{id}, date => $day->{datetime} };
 
@@ -263,9 +270,8 @@ get '/talks/schedule' => sub {
         my @all =
           sort { $a->start_time cmp $b->start_time } ( @talks, @events );
 
-        # room names
-        my $i = 0;
-        my %rooms = map { $_->room => ++$i } @all;
+        # unique room names
+        my %rooms = map { $_->room => 1 } @all;
         if ( $rooms{''} ) {
             $rooms{"room not defined"} = delete $rooms{''};
         }
@@ -277,6 +283,9 @@ get '/talks/schedule' => sub {
 
         if (@all) {
 
+            # we have some talks/events
+
+            # we need a unique set of all start and end times
             my %times =
               map { $_->strftime("%H:%M") => $_ }
               map { $_->start_time, $_->end_time } @all;
@@ -286,8 +295,7 @@ get '/talks/schedule' => sub {
               map { $_ => { row => ++$i, datetime => $times{$_} } }
               sort keys %times;
 
-            my @times = sort keys %times;
-
+            # spin through all collected times - we will have one row for each
             my @rows;
             foreach my $time ( sort keys %times ) {
 
@@ -296,9 +304,9 @@ get '/talks/schedule' => sub {
                 my $row = $val->{row};
 
                 my @slots;
-
                 my $col = 0;
 
+                # add room columns
               ROOM: foreach my $room (@rooms) {
 
                     my $data = {};
@@ -329,8 +337,8 @@ get '/talks/schedule' => sub {
                             # a Talk or an Event
                             my $e = $found[0];
                             $data = {
-                                class    => "r" . $col,
-                                title    => $e->title,
+                                class => $col % 2 ? 'bg-info' : 'bg-danger',
+                                title => $e->title,
                                 duration => $e->duration,
                                 uri      => $e->seo_uri,
                             };
@@ -366,11 +374,7 @@ get '/talks/schedule' => sub {
                 push @rows, { time => $time, slots => \@slots };
             }
 
-            #use DDP;
-            #p @rows;
             $tab->{rows} = \@rows;
-
-            #print STDERR to_dumper \%times;
         }
 
         push @tabs, $tab;
