@@ -52,6 +52,9 @@ WriteMakefile(
         'URI::Escape'                      => 0,
         # PayPal payments
         'Business::PayPal::API' => 0,
+	# Live requirements
+	'Starman'               => 0,
+	'DBD::Pg'               => 0,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'PerlDance-*' },
