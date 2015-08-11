@@ -317,6 +317,16 @@ sub complete_transaction {
   		});
 		$orderline->insert;
 		$item_number += 1;
+
+        # reduce inventory
+        my $inventory = $product->inventory;
+
+        if ($inventory) {
+            $inventory->decrement($item->quantity);
+        }
+        else {
+            warning "No inventory for product ", $product->sku;
+        }
 	}
 
 	cart->clear;
