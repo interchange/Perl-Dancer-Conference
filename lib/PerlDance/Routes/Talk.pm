@@ -251,6 +251,15 @@ get '/talks/schedule' => sub {
 
     my @tabs;
 
+    # css classes for event cells
+    
+    my %classes = (
+        1 => "success",
+        2 => "danger",
+        3 => "info",
+        0 => "warning",
+    );
+
     # process talks/events one day at a time
   DAY: foreach my $day (@days) {
         my $tab = { id => $day->{id}, date => $day->{datetime} };
@@ -334,11 +343,12 @@ get '/talks/schedule' => sub {
                         }
                         else {
 
+
                             # a Talk or an Event
                             my $e = $found[0];
                             $data = {
-                                class => $col % 2 ? 'bg-info' : 'bg-danger',
-                                title => $e->title,
+                                class => $classes{ $col % 4 },
+                                title    => $e->title,
                                 duration => $e->duration,
                                 uri      => $e->seo_uri,
                             };
