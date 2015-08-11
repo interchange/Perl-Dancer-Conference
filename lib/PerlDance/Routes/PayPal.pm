@@ -48,6 +48,9 @@ post '/paypal/setrequest' => sub {
         }
     };
 
+    # for testing failures
+    # $address->{PostalCode} = 'xyz';
+
     my %pprequest = (
                      OrderTotal    => $amount,
                      currencyID    => $config->{currencycode},
@@ -64,8 +67,23 @@ post '/paypal/setrequest' => sub {
 
     my $pptoken = $ppresponse{Token};
 
+    # payment date to be stored in the database
+    my %payment_data = (
+        payment_mode => 'paypal',
+        payment_action => 'setrequest',
+        # not supported by Interchange6::Schema
+        # currency => 'EUR',
+        sessions_id => session->id,
+        amount => $amount,
+    );
+
     if ($pptoken) {
         session paypaltoken => $pptoken;
+
+        # store in database
+        $payment_data{status} = 'success';
+
+        schema->resultset('PaymentOrder')->create(\%payment_data);
 
         # redirect to PayPal
         my $ppurl;
@@ -83,6 +101,11 @@ post '/paypal/setrequest' => sub {
         return redirect $ppurl;
     }
     else {
+        # store in database
+        $payment_data{status} = 'failure';
+
+        schema->resultset('PaymentOrder')->create(\%payment_data);
+
         flash error => 'Payment with PayPal failed. Please contact <a href="mailto:2015@perl.dance">2015@perl.dance</a> for assistance.';
         warning "No PayPal token: ", \%ppresponse;
         return redirect uri_for('cart');
@@ -294,6 +317,16 @@ sub complete_transaction {
   		});
 		$orderline->insert;
 		$item_number += 1;
+
+        # reduce inventory
+        my $inventory = $product->inventory;
+
+        if ($inventory) {
+            $inventory->decrement($item->quantity);
+        }
+        else {
+            warning "No inventory for product ", $product->sku;
+        }
 	}
 
 	cart->clear;

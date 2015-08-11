@@ -41,7 +41,7 @@ WriteMakefile(
         'HTML::TagCloud'                   => '0.38',
         'Imager'                           => 0,
         'Interchange6'                     => '0.080',
-        'Interchange6::Schema'             => '0.088',
+        'Interchange6::Schema'             => '0.089',
         'Number::Format'                   => 0,
         'Plack::Middleware::XForwardedFor' => 0,
         'Plack::Middleware::XSRFBlock'     => 0,

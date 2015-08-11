@@ -1,3 +1,6 @@
 <specification>
+  <pattern name="paypal-action" type="string">setrequest</pattern>
+  <value name="paypal-action" class="payment-form"
+         pattern="paypal-action" target="action"/>
   <value name="cart-container" op="hook" include="fragments/cart.html"/>
 </specification>
