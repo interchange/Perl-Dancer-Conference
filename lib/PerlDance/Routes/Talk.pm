@@ -12,8 +12,6 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Data::Transpose::Validator;
 use DateTime;
-use DateTime::Span;
-use DateTime::SpanSet;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
 use Safe::Isa;
@@ -285,9 +283,6 @@ get '/talks/schedule' => sub {
 
         # unique room names
         my %rooms = map { $_->room => 1 } @all;
-        if ( $rooms{''} ) {
-            $rooms{"room not defined"} = delete $rooms{''};
-        }
         my @rooms = sort keys %rooms;
         $tab->{rooms} = [ map { { name => $_ } } @rooms ];
 
@@ -327,10 +322,8 @@ get '/talks/schedule' => sub {
 
                     next ROOM if ( $emptycell{"$row:$col"} );
 
-                    my $room_match = $room eq 'room not defined' ? '' : $room;
-
                     my @found =
-                      grep { $_->start_time == $dt && $_->room eq $room_match }
+                      grep { $_->start_time == $dt && $_->room eq $room }
                       @all;
 
                     if (@found) {
