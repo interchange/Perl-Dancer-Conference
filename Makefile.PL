@@ -32,6 +32,7 @@ WriteMakefile(
         'Data::Transpose'                  => '0.0015',
         'DateTime::Format::ISO8601'        => 0,
         'DateTime::Format::Pg'             => 0,
+	'DateTime::Span'                   => 0,
         'DBIx::Class::DeploymentHandler'   => 0,
         'Email::Sender::Transport::Redirect' => 0,
         'Geo::Coder::OSM'                  => 0,
