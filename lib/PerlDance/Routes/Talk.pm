@@ -251,7 +251,7 @@ get '/talks/schedule' => sub {
 
     my @tabs;
 
-    # process talks/evenst one day at a time
+    # process talks/events one day at a time
   DAY: foreach my $day (@days) {
         my $tab = { id => $day->{id}, date => $day->{datetime} };
 
