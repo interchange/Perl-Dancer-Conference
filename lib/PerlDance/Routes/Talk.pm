@@ -240,7 +240,24 @@ get '/talks/schedule' => sub {
         $talks = $talks->with_attendee_status( $user->id );
     }
 
-    if ( !user_has_role('admin') ) {
+    if ( user_has_role('admin') ) {
+
+        # admins are also shown accepted talks with no start_time
+        $tokens->{unscheduled_talks} = [
+            rset('Talk')->search(
+                {
+                    accepted       => 1,
+                    conferences_id => setting('conferences_id'),
+                    start_time     => undef,
+                },
+                {
+                    order_by => 'start_time',
+                    prefetch => 'author',
+                }
+            )->all
+        ];
+    }
+    else {
 
         # non-Admins can only see things that are 'scheduled'
         $events = $events->search( { scheduled => 1 } );

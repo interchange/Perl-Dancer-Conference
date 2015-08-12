@@ -1,5 +1,6 @@
 <specification>
   <container name="show-stars" value="logged_in_user"/>
+  <container name="show-unscheduled" value="unscheduled_talks"/>
   <pattern name="durationpat" type="string">10</pattern>
   <pattern name="nicknamepat" type="string">NickName</pattern>
   <list name="nav_day" iterator="days">
@@ -38,5 +39,13 @@
         <param name="stars"/>
       </list>
     </list>
+  </list>
+  <list name="unscheduled" iterator="unscheduled_talks">
+    <param name="name" field="author.name"/>
+    <param name="nickname" field="author.nickname" pattern="nicknamepat"/>
+    <param name="uri" field="author.uri" target="href" op="append"/>
+    <param name="title"/>
+    <param name="talk-uri" class="title" field="seo_uri" target="href" op="append"/>
+    <param name="duration"/>
   </list>
 </specification>
