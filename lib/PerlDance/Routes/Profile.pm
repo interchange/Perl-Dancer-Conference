@@ -60,31 +60,17 @@ Profile update top-level page showing available options.
 get '/' => sub {
     my $nav = shop_navigation( { uri => 'profile' } );
 
+    my $user = logged_in_user;
     my $talks = [
-        logged_in_user->talks_authored->search(
+        $user->talks_authored->search(
             { conferences_id => setting('conferences_id') }
         )->hri->all
     ];
 
     # check whether user ordered a ticket
-    my $order_rs = logged_in_user->orders;
-    my $order_number;
-
-    while (my $order = $order_rs->next) {
-        my $orderline_rs = $order->orderlines;
-
-        while (my $orderline = $orderline_rs->next) {
-            my ($ct, $conf);
-
-            if ($ct = $orderline->product->conference_ticket) {
-                if (($conf = $ct->conference)
-                        && $conf->name eq config->{'conference_name'}) {
-                    $order_number = $order->order_number;
-                    last;
-                }
-            }
-        }
-    }
+    my $order_rs = $user->orders;
+    my $order_number = conference_ticket($order_rs);
+    my $unregister_link = user_can_unregister($user, $order_rs, $talks);
 
     my $tokens = {
         title       => 'Profile',
@@ -114,7 +100,19 @@ get '/' => sub {
             uri => 'tickets',
         }
     }
-
+    my $registered = user_is_registered($user);
+    if ($registered && $unregister_link) {
+        push @{$tokens->{profile_nav}}, {
+                                         name => 'Unregister from the conference',
+                                         uri => $unregister_link,
+                                        };
+    }
+    elsif (!$registered) {
+        push @{$tokens->{profile_nav}}, {
+                                         name => 'Register to the conference',
+                                         uri => 'profile/register',
+                                        };
+    }
     template 'profile', $tokens;
 };
 
@@ -926,6 +924,99 @@ sub order_receipt {
             subject => "Your Ticket for " . setting("conference_name"),
         );
     return 1;
+}
+
+sub conference_ticket {
+    my ($order_rs) = @_;
+    my $order_number;
+    while (my $order = $order_rs->next) {
+        my $orderline_rs = $order->orderlines;
+
+        while (my $orderline = $orderline_rs->next) {
+            my ($ct, $conf);
+
+            if ($ct = $orderline->product->conference_ticket) {
+                if (($conf = $ct->conference)
+                        && $conf->name eq config->{'conference_name'}) {
+                    $order_number = $order->order_number;
+                    last;
+                }
+            }
+        }
+    }
+    $order_rs->reset;
+    return $order_number;
+}
+
+sub user_can_unregister {
+    # we don't need arguments, but save queries if passed
+    my ($user, $order_rs, $talks) = @_;
+    my $conference_id = setting('conferences_id');
+
+    $user ||= logged_in_user;
+    return 0 unless $user;
+    return 0 unless user_is_registered($user);
+    unless ($order_rs) {
+        $order_rs = $user->orders;
+    }
+    if (conference_ticket($order_rs)) {
+        return 0;
+    }
+    $talks ||= [
+                $user->talks_authored
+                ->search(
+                         { conferences_id => $conference_id }
+                        )->hri->all
+               ];
+    if (@$talks) {
+        return 0;
+    }
+    else {
+        # nor talks, nor tickets
+        return 'profile/unregister';
+    }
+}
+
+get '/unregister' => sub {
+    my $user = logged_in_user;
+    my $conference_id = setting('conferences_id');
+    if (user_can_unregister($user)) {
+        if (my $record = user_is_registered($user)) {
+            $record->delete;
+            flash success => "You unregistered from the conference!";
+        }
+        else {
+            # shouldn't happen, though
+            flash error => "You are already unregistered!";
+        }
+    }
+    else {
+        flash error => "You can't unregister!";
+    }
+    return redirect '/profile';
+};
+
+get '/register' => sub {
+    my $user = logged_in_user;
+    my $conference_id = setting('conferences_id');
+    if (user_is_registered($user)) {
+        flash error => "You are already registered!";
+    }
+    else {
+        $user->conferences_attended
+          ->update_or_create({ conferences_id => $conference_id });
+        flash success => "You are registered now!";
+    }
+    return redirect '/profile';
+};
+
+
+sub user_is_registered {
+    my $user = shift || logged_in_user;
+    return unless $user;
+    my $conference_id = setting('conferences_id');
+    # debug "Checking " . $user->username . " for $conference_id";
+    return $user->conferences_attended->find({ conferences_id => $conference_id });
 }
 
 # undef prefix - keep as last line before 'true'
