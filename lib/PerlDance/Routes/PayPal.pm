@@ -257,6 +257,13 @@ post '/paypal/maintenance' => sub {
     template 'paypal_maintenance', $tokens;
 };
 
+get '/paypal/cancel' => sub {
+    debug "Paypal cancelled";
+    flash info => "Payment with PayPal was cancelled";
+    return redirect ('/cart');
+};
+
+
 sub complete_transaction {
 	my ($user, $payment_method, $payment_id, $payment_status, $payment_mode, $country_iso_code, $order_details) = @_;
 

@@ -118,3 +118,14 @@ plugins:
       login:
         template: sign-in
 checkout_type: multi
+
+# placeholder
+paypal:
+  id: myid
+  password: XXX
+  signature: XXXXXX
+  returnurl: "https://www.perl.dance/paypal/getrequest"
+  cancelurl: "https://www.perl.dance/paypal/cancel"
+  currencycode: EUR
+  sandbox: 1
+  maintenance: 0
