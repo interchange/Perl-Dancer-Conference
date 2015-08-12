@@ -24,6 +24,7 @@ use PerlDance::Routes::Profile;
 use PerlDance::Routes::Talk;
 use PerlDance::Routes::User;
 use PerlDance::Routes::Wiki;
+use Encode qw/encode/;
 
 =head1 ROUTES
 
@@ -291,6 +292,7 @@ The following keys are required:
 sub send_email {
     my %args = @_;
 
+    try {
     my $template = delete $args{template};
     die "template not supplied to send_email" unless $template;
 
@@ -302,23 +304,25 @@ sub send_email {
       uri_for(
         shop_schema->resultset('Media')->search( { label => "email-logo" } )
           ->first->uri );
-
+    debug "Rendering mail $template";
     my $html = template $template, $tokens, { layout => 'email' };
 
     my $f    = HTML::FormatText::WithLinks->new;
     my $text = $f->parse($html);
-
+    # the dumper shows \x{20ac}, so html and text are decoded.
     email {
         %args,
-        body => $text,
+        body => encode('UTF-8', $text),
         type => 'text',
         attach => {
-            Data     => $html,
+            Data     => encode('UTF-8', $html),
             Encoding => "quoted-printable",
             Type     => "text/html"
         },
         multipart => 'alternative',
     };
+   }
+   catch { error "Could not send email: $_"; };
 }
 
 true;
