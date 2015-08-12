@@ -1,0 +1,11 @@
+<specification>
+  <list name="events-item" iterator="events">
+    <param name="title"/>
+    <param name="duration"/>
+    <param name="scheduled" filter="boolean"/>
+    <param name="start_time" filter="date"/>
+    <param name="room"/>
+    <param name="edit" field="events_id" target="href" op="append"/>
+    <param name="delete" field="events_id" target="href" op="append"/>
+  </list>
+</specification>

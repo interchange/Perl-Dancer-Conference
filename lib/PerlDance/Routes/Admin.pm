@@ -12,6 +12,7 @@ use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 use Try::Tiny;
 
+use PerlDance::Routes::Admin::Events;
 use PerlDance::Routes::Admin::Navigation;
 use PerlDance::Routes::Admin::Talks;
 use PerlDance::Routes::Admin::Users;
@@ -20,6 +21,7 @@ use PerlDance::Routes::Admin::Users;
 
 See also:
 
+L<PerlDance::Routes::Admin::Events>,
 L<PerlDance::Routes::Admin::Navigation>, L<PerlDance::Routes::Admin::Talks>,
 L<PerlDance::Routes::Admin::Users>
 

@@ -258,6 +258,7 @@ sub add_validator_errors_token {
 
     my %errors;
     my $v_hash = $validator->errors_hash;
+
     while ( my ( $key, $value ) = each %$v_hash ) {
         my $error = $value->[0]->{value};
 
