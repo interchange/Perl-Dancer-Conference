@@ -143,6 +143,10 @@ get '/paypal/getrequest' => sub {
                 });
 
                 debug "Created new user with id ", $user->id, " for email $email";
+                $user->find_or_create_related('conferences_attended',
+                                              {conferences_id => setting('conferences_id'),
+                                               confirmed => 1,
+                                           });
             }
         }
 
