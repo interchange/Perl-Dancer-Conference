@@ -217,6 +217,7 @@ get '/talks/schedule' => sub {
     my $events = rset('Event')->search(
         {
             conferences_id => setting('conferences_id'),
+            room           => { '!=' => '' },
             start_time     => { '!=' => undef },
         },
         {
@@ -228,6 +229,7 @@ get '/talks/schedule' => sub {
         {
             accepted       => 1,
             conferences_id => setting('conferences_id'),
+            room           => { '!=' => '' },
             start_time     => { '!=' => undef },
         },
         {
@@ -242,20 +244,41 @@ get '/talks/schedule' => sub {
 
     if ( user_has_role('admin') ) {
 
-        # admins are also shown accepted talks with no start_time
-        $tokens->{unscheduled_talks} = [
-            rset('Talk')->search(
-                {
-                    accepted       => 1,
-                    conferences_id => setting('conferences_id'),
-                    start_time     => undef,
+        # admins are also shown accepted talks and events which have
+        # no start_time or no room defined
+
+        my @events = rset('Event')->search(
+            {
+                conferences_id => setting('conferences_id'),
+                -or            => {
+                    room       => '',
+                    start_time => undef,
                 },
-                {
-                    order_by => 'start_time',
-                    prefetch => 'author',
-                }
-            )->all
-        ];
+            },
+            {
+                order_by => 'start_time',
+            }
+        )->all;
+
+        $tokens->{unscheduled_events} = \@events if @events;
+
+        my @talks = rset('Talk')->search(
+            {
+                accepted       => 1,
+                conferences_id => setting('conferences_id'),
+                -or            => {
+                    room       => '',
+                    start_time => undef,
+                },
+            },
+            {
+                order_by => 'start_time',
+                prefetch => 'author',
+            }
+        )->all;
+
+        $tokens->{unscheduled_talks} = \@talks if @talks;
+
     }
     else {
 

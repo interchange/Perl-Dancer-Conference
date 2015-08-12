@@ -1,6 +1,7 @@
 <specification>
   <container name="show-stars" value="logged_in_user"/>
-  <container name="show-unscheduled" value="unscheduled_talks"/>
+  <container name="show-unscheduled-events" value="unscheduled_events"/>
+  <container name="show-unscheduled-talks" value="unscheduled_talks"/>
   <pattern name="durationpat" type="string">10</pattern>
   <pattern name="nicknamepat" type="string">NickName</pattern>
   <list name="nav_day" iterator="days">
@@ -40,12 +41,23 @@
       </list>
     </list>
   </list>
-  <list name="unscheduled" iterator="unscheduled_talks">
+  <list name="unscheduled_event" iterator="unscheduled_events">
+    <param name="title"/>
+    <param name="event-uri" class="title" field="seo_uri" target="href"
+      op="append"/>
+    <param name="duration"/>
+    <param name="start_time" filter="date"/>
+    <param name="room"/>
+  </list>
+  <list name="unscheduled_talk" iterator="unscheduled_talks">
     <param name="name" field="author.name"/>
     <param name="nickname" field="author.nickname" pattern="nicknamepat"/>
     <param name="uri" field="author.uri" target="href" op="append"/>
     <param name="title"/>
-    <param name="talk-uri" class="title" field="seo_uri" target="href" op="append"/>
+    <param name="talk-uri" class="title" field="seo_uri" target="href"
+      op="append"/>
     <param name="duration"/>
+    <param name="start_time" filter="date"/>
+    <param name="room"/>
   </list>
 </specification>
