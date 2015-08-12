@@ -417,53 +417,5 @@ sub add_validator_errors_token {
     $tokens->{errors} = \%errors;
 }
 
-=head2 send_email( $args_hash );
-
-The following keys are required:
-
-=over 4
-
-=item template
-
-=item tokens
-
-=item to
-
-=item subject
-
-=back
-
-=cut
-
-sub send_email {
-    my %args = @_;
-
-    my $template = delete $args{template};
-    die "template not supplied to send_email" unless $template;
-
-    my $tokens = delete $args{tokens};
-    die "tokens hashref not supplied to send_email"
-      unless ref($tokens) eq 'HASH';
-
-    $tokens->{"conference-logo"} =
-      uri_for( rset('Media')->search( { label => "email-logo" } )->first->uri );
-
-    my $html = template $template, $tokens, { layout => 'email' };
-
-    my $f    = HTML::FormatText::WithLinks->new;
-    my $text = $f->parse($html);
-
-    email {
-        %args,
-        body => $text,
-        type => 'text',
-        attach => {
-            Data     => $html,
-            Encoding => "quoted-printable",
-            Type     => "text/html"
-        },
-        multipart => 'alternative',
-    };
-}
 
 true;

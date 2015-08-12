@@ -614,38 +614,19 @@ post '/talk/create' => sub {
             );
 
             debug "new talk submitted";
-
-            my $html = template '/email/talk_submitted',
-              {
-                %$valid,
-                logged_in_user    => logged_in_user,
-                talk              => $talk,
-                "conference-logo" => uri_for(
-                    shop_schema->resultset('Media')
-                      ->search( { label => "email-logo" } )->first->uri
-                ),
-              },
-              { layout => 'email' };
-
-            my $f    = HTML::FormatText::WithLinks->new;
-            my $text = $f->parse($html);
-
-            email {
-                subject => setting("conference_name") . " talk submitted",
-                body    => $text,
-                type    => 'text',
-                attach  => {
-                    Data     => $html,
-                    Encoding => "quoted-printable",
-                    Type     => "text/html"
-                },
-                multipart => 'alternative',
-            };
-
+            PerlDance::Routes::send_email(
+                                          template => '/email/talk_submitted',
+                                          tokens => {
+                                                     %$valid,
+                                                     logged_in_user    => logged_in_user,
+                                                     talk              => $talk,
+                                                    },
+                                          subject => setting("conference_name") . " talk submitted",
+                                         );
             debug "sent email/talk_submitted";
 
             $form->reset;
-            flash success => "Thankyou for submitting your talk. We will be in contact soon";
+            flash success => "Thank you for submitting your talk. We will be in contact soon";
             $success = 1;
         }
         catch {
@@ -753,39 +734,20 @@ post '/talk/:id' => sub {
                         duration  => $valid->{duration},
                         url       => $valid->{url} || '',
                         comments  => $valid->{comments} || '',
-                        confirmed => $valid->{confirmed},
+                        confirmed => $valid->{confirmed} || 0,
                     }
                 );
 
                 debug "talk updated with id: ", $talk->id;
-
-                my $html = template '/email/talk_submitted',
-                  {
-                    %$valid,
-                    logged_in_user    => logged_in_user,
-                    talk              => $talk,
-                    "conference-logo" => uri_for(
-                        shop_schema->resultset('Media')
-                          ->search( { label => "email-logo" } )->first->uri
-                    ),
-                  },
-                  { layout => 'email' };
-
-                my $f    = HTML::FormatText::WithLinks->new;
-                my $text = $f->parse($html);
-
-                email {
-                    subject => setting("conference_name") . " talk updated",
-                    body    => $text,
-                    type    => 'text',
-                    attach  => {
-                        Data     => $html,
-                        Encoding => "quoted-printable",
-                        Type     => "text/html"
-                    },
-                    multipart => 'alternative',
-                };
-
+                PerlDance::Routes::send_email(
+                                              template => '/email/talk_submitted',
+                                              tokens => {
+                                                         %$valid,
+                                                         logged_in_user    => logged_in_user,
+                                                         talk              => $talk,
+                                                        },
+                                              subject => setting("conference_name") . " talk updated",
+                                             );
                 $form->reset;
 
                 return redirect '/profile';
@@ -953,8 +915,7 @@ Send order receipt as email.
 sub order_receipt {
     my $order = shift;
 
-    try {
-        PerlDance::Routes::send_email(
+    PerlDance::Routes::send_email(
             template => "email/receipt",
             tokens => {
                 order   => $order,
@@ -964,11 +925,6 @@ sub order_receipt {
             bcc     => '2015@perl.dance',
             subject => "Your Ticket for " . setting("conference_name"),
         );
-    }
-    catch {
-        error "Could not send email: $_";
-    };
-
     return 1;
 }
 

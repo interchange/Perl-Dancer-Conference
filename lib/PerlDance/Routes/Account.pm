@@ -8,7 +8,6 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::Email;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
@@ -168,8 +167,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
         my $action_name =
           $action eq 'register' ? 'registration' : 'password reset';
 
-        try {
-            PerlDance::Routes::send_email(
+        PerlDance::Routes::send_email(
                 template => "email/generic",
                 tokens   => {
                     preamble => "You are receiving this email because your "
@@ -182,15 +180,11 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
                 subject => "\u$action_name for the "
                   . setting("conference_name"),
             );
-        }
-        catch {
-            error "Could not send email: $_";
-        }
     }
 
     template 'email_sent',
       {
-        title       => "Thankyou",
+        title       => "Thank you",
         description => "Email on its way",
         username    => $email
       };

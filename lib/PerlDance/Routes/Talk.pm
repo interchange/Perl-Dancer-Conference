@@ -9,7 +9,6 @@ PerlDance::Routes::Talk - Talk routes for PerlDance conference application
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
 use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Email;
 use Data::Transpose::Validator;
 use DateTime;
 use HTML::FormatText::WithLinks;
