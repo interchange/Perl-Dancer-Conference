@@ -183,7 +183,7 @@ get '/edit' => sub {
                         $values{latitude}  = $record->latitude;
                         $values{longitude} = $record->longitude;
 
-                        my $country = rset('country')
+                        my $country = rset('Country')
                           ->find( { country_iso_code => $values{country} } );
 
                         if ( $country && $country->show_states ) {
