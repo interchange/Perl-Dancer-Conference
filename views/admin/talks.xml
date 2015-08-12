@@ -1,8 +1,12 @@
 <specification>
   <list name="talks-item" iterator="talks">
     <param name="title"/>
+    <param name="duration"/>
     <param name="accepted" filter="boolean"/>
     <param name="confirmed" filter="boolean"/>
+    <param name="scheduled" filter="boolean"/>
+    <param name="start_time" filter="date"/>
+    <param name="room"/>
     <param name="author" field="author.name"/>
     <param name="edit" field="talks_id" target="href" op="append"/>
     <param name="delete" field="talks_id" target="href" op="append"/>
