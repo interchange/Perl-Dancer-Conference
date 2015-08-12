@@ -332,6 +332,21 @@ sub complete_transaction {
 	cart->clear;
 
 	debug "Order $order_number added";
+    debug "Notifying shop owner";
+    try {
+        PerlDance::Routes::send_email(
+            template => "profile/order",
+            tokens => {
+                       order   => $transactions,
+                       hide_profile_link => 1,
+            },
+            to      => '2015@perl.dance',
+            subject => setting("conference_name") . " Order $order_number",
+        );
+    }
+    catch {
+        error "Could not send email: $_";
+    };
 	return $transactions;
 }
 

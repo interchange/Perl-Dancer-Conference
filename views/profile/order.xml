@@ -5,6 +5,8 @@
   <value name="order-payment-method" field="order.payment_method"/>
   <container name="receipt" value="receipt">
   </container>
+  <container name="profile-link" value="!hide_profile_link">
+  </container>
   <list name="orderline" iterator="order.orderlines">
     <param name="sku"/>
     <param name="name"/>
