@@ -263,18 +263,15 @@ sub validate_event {
         },
         scheduled => {
             required  => 1,
-#
-# See https://github.com/racke/Data-Transpose/issues/19
-#
-#            validator => sub {
-#                my $field = shift;
-#                if ( $field =~ /^[01]$/ ) {
-#                    return $field;
-#                }
-#                else {
-#                    return ( undef, "Not a boolean yes/no (1/0)" );
-#                }
-#            },
+            validator => sub {
+                my $field = shift;
+                if ( $field =~ /^[01]$/ ) {
+                    return 1;
+                }
+                else {
+                    return ( undef, "Not a boolean yes/no (1/0)" );
+                }
+            },
         },
         start_time => {
             validator => 'String',
