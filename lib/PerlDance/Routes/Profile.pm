@@ -359,7 +359,7 @@ post '/password' => sub {
             required => 1,
             validator => sub {
                 if ( logged_in_user->check_password($_[0]) ) {
-                    return $_[0];
+                    return 1;
                 }
                 else {
                     return (undef, "Password incorrect");
