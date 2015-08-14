@@ -13,7 +13,7 @@ use Dancer::Plugin::Email;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
-use Data::Transpose::Validator;
+use PerlDance::Validate;
 use File::Copy;
 use File::Spec;
 use File::Type;
@@ -350,47 +350,10 @@ get '/password' => sub {
 =cut
 
 post '/password' => sub {
+    my %params =  params('body') ;
 
-    my %params = params('body');
-
-    my $validator = Data::Transpose::Validator->new;
-    $validator->prepare(
-        old_password => {
-            required => 1,
-            validator => sub {
-                if ( logged_in_user->check_password($_[0]) ) {
-                    return 1;
-                }
-                else {
-                    return (undef, "Password incorrect");
-                }
-            },
-        },
-        password => {
-            required  => 1,
-            validator => {
-                class   => 'PasswordPolicy',
-                options => {
-                    username      => logged_in_user->username,
-                    minlength     => 8,
-                    maxlength     => 70,
-                    patternlength => 4,
-                    mindiffchars  => 5,
-                    disabled      => {
-                        digits   => 1,
-                        mixed    => 1,
-                        specials => 1,
-                    }
-                }
-            }
-        },
-        confirm_password => { required => 1 },
-        passwords        => {
-            validator => 'Group',
-            fields    => [ "password", "confirm_password" ],
-        },
-    );
-    my $valid = $validator->transpose( \%params );
+    my $pdv = PerlDance::Validate->new( params => \%params );
+    my ( $validator, $valid ) = $pdv->password;
 
     if ( $valid ) {
         logged_in_user->update({ password => $valid->{password} });
@@ -583,7 +546,8 @@ post '/talk/create' => sub {
 
     my $form   = form('create_update_talk');
 
-    my ( $validator, $valid ) = validate_talk($form);
+    my $pdv = PerlDance::Validate->new( form => $form );
+    my ( $validator, $valid ) = $pdv->talk;
 
     if ($valid) {
 
@@ -711,7 +675,8 @@ post '/talk/:id' => sub {
         my $form = form('create_update_talk');
         my $values = $form->values;
 
-        my ( $validator, $valid ) = validate_talk($form);
+        my $pdv = PerlDance::Validate->new( form => $form );;
+        my ( $validator, $valid ) = $pdv->talk;
 
         if ($valid) {
 
@@ -847,62 +812,6 @@ sub add_durations_token {
         },
     ];
 }
-
-=head2 validate_talk( $form )
-
-Returns ( $validator, $valid )
-
-=cut
-
-sub validate_talk {
-    my $form = shift;
-
-    my $values = $form->values;
-
-    my $validator = Data::Transpose::Validator->new(
-        stripwhite => 1,
-    );
-
-    $validator->prepare(
-        talk_title => {
-            validator => "String",
-            required => 1,
-        },
-        abstract   => {
-            validator => "String",
-            required => 1,
-        },
-        tags => {
-            validator => "String",
-            required => 0,
-        },
-        duration   => {
-            validator => {
-                class   => "NumericRange",
-                options => {
-                    integer => 1,
-                    min     => 20,
-                    max     => 40,
-                }
-            },
-            required => 1,
-        },
-        url => {
-            validator => "String",
-            required => 0,
-        },
-        comments => {
-            validator => "String",
-            required => 0,
-        },
-        confirmed => {
-            required => 0,
-        },
-    );
-
-    return ( $validator, $validator->transpose($values) );
-}
-
 
 =head2 order_receipt( $order )
 
