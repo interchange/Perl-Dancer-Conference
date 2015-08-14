@@ -11,7 +11,7 @@ use warnings;
 
 use Moo;
 use Dancer::Plugin::Auth::Extensible;
-use Data::Transpose;
+use Data::Transpose::Validator;
 
 =head2 form
 
