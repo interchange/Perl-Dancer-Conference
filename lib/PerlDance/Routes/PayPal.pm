@@ -142,10 +142,12 @@ get '/paypal/getrequest' => sub {
                     last_name => $details{LastName},
                 });
 
+
+
                 debug "Created new user with id ", $user->id, " for email $email";
             }
         }
-        $user->find_or_create_related('conferences_attended',
+        $user->update_or_create_related('conferences_attended',
                                       {
                                        conferences_id => setting('conferences_id'),
                                        confirmed => 1,
@@ -178,8 +180,21 @@ get '/paypal/getrequest' => sub {
         my %order_details = (first_name => $details{FirstName},
                              last_name => $details{LastName},
                              city => $details{CityName},
-                         );
+                             company => $details{PayerBusiness} || '',
+                             address => $details{Street1} || '',
+                             address_2 => $details{Street2} || '',
+                             postal_code => $details{PostalCode} || '',
+                            );
 
+        # handle "Name", which is the name set for the delivery in
+        # paypal unclear if it's the right thing to do, but this
+        # record goes in addresses, not in users, so probably makes
+        # sense.
+        if ($details{Name} and $details{Name} =~ /\w/) {
+            my ($first, $last) = split(' ', $details{Name}, 2);
+            $order_details{first_name} = $first;
+            $order_details{last_name} = $last;
+        }
         debug "Order details: ", \%order_details;
 
         my $order = complete_transaction($user, 'PayPal', $details{PayerID} , 'paid', '', $details{Country}, \%order_details);
@@ -278,12 +293,20 @@ sub complete_transaction {
     debug "Completing transaction for user: ", ref($user);
     debug "Order details: ", $order_details;
 
+    my %address_hash = (
+                        users_id => $user->id,
+                        country_iso_code => $country_iso_code,
+                        %$order_details,
+                       );
+    debug to_dumper(\%address_hash);
     # create address
-    my $address = schema->resultset('Address')->create({
-        users_id => $user->id,
-        city => $order_details->{city},
-        country_iso_code => $country_iso_code,
-    });
+    my $address = schema->resultset('Address')->search(\%address_hash)->first ||
+      schema->resultset('Address')->create(\%address_hash)->discard_changes;
+
+    unless ($user->addresses->search({ type => 'primary' })->first) {
+        debug "No primary address found, making this the primary one";
+        $address->update({ type => 'primary'  });
+    }
 
 	# Transaction
 	my $transactions = schema->resultset('Order')->create({
