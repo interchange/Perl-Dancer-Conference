@@ -1,15 +1,5 @@
 $(document).ready(function() {
   var xsrfMeta = $('head meta[name="xsrf-meta"]').attr('content');
-  $(".nav-item").each(function() {
-    var navid = $(this).find(".navigation_id");
-    $(this).data("ttId", navid.text());
-    navid.remove();
-    var navpid = $(this).find(".parent_id");
-    if ( navpid.text() ) {
-      $(this).data("ttParentId", navpid.text());
-    }
-    navpid.remove();
-  });
 
   $("#createModal").on('show.bs.modal', function(event) {
     var button = $(event.relatedTarget);

@@ -1,7 +1,5 @@
 <specification>
   <list name="nav-item" iterator="navigation_list">
-    <param name="navigation_id"/>
-    <param name="parent_id"/>
     <param name="uri"/>
     <param name="type"/>
     <param name="scope"/>
@@ -15,7 +13,7 @@
     <param name="create" field="navigation_id" target="data-parent"/>
     <param name="create-type" class="create" field="type" target="data-type"/>
     <param name="create-scope" class="create" field="scope" target="data-scope"/>
-    <param name="data-id" class="uri" target="data-tt-id" field="navigation_id"/>
-    <param name="parent-id" class="uri" target="data-tt-parent-id" field="parent_id"/>
+    <param name="navigation_id" class="parent" target="data-tt-id"/>
+    <param name="parent_id" class="parent" target="data-tt-parent-id"/>
   </list>
 </specification>
