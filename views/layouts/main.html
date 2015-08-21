@@ -1,129 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title class="head-title">Conference Name | Page Title</title>
-    <meta class="meta-description" name="description" content="Conference Name. Page description">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway%3A100%2C200%2C300%2Cregular%2C500%2C600%2C700%2C800%2C900&#038;subset=latin&#038' type='text/css'>
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Montserrat%3Aregular%2C700&#038;subset=latin&#038' type='text/css'>
-    <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Droid+Serif%3Aregular%2Citalic%2C700%2C700italic&#038;subset=latin&#038' type='text/css'>
-    <link rel="stylesheet" href="/css/leaflet.css" />
-    <link rel='stylesheet' href='/css/font-awesome.min.css' type='text/css'>
-    <link rel='stylesheet' href='/css/fileinput.min.css' type='text/css'>
-    <link rel='stylesheet' href='/css/bootstrap-datetimepicker.min.css' type='text/css'>
-    <link rel='stylesheet' href='/css/jquery.Jcrop.min.css' type='text/css'>
-    <link rel='stylesheet' href='/css/site.css' type='text/css'>
-    <!--[if lt IE 9]>
-    <script src="/js/html5.js"></script>
-    <script src="/js/excanvas.js"></script>
-    <![endif]-->
-  </head>
-  <body>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title class="head-title">Conference Name | Page Title</title>
+        <meta class="meta-description" name="description" content="Conference Name. Page description">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway%3A100%2C200%2C300%2Cregular%2C500%2C600%2C700%2C800%2C900&#038;subset=latin&#038' type='text/css'>
+        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Montserrat%3Aregular%2C700&#038;subset=latin&#038' type='text/css'>
+        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Droid+Serif%3Aregular%2Citalic%2C700%2C700italic&#038;subset=latin&#038' type='text/css'>
+        <link rel="stylesheet" href="/css/leaflet.css" />
+        <link rel='stylesheet' href='/css/font-awesome.min.css' type='text/css'>
+        <link rel='stylesheet' href='/css/fileinput.min.css' type='text/css'>
+        <link rel='stylesheet' href='/css/bootstrap-datetimepicker.min.css' type='text/css'>
+        <link rel='stylesheet' href='/css/jquery.Jcrop.min.css' type='text/css'>
+        <link rel='stylesheet' href='/css/site.css' type='text/css'>
+        <!--[if lt IE 9]>
+            <script src="/js/html5.js"></script>
+            <script src="/js/excanvas.js"></script>
+            <![endif]-->
+    </head>
+    <body>
 
-    <div class="navbar navbar-default navbar-fixed-top normal" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/"><img src="/img/perl-dancer-2015-logo.png"></a>
+        <div class="navbar navbar-default navbar-fixed-top normal" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/"><img src="/img/perl-dancer-2015-logo.png"></a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right auth-login">
+                        <li class="menu-login">
+                            <a class="link" href="/">Login</a>
+                            <ul class="dropdown-menu">
+                                <li class="menu-login-child"><a class="link" href="/">Submenu</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right auth-logout">
+                        <li class="menu-logout">
+                            <a class="link" href="/">Logout</a>
+                            <ul class="dropdown-menu">
+                                <li class="menu-logout-child"><a class="link" href="/">Submenu</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right show-nav-admin">
+                        <li class="menu-admin">
+                            <a class="link" href="/">Menu</a>
+                            <ul class="dropdown-menu">
+                                <li class="menu-admin-child"><a class="link" href="/">Submenu</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="menu-main">
+                            <a class="link" href="/">Home</a>
+                            <ul class="dropdown-menu">
+                                <li class="menu-main-child"><a class="link" href="/">Submenu</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav navbar-right auth-login">
-            <li class="menu-login">
-              <a class="link" href="/">Login</a>
-              <ul class="dropdown-menu">
-                <li class="menu-login-child"><a class="link" href="/">Submenu</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right auth-logout">
-            <li class="menu-logout">
-              <a class="link" href="/">Logout</a>
-              <ul class="dropdown-menu">
-                <li class="menu-logout-child"><a class="link" href="/">Submenu</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right show-nav-admin">
-            <li class="menu-admin">
-              <a class="link" href="/">Menu</a>
-              <ul class="dropdown-menu">
-                <li class="menu-admin-child"><a class="link" href="/">Submenu</a></li>
-              </ul>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li class="menu-main">
-              <a class="link" href="/">Home</a>
-              <ul class="dropdown-menu">
-                <li class="menu-main-child"><a class="link" href="/">Submenu</a></li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
 
-    <div class="jumbotron title-wrapper">
-      <div class="container">
-      <h1 class="page-title">Some title</h1>
-      <span class="page-caption">caption goes here</span>
-      </div>
-    </div>
+        <div class="jumbotron title-wrapper">
+            <div class="container">
+                <h1 class="page-title">Some title</h1>
+                <span class="page-caption">caption goes here</span>
+            </div>
+        </div>
 
-    <div class="container">
-      <div class="alerts-success">
-        <div class="alert alert-success alert-dismissable" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Success!</strong> <span class="message">Some message</span>
+        <div class="container">
+            <div class="alerts-success">
+                <div class="alert alert-success alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Success!</strong> <span class="message">Some message</span>
+                </div>
+            </div>
+            <div class="alerts-info">
+                <div class="alert alert-info alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Info!</strong> <span class="message">Some message</span>
+                </div>
+            </div>
+            <div class="alerts-warning">
+                <div class="alert alert-warning alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Warning!</strong> <span class="message">Some message</span>
+                </div>
+            </div>
+            <div class="alerts-error">
+                <div class="alert alert-danger alert-dismissable" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> <span class="message">Some message</span>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="alerts-info">
-        <div class="alert alert-info alert-dismissable" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Info!</strong> <span class="message">Some message</span>
-        </div>
-      </div>
-      <div class="alerts-warning">
-        <div class="alert alert-warning alert-dismissable" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Warning!</strong> <span class="message">Some message</span>
-        </div>
-      </div>
-      <div class="alerts-error">
-        <div class="alert alert-danger alert-dismissable" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <strong>Error!</strong> <span class="message">Some message</span>
-        </div>
-      </div>
-    </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 content"></div>
+                <div class="col-md-3">
+                    <div class="well">
+                        <h4 class="text-center">Sponsors</h4>
+                        <div class="row">
+                            <div class="spacing-bottom-small">
+                                <img src="http://act.perl.dance/eic2014/images/booking_logo.jpg" class="center-block img-responsive">
+                            </div>
+                            <div class="spacing-bottom-small">
+                                <img src="http://act.perl.dance/eic2014/images/booking_logo.jpg" class="center-block img-responsive">
+                            </div>
+                            <div class="spacing-bottom-small">
+                                <img src="http://act.perl.dance/eic2014/images/booking_logo.jpg" class="center-block img-responsive">
+                            </div>
+                            <div class="spacing-bottom-small">
+                                <img src="http://act.perl.dance/eic2014/images/booking_logo.jpg" class="center-block img-responsive">
+                            </div>
+                            <div class="spacing-bottom-small">
+                                <img src="http://act.perl.dance/eic2014/images/booking_logo.jpg" class="center-block img-responsive">
+                            </div> 
 
-    <div class="content"></div>
-    
-    <div class="footer">
-      <div class="copyright-container container">
-        <div class="copyright-left">
-            © Copyright 2015 Interchange Development Group, All Right Reserved
-        </div>
-      </div>
-    </div>
+                        </div>
+                    </div>
 
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-    <script src='/js/jquery.equalheightcolumns.min.js'></script>
-    <script src="/js/fileinput.min.js"></script>
-    <script src="/js/jquery.Jcrop.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src='/js/bootstrap-hover-dropdown.min.js'></script>
-    <script src='/js/leaflet.js'></script>
-    <script src='/js/site.js'></script>
-    <div class='extra-js'><script class='src' src=''></script></div>
-  </body>
+                </div>
+
+            </div>
+            <div class="footer">
+                <div class="copyright-container container">
+                    <div class="copyright-left">
+                        © Copyright 2015 Interchange Development Group, All Right Reserved
+                    </div>
+                </div>
+            </div>
+
+            <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+            <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+            <script src='/js/jquery.equalheightcolumns.min.js'></script>
+            <script src="/js/fileinput.min.js"></script>
+            <script src="/js/jquery.Jcrop.min.js"></script>
+            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+            <script src='/js/bootstrap-hover-dropdown.min.js'></script>
+            <script src='/js/leaflet.js'></script>
+            <script src='/js/site.js'></script>
+            <div class='extra-js'><script class='src' src=''></script></div>
+    </body>
 </html>
