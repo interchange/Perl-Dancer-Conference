@@ -40,9 +40,7 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
 
-    var no_title_wrapper => 1;
-
-    $tokens->{user} = rset('User')->find(
+    my $user = rset('User')->find(
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
@@ -54,6 +52,8 @@ get qr{/speakers/(?<id>\d+).*} => sub {
             join => 'conferences_attended',
         }
     );
+    $tokens->{user} = $user;
+    my $address = $user->addresses->first;
 
     if ( !$tokens->{user} ) {
         $tokens->{title} = "Not Found";
@@ -82,6 +82,9 @@ get qr{/speakers/(?<id>\d+).*} => sub {
     }
 
     $tokens->{title} = $tokens->{user}->name;
+    if ( $address ) {
+        $tokens->{description} = join(", ", $address->company, $address->city, $address->country->name );
+    }
 
     template 'speaker', $tokens;
 };
