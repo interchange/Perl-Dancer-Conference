@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title class="head-title">Conference Name | Page Title</title>
     <meta class="meta-description" name="description" content="Conference Name. Page description">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Raleway%3A100%2C200%2C300%2Cregular%2C500%2C600%2C700%2C800%2C900&#038;subset=latin&#038' type='text/css'>
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Montserrat%3Aregular%2C700&#038;subset=latin&#038' type='text/css'>
     <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Droid+Serif%3Aregular%2Citalic%2C700%2C700italic&#038;subset=latin&#038' type='text/css'>
@@ -106,7 +106,13 @@
     </div>
 
     <div class="container">
-      <div class="content"></div>
+      <div class="show_sidebar row">
+        <div class="col-sm-9 content"></div>
+        <div class="col-sm-3 sidebar"></div>
+      </div>
+      <div class="no_sidebar">
+        <div class="content"></div>
+      </div>
     </div>
     
     <div class="footer">
@@ -117,12 +123,12 @@
       </div>
     </div>
 
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="/js/jquery-2.1.1.min.js"></script>
+    <script src="/js/jquery-migrate-1.2.1.min.js"></script>
     <script src='/js/jquery.equalheightcolumns.min.js'></script>
     <script src="/js/fileinput.min.js"></script>
     <script src="/js/jquery.Jcrop.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src='/js/bootstrap-hover-dropdown.min.js'></script>
     <script src='/js/leaflet.js'></script>
     <script src='/js/site.js'></script>

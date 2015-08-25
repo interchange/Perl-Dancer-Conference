@@ -3,6 +3,11 @@
   <container name="logout" value="logged_in_user" class="auth-logout"/>
   <container name="show-nav-admin" value="is_admin"/>
   <container name="title-wrapper" value="title_wrapper"/>
+  <container name="show_sidebar" value="show_sidebar"/>
+  <container name="no_sidebar" value="!show_sidebar"/>
+
+  <value name="sidebar" include="../fragments/sidebar.html"/>
+
   <value name="title" class="page-title"/>
   <value name="description" class="page-caption"/>
 

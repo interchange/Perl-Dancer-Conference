@@ -128,6 +128,11 @@ hook 'before_layout_render' => sub {
             push @{$tokens->{alerts}->{$key}}, { message => $message };
         }
     }
+
+    # display sidebar?
+    if ( request->path =~ m{^/($|speakers|talks|tickets|users/|wiki)} ) {
+        $tokens->{show_sidebar} = 1;
+    }
 };
 
 hook after_layout_render => sub {
