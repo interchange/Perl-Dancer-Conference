@@ -19,6 +19,7 @@ use base 'Template::Flute::Filter';
 # undef value means no website
 my %lookup = (
     'drinkers.pm' => undef,
+    'Ljubljana.pm' => 'www.meetup.com/Ljubljana-pm-Perl-Mongers',
     'Hannover.pm' => 'Hannover.pm',
 );
 
