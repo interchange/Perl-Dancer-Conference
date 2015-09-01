@@ -8,12 +8,12 @@ PerlDance::Routes::Profile - account routes such as login, edit profile, ...
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
-use Data::Transpose::Validator;
 use File::Copy;
 use File::Spec;
 use File::Type;
@@ -342,6 +342,8 @@ post '/geocode' => sub {
 =cut
 
 get '/password' => sub {
+    my $form = form('change-password');
+    $form->reset;
     template 'profile/password', { title => 'Change Password' };
 };
 
@@ -351,55 +353,20 @@ get '/password' => sub {
 
 post '/password' => sub {
 
-    my %params = params('body');
+    my $form = form('change-password');
+    my $data = validator( $form->values, 'change-password', logged_in_user );
 
-    my $validator = Data::Transpose::Validator->new;
-    $validator->prepare(
-        old_password => {
-            required => 1,
-            validator => sub {
-                if ( logged_in_user->check_password($_[0]) ) {
-                    return 1;
-                }
-                else {
-                    return (undef, "Password incorrect");
-                }
-            },
-        },
-        password => {
-            required  => 1,
-            validator => {
-                class   => 'PasswordPolicy',
-                options => {
-                    username      => logged_in_user->username,
-                    minlength     => 8,
-                    maxlength     => 70,
-                    patternlength => 4,
-                    mindiffchars  => 5,
-                    disabled      => {
-                        digits   => 1,
-                        mixed    => 1,
-                        specials => 1,
-                    }
-                }
-            }
-        },
-        confirm_password => { required => 1 },
-        passwords        => {
-            validator => 'Group',
-            fields    => [ "password", "confirm_password" ],
-        },
-    );
-    my $valid = $validator->transpose( \%params );
+    # we don't want form data to leak into the session
+    $form->reset;
 
-    if ( $valid ) {
-        logged_in_user->update({ password => $valid->{password} });
+    if ( $data->{valid} ) {
+        logged_in_user->update( { password => $data->{values}->{password} } );
         flash success => "Password changed.";
         redirect '/profile';
     }
     else {
-        my $tokens = { title => "Change Password " };
-        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
+        my $tokens =
+          { title => "Change Password", form => $form, data => $data };
         template 'profile/password', $tokens;
     }
 };
@@ -565,7 +532,7 @@ get '/talk/create' => sub {
         title => "New Talk",
     };
 
-    $tokens->{form} = form('create_update_talk');
+    $tokens->{form} = form('create-update-talk');
     $tokens->{form}->reset;
     $tokens->{form}->fill( duration => 40 );
 
@@ -581,19 +548,19 @@ get '/talk/create' => sub {
 post '/talk/create' => sub {
     my $tokens = {};
 
-    my $form   = form('create_update_talk');
+    my $form = form('create-update-talk');
+    my $data = validator( $form->values, 'create-update-talk' );
 
-    my ( $validator, $valid ) = validate_talk($form);
+    if ($data->{valid}) {
 
-    if ($valid) {
+        debug "valid values: ", $data->{values};
 
-        debug "valid values: ", $valid;
-
-        my $tags = defined $valid->{tags} ? $valid->{tags} : '';
+        my $tags =
+          defined $data->{values}->{tags} ? $data->{values}->{tags} : '';
         $tags =~ s/,/ /g;
         $tags =~ s/\s+/ /g;
 
-        ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
+        ( my $abstract = $data->{values}->{abstract} ) =~ s/\r\n/\n/;
 
         my $success;
 
@@ -602,25 +569,27 @@ post '/talk/create' => sub {
                 {
                     author_id      => logged_in_user->id,
                     conferences_id => setting('conferences_id'),
-                    title          => $valid->{talk_title},
+                    title          => $data->{values}->{title},
                     abstract       => $abstract,
                     tags           => $tags,
-                    duration       => $valid->{duration},
-                    url            => $valid->{url} || '',
-                    comments       => $valid->{comments} || '',
+                    duration       => $data->{values}->{duration},
+                    url            => $data->{values}->{url} || '',
+                    comments       => $data->{values}->{comments} || '',
                 }
             );
 
             debug "new talk submitted";
+
             PerlDance::Routes::send_email(
-                                          template => '/email/talk_submitted',
-                                          tokens => {
-                                                     %$valid,
-                                                     logged_in_user    => logged_in_user,
-                                                     talk              => $talk,
-                                                    },
-                                          subject => setting("conference_name") . " talk submitted",
-                                         );
+                template => '/email/talk_submitted',
+                tokens   => {
+                    %{ $data->{values} },
+                    logged_in_user => logged_in_user,
+                    talk           => $talk,
+                },
+                subject => setting("conference_name") . " talk submitted",
+            );
+
             debug "sent email/talk_submitted";
 
             $form->reset;
@@ -637,10 +606,9 @@ post '/talk/create' => sub {
         }
     }
 
-    debug "talk submission errors: ", $validator->errors_as_hashref_for_humans;
+    debug "talk submission errors: ", $data->{errors};
 
-    PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
-
+    $tokens->{data} = $data;
     $tokens->{form} = $form;
 
     add_durations_token($tokens);
@@ -655,7 +623,7 @@ post '/talk/create' => sub {
 get '/talk/:id' => sub {
     my $tokens = {};
 
-    my $form = form('create_update_talk');
+    my $form = form('create-update-talk');
     $form->reset;
 
     my $talk = shop_schema->resultset('Talk')->find(param('id'));
@@ -668,7 +636,7 @@ get '/talk/:id' => sub {
         # all good
 
         $form->fill(
-            talk_title => $talk->title,
+            title      => $talk->title,
             abstract   => $talk->abstract,
             tags       => $talk->tags,
             duration   => $talk->duration,
@@ -708,59 +676,58 @@ post '/talk/:id' => sub {
     {
         # all good so validate
 
-        my $form = form('create_update_talk');
-        my $values = $form->values;
+        my $form = form('create-update-talk');
+        my $data = validator( $form->values, 'create-update-talk' );
 
-        my ( $validator, $valid ) = validate_talk($form);
+        if ($data->{valid}) {
 
-        if ($valid) {
+            debug "valid values: ", $data->{values};
 
-            debug "valid values: ", $valid;
-
-            my $tags = defined $valid->{tags} ? $valid->{tags} : '';
+            my $tags =
+              defined $data->{values}->{tags} ? $data->{values}->{tags} : '';
             $tags =~ s/,/ /g;
             $tags =~ s/\s+/ /g;
 
-            ( my $abstract = $valid->{abstract} ) =~ s/\r\n/\n/;
+            ( my $abstract = $data->{values}->{abstract} ) =~ s/\r\n/\n/;
 
             try {
                 $talk->update(
                     {
-                        title     => $valid->{talk_title},
+                        title     => $data->{values}->{title},
                         abstract  => $abstract,
                         tags      => $tags,
-                        duration  => $valid->{duration},
-                        url       => $valid->{url} || '',
-                        comments  => $valid->{comments} || '',
-                        confirmed => $valid->{confirmed} || 0,
+                        duration  => $data->{values}->{duration},
+                        url       => $data->{values}->{url} || '',
+                        comments  => $data->{values}->{comments} || '',
+                        confirmed => $data->{values}->{confirmed} || 0,
                     }
                 );
 
                 debug "talk updated with id: ", $talk->id;
+
                 PerlDance::Routes::send_email(
-                                              template => '/email/talk_submitted',
-                                              tokens => {
-                                                         %$valid,
-                                                         logged_in_user    => logged_in_user,
-                                                         talk              => $talk,
-                                                        },
-                                              subject => setting("conference_name") . " talk updated",
-                                             );
+                    template => '/email/talk_submitted',
+                    tokens   => {
+                        %{ $data->{values} },
+                        logged_in_user => logged_in_user,
+                        talk           => $talk,
+                    },
+                    subject => setting("conference_name") . " talk updated",
+                );
                 $form->reset;
 
                 return redirect '/profile';
             }
             catch {
-                # FIXME: handle errors
-                error "Talk submission error: $_";
+                error "Talk update error: $_";
+                flash error => "Talk update error: $_";
             };
         }
         else {
-            debug "errors: ", $validator->errors_as_hashref_for_humans;
+            debug "errors: ", $data->{errors};
         }
 
-        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
-
+        $tokens->{data}     = $data;
         $tokens->{form}     = $form;
         $tokens->{accepted} = $talk->accepted;
         $tokens->{title}    = "Edit Talk",
@@ -847,62 +814,6 @@ sub add_durations_token {
         },
     ];
 }
-
-=head2 validate_talk( $form )
-
-Returns ( $validator, $valid )
-
-=cut
-
-sub validate_talk {
-    my $form = shift;
-
-    my $values = $form->values;
-
-    my $validator = Data::Transpose::Validator->new(
-        stripwhite => 1,
-    );
-
-    $validator->prepare(
-        talk_title => {
-            validator => "String",
-            required => 1,
-        },
-        abstract   => {
-            validator => "String",
-            required => 1,
-        },
-        tags => {
-            validator => "String",
-            required => 0,
-        },
-        duration   => {
-            validator => {
-                class   => "NumericRange",
-                options => {
-                    integer => 1,
-                    min     => 20,
-                    max     => 40,
-                }
-            },
-            required => 1,
-        },
-        url => {
-            validator => "String",
-            required => 0,
-        },
-        comments => {
-            validator => "String",
-            required => 0,
-        },
-        confirmed => {
-            required => 0,
-        },
-    );
-
-    return ( $validator, $validator->transpose($values) );
-}
-
 
 =head2 order_receipt( $order )
 

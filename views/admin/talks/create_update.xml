@@ -1,5 +1,5 @@
 <specification>
-  <form name="update_create_talk" link="name">
+  <form name="create-update-talk" link="name">
     <field name="talks_id"/>
     <field name="author" iterator="authors"
        iterator_value_key="users_id" iterator_name_key="name"/>
@@ -15,4 +15,42 @@
     <field name="start_time"/>
     <field name="room"/>
   </form>
+
+  <value name="author_input" field="data.css.author" target="class"
+    op="append" joiner=" "/>
+  <value name="author_error" field="data.errors.author"/>
+  <value name="duration_input" field="data.css.duration" target="class"
+    op="append" joiner=" "/>
+  <value name="duration_error" field="data.errors.duration"/>
+  <value name="title_input" field="data.css.title" target="class"
+    op="append" joiner=" "/>
+  <value name="title_error" field="data.errors.title"/>
+  <value name="tags_input" field="data.css.tags" target="class"
+    op="append" joiner=" "/>
+  <value name="tags_error" field="data.errors.tags"/>
+  <value name="abstract_input" field="data.css.abstract" target="class"
+    op="append" joiner=" "/>
+  <value name="abstract_error" field="data.errors.abstract"/>
+  <value name="url_input" field="data.css.url" target="class"
+    op="append" joiner=" "/>
+  <value name="url_error" field="data.errors.url"/>
+  <value name="comments_input" field="data.css.comments" target="class"
+    op="append" joiner=" "/>
+  <value name="comments_error" field="data.errors.comments"/>
+  <value name="accepted_input" field="data.css.accepted" target="class"
+    op="append" joiner=" "/>
+  <value name="accepted_error" field="data.errors.accepted"/>
+  <value name="confirmed_input" field="data.css.confirmed" target="class"
+    op="append" joiner=" "/>
+  <value name="confirmed_error" field="data.errors.confirmed"/>
+  <value name="lightning_input" field="data.css.lightning" target="class"
+    op="append" joiner=" "/>
+  <value name="lightning_error" field="data.errors.lightning"/>
+  <value name="start_time_input" field="data.css.start_time" target="class"
+    op="append" joiner=" "/>
+  <value name="start_time_error" field="data.errors.start_time"/>
+  <value name="room_input" field="data.css.room" target="class"
+    op="append" joiner=" "/>
+  <value name="room_error" field="data.errors.room"/>
+
 </specification>

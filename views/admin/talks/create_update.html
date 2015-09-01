@@ -1,4 +1,4 @@
-<form class="form-horizontal" method="post" name="update_create_talk">
+<form class="form-horizontal" method="post" name="create-update-talk">
     <input type="hidden" name="talks_id">
 
     <div class="form-group">
@@ -7,52 +7,58 @@
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group author_input">
         <label for="inputAuthor" class="col-sm-2 control-label">Author</label>
         <div class="col-sm-10">
             <select class="form-control author" id="inputAuthor" name="author"  placeholder="Choose Author">
                 <option>Author</option>
             </select>
+            <div class="help-block author_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group duration_input">
         <label for="inputDuration" class="col-sm-2 control-label">Duration</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="inputDuration" name="duration" placeholder="Duration" required>
+            <div class="help-block duration_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group title_input">
         <label for="inputTitle" class="col-sm-2 control-label">Title</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="inputTitle" name="title" placeholder="Title" required>
+            <div class="help-block title_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group tags_input">
         <label for="inputTags" class="col-sm-2 control-label">Tags</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="inputTags" name="tags" placeholder="Tags">
+            <div class="help-block tags_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group abstract_input">
         <label for="inputAbstract" class="col-sm-2 control-label">Abstract</label>
         <div class="col-sm-10">
             <textarea rows="10" class="form-control" id="inputAbstract" name="abstract" placeholder="Abstract" required></textarea>
             <span class="help-block">Abstract should be written in Markdown</span>
+            <div class="help-block abstract_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group url_input">
         <label for="inputUrl" class="col-sm-2 control-label">Optional Url</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="inputUrl" name="url" placeholder="Url">
+            <div class="help-block url_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group accepted_input">
         <label for="inputAccepted" class="col-sm-2 control-label">Accepted</label>
         <div class="col-sm-10">
             <label class="radio-inline">
@@ -61,10 +67,11 @@
             <label class="radio-inline">
                 <input type="radio" name="accepted" class="accepted" value="0">No
             </label>
+            <div class="help-block accepted_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group confirmed_input">
         <label for="inputConfirmed" class="col-sm-2 control-label">Confirmed</label>
         <div class="col-sm-10">
             <label class="radio-inline">
@@ -73,10 +80,11 @@
             <label class="radio-inline">
                 <input type="radio" name="confirmed" class="confirmed" value="0">No
             </label>
+            <div class="help-block confirmed_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group lightning_input">
         <label for="inputLightning" class="col-sm-2 control-label">Lightning</label>
         <div class="col-sm-10">
             <label class="radio-inline">
@@ -85,32 +93,36 @@
             <label class="radio-inline">
                 <input type="radio" name="lightning" class="lightning" value="0">No
             </label>
+            <div class="help-block lightning_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group start_time_input">
       <label for="inputStartTime" class="col-sm-2 control-label">Start Time</label>
       <div class="col-sm-4">
         <div class="input-group date form_datetime" data-date-format="dd MM yyyy - HH:ii p" data-link-field="start_time">
             <input class="form-control" name="start_time" size="16" type="text" value="">
             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
             <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+            <div class="help-block start_time_error"></div>
         </div>
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group room_input">
         <label for="inputRoom" class="col-sm-2 control-label">Room</label>
         <div class="col-sm-10">
             <input type="text" class="form-control" id="inputRoom" name="room" placeholder="Room">
+            <div class="help-block room_error"></div>
         </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group comments_input">
         <label for="inputComments" class="col-sm-2 control-label">Comments</label>
         <div class="col-sm-10">
             <textarea rows="5" class="form-control" id="inputComments" name="comments" placeholder="Comments"></textarea>
             <span class="help-block">Comments should be written in Markdown</span>
+            <div class="help-block comments_error"></div>
         </div>
     </div>
 

@@ -113,7 +113,7 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     my $username = lc($email);
 
     my $form = form('register-reset');
-    my $data = validator( $form->values, 'register-reset' );
+    my $data = validator( $form->values, 'email-valid' );
 
     if ( $data->{valid} ) {
 

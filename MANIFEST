@@ -15,3 +15,6 @@ public/javascripts/jquery.min.js
 t/002_index_route.t
 t/001_base.t
 Makefile.PL
+validation/email-valid
+validation/create-update-talk
+validation/update-create-event

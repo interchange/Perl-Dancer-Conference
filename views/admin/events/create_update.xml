@@ -1,5 +1,5 @@
 <specification>
-  <form name="update_create_event" link="name">
+  <form name="update-create-event" link="name">
     <field name="duration"/>
     <field name="title"/>
     <field name="abstract"/>
@@ -9,32 +9,32 @@
     <field name="room"/>
   </form>
 
-  <value name="duration_input" field="errors.duration_input" target="class"
+  <value name="duration_input" field="data.css.duration" target="class"
     op="append" joiner=" "/>
-  <value name="duration_error" field="errors.duration"/>
+  <value name="duration_error" field="data.errors.duration"/>
 
-  <value name="title_input" field="errors.title_input" target="class"
+  <value name="title_input" field="data.css.title" target="class"
     op="append" joiner=" "/>
-  <value name="title_error" field="errors.title"/>
+  <value name="title_error" field="data.errors.title"/>
 
-  <value name="abstract_input" field="errors.abstract_input" target="class"
+  <value name="abstract_input" field="data.css.abstract" target="class"
     op="append" joiner=" "/>
-  <value name="abstract_error" field="errors.abstract"/>
+  <value name="abstract_error" field="data.errors.abstract"/>
 
-  <value name="url_input" field="errors.url_input" target="class"
+  <value name="url_input" field="data.css.url" target="class"
     op="append" joiner=" "/>
-  <value name="url_error" field="errors.url"/>
+  <value name="url_error" field="data.errors.url"/>
 
-  <value name="scheduled_input" field="errors.scheduled_input" target="class"
+  <value name="scheduled_input" field="data.css.scheduled" target="class"
     op="append" joiner=" "/>
-  <value name="scheduled_error" field="errors.scheduled"/>
+  <value name="scheduled_error" field="data.errors.scheduled"/>
 
-  <value name="start_time_input" field="errors.start_time_input" target="class"
+  <value name="start_time_input" field="data.css.start_time" target="class"
     op="append" joiner=" "/>
-  <value name="start_time_error" field="errors.start_time"/>
+  <value name="start_time_error" field="data.errors.start_time"/>
 
-  <value name="room_input" field="errors.room_input" target="class"
+  <value name="room_input" field="data.css.room" target="class"
     op="append" joiner=" "/>
-  <value name="room_error" field="errors.room"/>
+  <value name="room_error" field="data.errors.room"/>
 
 </specification>

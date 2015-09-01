@@ -1,0 +1,49 @@
+#!perl
+{
+    options => {
+        stripwhite => 1,
+    },
+    prepare => {
+        duration => {
+            required  => 1,
+            validator => sub {
+                my $field = shift;
+                if ( $field =~ /^\d+/ && $field > 0 ) {
+                    return 1;
+                }
+                else {
+                    return ( undef, "Not a positive integer" );
+                }
+            },
+        },
+        title => {
+            required  => 1,
+            validator => 'String',
+        },
+        abstract => {
+            required  => 1,
+            validator => 'String',
+        },
+        url => {
+            validator => 'String',
+        },
+        scheduled => {
+            required  => 1,
+            validator => sub {
+                my $field = shift;
+                if ( $field =~ /^[01]$/ ) {
+                    return 1;
+                }
+                else {
+                    return ( undef, "Not a boolean yes/no (1/0)" );
+                }
+            },
+        },
+        start_time => {
+            validator => 'String',
+        },
+        room => {
+            validator => 'String',
+        },
+    }
+}

@@ -8,6 +8,7 @@ PerlDance::Routes::Admin::Events - /admin/events routes
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 use Try::Tiny;
@@ -54,7 +55,7 @@ get '/create' => require_role admin => sub {
 
     $tokens->{title} = "Create Event";
 
-    my $form = form('update_create_event');
+    my $form = form('update-create-event');
     $form->reset;
     $form->fill(
         {
@@ -79,22 +80,21 @@ get '/create' => require_role admin => sub {
 post '/create' => require_role admin => sub {
     my $tokens = {};
 
-    my $form   = form('update_create_event');
+    my $form = form('update-create-event');
+    my $data = validator( $form->values, "update-create-event" );
 
-    my ( $validator, $valid ) = validate_event( $form );
-
-    if ($valid) {
+    if ($data->{valid}) {
         $form->reset;
         rset('Event')->create(
             {
                 conferences_id => setting('conferences_id'),
-                duration       => $valid->{duration},
-                title          => $valid->{title},
-                abstract       => $valid->{abstract},
-                url            => $valid->{url} || '',
-                scheduled      => $valid->{scheduled} ? 1 : 0,
-                start_time     => $valid->{start_time} || undef,
-                room           => $valid->{room} || '',
+                duration       => $data->{values}->{duration},
+                title          => $data->{values}->{title},
+                abstract       => $data->{values}->{abstract},
+                url            => $data->{values}->{url} || '',
+                scheduled      => $data->{values}->{scheduled} ? 1 : 0,
+                start_time     => $data->{values}->{start_time} || undef,
+                room           => $data->{values}->{room} || '',
             }
         );
         return redirect '/admin/events';
@@ -103,6 +103,7 @@ post '/create' => require_role admin => sub {
     # validation failed
     
     $tokens->{title} = "Create Event";
+    $tokens->{data}  = $data;
     $tokens->{form}  = $form;
 
     PerlDance::Routes::add_javascript(
@@ -110,8 +111,6 @@ post '/create' => require_role admin => sub {
         '/js/bootstrap-datetimepicker.min.js',
         '/js/bootstrap-datetimepicker.config.js'
     );
-
-    PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
 
     template 'admin/events/create_update', $tokens;
 };
@@ -142,7 +141,7 @@ get '/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form   = form('update_create_event');
+    my $form   = form('update-create-event');
     $form->reset;
 
     $form->fill(
@@ -183,22 +182,21 @@ post '/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form   = form('update_create_event');
+    my $form = form('update-create-event');
+    my $data = validator( $form->values, "update-create-event" );
 
-    my ( $validator, $valid ) = validate_event( $form );
-
-    if ( $valid ) {
+    if ( $data->{valid} ) {
         $form->reset;
         $event->update(
             {
                 conferences_id => setting('conferences_id'),
-                duration       => $valid->{duration},
-                title          => $valid->{title},
-                abstract       => $valid->{abstract},
-                url            => $valid->{url} || '',
-                scheduled      => $valid->{scheduled} ? 1 : 0,
-                start_time     => $valid->{start_time} || undef,
-                room           => $valid->{room} || '',
+                duration       => $data->{values}->{duration},
+                title          => $data->{values}->{title},
+                abstract       => $data->{values}->{abstract},
+                url            => $data->{values}->{url} || '',
+                scheduled      => $data->{values}->{scheduled} ? 1 : 0,
+                start_time     => $data->{values}->{start_time} || undef,
+                room           => $data->{values}->{room} || '',
             }
         );
         return redirect '/admin/events';
@@ -207,6 +205,7 @@ post '/edit/:id' => require_role admin => sub {
     # validation failed
 
     $tokens->{title} = "Edit Event";
+    $tokens->{data}  = $data;
     $tokens->{form}  = $form;
 
     PerlDance::Routes::add_javascript(
@@ -215,74 +214,8 @@ post '/edit/:id' => require_role admin => sub {
         '/js/bootstrap-datetimepicker.config.js'
     );
 
-    PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
-
     template 'admin/events/create_update', $tokens;
 };
-
-=head1 METHODS
-
-=head2 validate_event( $form )
-
-Returns ( $validator, $valid )
-
-=cut
-
-sub validate_event {
-    my $form = shift;
-
-    my $values = $form->values;
-    debug to_dumper $values;
-    $values->{abstract} =~ s/\r\n/\n/g if defined $values->{abstract};
-
-    my $validator = Data::Transpose::Validator->new( stripwhite => 1, );
-
-    $validator->prepare(
-        duration => {
-            required  => 1,
-            validator => sub {
-                my $field = shift;
-                if ( $field =~ /^\d+/ && $field > 0 ) {
-                    return $field;
-                }
-                else {
-                    return ( undef, "Not a positive integer" );
-                }
-            },
-        },
-        title => {
-            required  => 1,
-            validator => 'String',
-        },
-        abstract => {
-            required  => 1,
-            validator => 'String',
-        },
-        url => {
-            validator => 'String',
-        },
-        scheduled => {
-            required  => 1,
-            validator => sub {
-                my $field = shift;
-                if ( $field =~ /^[01]$/ ) {
-                    return 1;
-                }
-                else {
-                    return ( undef, "Not a boolean yes/no (1/0)" );
-                }
-            },
-        },
-        start_time => {
-            validator => 'String',
-        },
-        room => {
-            validator => 'String',
-        },
-    );
-
-    return ( $validator, $validator->transpose($values) );
-}
 
 prefix undef;
 true;

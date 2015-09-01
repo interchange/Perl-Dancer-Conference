@@ -8,6 +8,7 @@ PerlDance::Routes::Admin::Talks - /admin/talks routes
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Form;
 use Try::Tiny;
@@ -39,15 +40,15 @@ get '/admin/talks/create' => require_role admin => sub {
 
     $tokens->{title} = "Create Talk";
 
-    my $form = form('update_create_talk');
+    my $form = form('create-update-talk');
     $form->reset;
     $form->fill(
         {
-            accepted   => 1,
-            confirmed  => 0,
-            lightning  => 0,
+            accepted  => 1,
+            confirmed => 0,
+            lightning => 0,
         }
-);
+    );
     $tokens->{form} = $form;
     $tokens->{authors} = [ rset('User')->all];
 
@@ -62,29 +63,44 @@ get '/admin/talks/create' => require_role admin => sub {
 post '/admin/talks/create' => require_role admin => sub {
     my $tokens = {};
 
-    my $form   = form('update_create_talk');
-    my %values = %{ $form->values };
-    $values{abstract} =~ s/\r\n/\n/g;
+    my $form   = form('create-update-talk');
+    my $data = validator( $form->values, 'create-update-talk' );
 
-    # TODO: validate values and if OK then try create
-    rset('Talk')->create(
-        {
-            author_id       => $values{author},
-            conferences_id  => setting('conferences_id'),
-            duration        => $values{duration},
-            title           => $values{title},
-            tags            => $values{tags} || '',
-            abstract        => $values{abstract} || '',
-            url             => $values{url} || '',
-            comments        => $values{comments} || '',
-            accepted        => $values{accepted} || 0,
-            confirmed       => $values{confirmed} || 0,
-            lightning       => $values{lightning} || 0,
-            start_time      => $values{start_time} || undef,
-            room            => $values{room} || '',
-        }
+    if ( $data->{valid} ) {
+        my %values = %{ $data->{values} };
+        $values{abstract} =~ s/\r\n/\n/g;
+
+        rset('Talk')->create(
+            {
+                author_id      => $values{author},
+                conferences_id => setting('conferences_id'),
+                duration       => $values{duration},
+                title          => $values{title},
+                tags           => $values{tags} || '',
+                abstract       => $values{abstract} || '',
+                url            => $values{url} || '',
+                comments       => $values{comments} || '',
+                accepted       => $values{accepted} || 0,
+                confirmed      => $values{confirmed} || 0,
+                lightning      => $values{lightning} || 0,
+                start_time     => $values{start_time} || undef,
+                room           => $values{room} || '',
+            }
+        );
+        return redirect '/admin/talks';
+    }
+
+    $tokens->{data} = $data;
+    $tokens->{form} = $form;
+    $tokens->{authors} = [ rset('User')->all];
+
+    PerlDance::Routes::add_javascript(
+        $tokens,
+        '/js/bootstrap-datetimepicker.min.js',
+        '/js/bootstrap-datetimepicker.config.js'
     );
-    return redirect '/admin/talks';
+
+    template 'admin/talks/create_update', $tokens;
 };
 
 get '/admin/talks/delete/:id' => require_role admin => sub {
@@ -105,7 +121,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form = form('update_create_talk');
+    my $form = form('create-update-talk');
     $form->reset;
 
     $form->fill(
@@ -147,29 +163,45 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
         return template '404', $tokens;
     }
 
-    my $form   = form('update_create_talk');
-    my %values = %{ $form->values };
-    $values{abstract} =~ s/\r\n/\n/g;
+    my $form = form('create-update-talk');
+    my $data = validator( $form->values, 'create-update-talk' );
 
-    # TODO: validate values and if OK then try update
-    $talk->update(
-        {
-            author_id       => $values{author},
-            duration        => $values{duration},
-            title           => $values{title},
-            tags            => $values{tags} || '',
-            abstract        => $values{abstract} || '',
-            url             => $values{url} || '',
-            comments        => $values{comments} || '',
-            accepted        => $values{accepted} || 0,
-            confirmed       => $values{confirmed} || 0,
-            lightning       => $values{lightning} || 0,
-            start_time      => $values{start_time} || undef,
-            room            => $values{room} || '',
+    if ( $data->{valid} ) {
+        my %values = %{ $data->{values} };
 
-        }
+        $values{abstract} =~ s/\r\n/\n/g;
+
+        $talk->update(
+            {
+                author_id  => $values{author},
+                duration   => $values{duration},
+                title      => $values{title},
+                tags       => $values{tags} || '',
+                abstract   => $values{abstract} || '',
+                url        => $values{url} || '',
+                comments   => $values{comments} || '',
+                accepted   => $values{accepted} || 0,
+                confirmed  => $values{confirmed} || 0,
+                lightning  => $values{lightning} || 0,
+                start_time => $values{start_time} || undef,
+                room       => $values{room} || '',
+
+            }
+        );
+        return redirect '/admin/talks';
+    }
+
+    $tokens->{data} = $data;
+    $tokens->{form} = $form;
+    $tokens->{authors} = [ rset('User')->all];
+
+    PerlDance::Routes::add_javascript(
+        $tokens,
+        '/js/bootstrap-datetimepicker.min.js',
+        '/js/bootstrap-datetimepicker.config.js'
     );
-    return redirect '/admin/talks';
+
+    template 'admin/talks/create_update', $tokens;
 };
 
 true;

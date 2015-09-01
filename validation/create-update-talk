@@ -1,0 +1,43 @@
+#!perl
+{
+    options => {
+        stripwhite => 1,
+        unknown => 'pass',
+    },
+    prepare => {
+        title => {
+            validator => "String",
+            required => 1,
+        },
+        abstract   => {
+            validator => "String",
+            required => 1,
+        },
+        tags => {
+            validator => "String",
+            required => 0,
+        },
+        duration   => {
+            validator => {
+                class   => "NumericRange",
+                options => {
+                    integer => 1,
+                    min     => 20,
+                    max     => 40,
+                }
+            },
+            required => 1,
+        },
+        url => {
+            validator => "String",
+            required => 0,
+        },
+        comments => {
+            validator => "String",
+            required => 0,
+        },
+        confirmed => {
+            required => 0,
+        },
+    }
+}
