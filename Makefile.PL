@@ -24,6 +24,7 @@ WriteMakefile(
         'Class::Method::Modifiers'         => '2.11',
         'Dancer'                           => '1.3136',
         'Dancer::Plugin::Auth::Extensible' => '0.40',
+        'Dancer::Plugin::DataTransposeValidator' => '0.002',
         'Dancer::Plugin::DBIC'             => '0.2102',
         'Dancer::Plugin::Email'            => '1.0400',
         'Dancer::Plugin::FlashNote'        => 0,
