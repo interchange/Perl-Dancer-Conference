@@ -364,9 +364,13 @@ get '/users/:name' => sub {
 sub add_speakers_tokens {
     my $tokens = shift;
 
+    my $unknown_user_pic =
+      rset('Media')->find( { uri => '/img/people/unknown.jpg' } );
+
     my @speakers = rset('User')->search(
         {
-            'addresses.type'                      => 'primary',
+            'me.media_id'    => { '!=', $unknown_user_pic->id },
+            'addresses.type' => 'primary',
             'conferences_attended.conferences_id' => setting('conferences_id'),
             -or                                   => {
                 'talks_authored.accepted'  => 1,
