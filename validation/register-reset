@@ -1,0 +1,9 @@
+#!perl
+{
+    prepare => {
+        username => {
+            required  => 1,
+            validator => 'EmailValid'
+        }
+    }
+}

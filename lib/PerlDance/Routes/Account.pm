@@ -8,6 +8,7 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
@@ -49,25 +50,25 @@ get '/login' => sub {
 =cut
 
 get '/register' => sub {
-    my $form = form('register-email');
-    my $errors = $form->errors;
+    my $form = form('register-reset');
+    $form->reset;
+
+    my $data = session("data_register");
+    if ( $data ) {
+        session "data_register" => undef;
+        $form->fill($data->{values});
+    }
 
     my $tokens = {
         title       => "Register",
         description => "Please complete the registration process",
         action      => "/register",
         action_name => "Registration",
+        data => $data,
         form => $form,
         text =>
 "Please enter your email address and hit submit to begin the registration process.",
     };
-
-    for my $err (@$errors) {
-        $tokens->{$err->{name}} = $err->{label};
-    }
-
-    # prevent stale errors
-    $form->reset;
 
     return template "register_reset", $tokens;
 };
@@ -77,11 +78,22 @@ get '/register' => sub {
 =cut
 
 get '/reset_password' => sub {
+    my $form = form('register-reset');
+    $form->reset;
+
+    my $data = session("data_reset_password");
+    if ( $data ) {
+        session "data_reset_password" => undef;
+        $form->fill($data->{values});
+    }
+
     my $tokens = {
         title       => "Reset Password",
         description => "",
         action      => "/reset_password",
         action_name => "Reset Password",
+        data => $data,
+        form => $form,
         text =>
 "Please enter your email address and hit submit to begin the password reset process.",
     };
@@ -95,71 +107,55 @@ Register of request password reset.
 =cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
-    my $email = param('username');
+    my $email    = param('username');
     my $captures = captures;
     my $action   = $$captures{action};
     my $username = lc($email);
 
-    # TODO: validate
+    my $form = form('register-reset');
+    my $data = validator( $form->values, 'register-reset' );
 
-    debug "$action for username: $username";
+    if ( $data->{valid} ) {
 
-    my $user = shop_user( { username => $username } );
-    if ($user) {
+        my $user = shop_user( { username => $username } );
 
-        # password reset
-    }
-    else {
-        my %params = params('body');
-        my %errors;
-        my $form = form('register-email');
+        if ( !$user ) {
 
-        my $validator = Data::Transpose::Validator->new;
-        $validator->prepare(
-            username => {
-                required  => 1,
-                validator => 'EmailValid'
-            },
-        );
+            # new registration
+            try {
 
-        my $valid = $validator->transpose( \%params );
+                my $media_id = shop_schema->resultset('Media')
+                  ->find( { file => 'img/people/unknown.jpg' } )->id;
+                $user = shop_user->create(
+                    {
+                        username => $username,
+                        email    => $email,
+                        media_id => $media_id,
+                    }
+                );
 
-        if ( !$valid ) {
-            my $tokens = {};
+            }
+            catch {
+                error "create user failed in $action: $_";
 
-            PerlDance::Routes::add_validator_errors_token( $validator,
-                $tokens );
+                # send email to site admins about error
+                PerlDance::Routes::send_email(
+                    template => "email/generic",
+                    tokens   => {
+                        preamble => "Create new user failed in /$action: $_",
+                    },
+                    subject => "$action for the "
+                      . setting("conference_name")
+                      . " failed",
+                );
+            };
 
-            my $saved = $form->errors( $tokens->{errors} );
-            $form->to_session;
+            if ($@) {
 
-            return redirect uri_for($action);
+                # no point continuing
+                return template "/error";
+            }
         }
-
-        # new registration
-        try {
-
-            my $media_id = shop_schema->resultset('Media')
-              ->find( { file => 'img/people/unknown.jpg' } )->id;
-            $user = shop_user->create(
-                {
-                    username => $username,
-                    email    => $email,
-                    media_id => $media_id,
-                }
-            );
-
-        }
-        catch {
-            error "create user failed in $action: $_";
-
-            # TODO: send email to admins as well?
-        }
-        # TODO: check that we have a user and do something sane if we don't
-        # since otherwise no email gets sent by later code
-    }
-
-    if ($user) {
 
         my $token = $user->reset_token_generate;
 
@@ -168,26 +164,32 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
           $action eq 'register' ? 'registration' : 'password reset';
 
         PerlDance::Routes::send_email(
-                template => "email/generic",
-                tokens   => {
-                    preamble => "You are receiving this email because your "
-                      . "email address was used to $reason for the "
-                      . setting("conference_name")
-                      . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
-                    link => uri_for( path( request->uri, $token ) ),
-                },
-                to      => $user->email,
-                subject => "\u$action_name for the "
-                  . setting("conference_name"),
-            );
-    }
+            template => "email/generic",
+            tokens   => {
+                preamble => "You are receiving this email because your "
+                  . "email address was used to $reason for the "
+                  . setting("conference_name")
+                  . ".\n\nIf you received this email in error please accept our apologies and delete this email. No further action is required on your part.\n\nTo continue with $action_name please click on the following link:",
+                link => uri_for( path( request->uri, $token ) ),
+            },
+            to      => $user->email,
+            subject => "\u$action_name for the " . setting("conference_name"),
+        );
 
-    template 'email_sent',
-      {
-        title       => "Thank you",
-        description => "Email on its way",
-        username    => $email
-      };
+        template 'email_sent',
+          {
+            title       => "Thank you",
+            description => "Email on its way",
+            username    => $email
+          };
+    }
+    else {
+
+        # problem in the form
+       
+        session "data_$action" => $data;
+        return redirect uri_for($action);
+    }
 };
 
 =head2 get/post /(register|reset_password)/:token
