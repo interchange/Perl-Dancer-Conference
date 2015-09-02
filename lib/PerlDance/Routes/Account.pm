@@ -12,7 +12,6 @@ use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
-use Data::Transpose::Validator;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
@@ -227,49 +226,22 @@ any [ 'get', 'post' ] => qr{
     if ( request->is_post ) {
 
         my %params = params('body');
-        my %errors;
 
-        my $validator = Data::Transpose::Validator->new;
-        $validator->prepare(
-            password => {
-                required  => 1,
-                validator => {
-                    class   => 'PasswordPolicy',
-                    options => {
-                        username      => $user->username,
-                        minlength     => 8,
-                        maxlength     => 70,
-                        patternlength => 4,
-                        mindiffchars  => 5,
-                        disabled      => {
-                            digits   => 1,
-                            mixed    => 1,
-                            specials => 1,
-                        }
-                    }
-                }
-            },
-            confirm_password => { required => 1 },
-            passwords        => {
-                validator => 'Group',
-                fields    => [ "password", "confirm_password" ],
-            },
-        );
+        my $data = validator( \%params, 'password-reset', $user->username );
 
-        my $valid = $validator->transpose( \%params );
-
-        if ($valid) {
+        if ( $data->{valid} ) {
 
             # all good so set password, add to attendees, login and
             # redirect to /profile
 
-            $user->update( { password => $params{password} } );
+            $user->update( { password => $data->{values}->{password} } );
 
             $user->find_or_create_related( 'conferences_attended',
                 { conferences_id => setting('conferences_id') } );
 
-            my ( undef, $realm ) =
-              authenticate_user( $user->username, $params{password} );
+            my ( undef, $realm ) = authenticate_user( $user->username,
+                $data->{values}->{password} );
+
             session logged_in_user       => $user->username;
             session logged_in_user_id    => $user->id;
             session logged_in_user_realm => $realm;
@@ -284,8 +256,7 @@ any [ 'get', 'post' ] => qr{
             return redirect '/profile';
         }
 
-        PerlDance::Routes::add_validator_errors_token( $validator, $tokens );
-
+        $tokens->{data} = $data;
         $tokens->{text} =
           "There appears to have been a problem.\n\nPlease try again.",
     }
