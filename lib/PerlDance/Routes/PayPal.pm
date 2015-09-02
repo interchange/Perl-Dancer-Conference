@@ -3,12 +3,12 @@ package PerlDance::Routes::PayPal;
 use Dancer ':syntax';
 use Dancer::Plugin::Interchange6;
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DataTransposeValidator;
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::FlashNote;
 use Dancer::Plugin::Form;
 
 use Try::Tiny;
-use Data::Transpose::Validator;
 use DateTime;
 use Business::PayPal::API::ExpressCheckout;
 
@@ -236,29 +236,12 @@ get '/paypal/getrequest' => sub {
 };
 
 post '/paypal/maintenance' => sub {
-    my %params = params('body');
-    my %errors;
     my $form = form('paypal-maintenance');
-    my $valid;
-    my $validator = Data::Transpose::Validator->new;
-    my $tokens = {form => $form};
+    my $data = validator( $form->values, 'email-valid' );
 
-    if ($params{form_submit}) {
-        $validator->prepare(
-            email => {
-                required  => 1,
-                validator => 'EmailValid'
-            },
-        );
+    if ( $data->{valid} ) {
 
-        $valid = $validator->transpose( \%params );
-
-        PerlDance::Routes::add_validator_errors_token( $validator,
-                                                       $tokens );
-    }
-
-    if ($valid) {
-        my $email = $params{email};
+        my $email = $data->{values}->{email};
 
         PerlDance::Routes::send_email(
                 template => "email/paypal_maintenance",
@@ -274,6 +257,7 @@ post '/paypal/maintenance' => sub {
         return template 'paypal_sent',
     }
 
+    my $tokens = { data => $data, form => $form };
     template 'paypal_maintenance', $tokens;
 };
 

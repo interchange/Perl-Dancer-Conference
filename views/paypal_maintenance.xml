@@ -2,7 +2,7 @@
   <form name="paypal-maintenance" link="name">
     <field name="email"/>
   </form>
-  <value name="email_input" field="errors.email_input" target="class"
+  <value name="email_input" field="data.css.email" target="class"
     op="append" joiner=" "/>
-  <value name="email_error" field="errors.email"/>
+  <value name="email_error" field="data.errors.email"/>
 </specification>
