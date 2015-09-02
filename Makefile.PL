@@ -30,7 +30,6 @@ WriteMakefile(
         'Dancer::Plugin::FlashNote'        => 0,
         'Dancer::Plugin::Interchange6'     => '0.086',
         'Dancer::Template::TemplateFlute'  => '0.0142',
-        'Data::Transpose'                  => '0.0015',
         'DateTime::Format::ISO8601'        => 0,
         'DateTime::Format::Pg'             => 0,
         'DBIx::Class::DeploymentHandler'   => 0,
