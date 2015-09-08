@@ -1,9 +1,12 @@
 <specification>
+  <pattern name="name" type="string">Name</pattern>
   <list name="row" iterator="speakers" class="speaker-row">
     <list name="col" iterator="row" class="speaker">
       <param name="name"/>
-      <param name="company" field="addresses.first.company"/>
-      <param name="city" field="addresses.first.city"/>
+      <param name="company" field="addresses.first.company" pattern="name"
+        op="toggle"/>
+      <param name="city" field="addresses.first.city" pattern="name"
+        op="toggle"/>
       <param name="country" field="addresses.first.country.name"/>
       <param name="photo" target="src" field="photo_uri"/>
       <param name="speaker-link" target="href" op="append" field="uri"/>
