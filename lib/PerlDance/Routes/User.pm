@@ -83,7 +83,10 @@ get qr{/speakers/(?<id>\d+).*} => sub {
 
     $tokens->{title} = $tokens->{user}->name;
     if ( $address ) {
-        $tokens->{description} = join(", ", $address->company, $address->city, $address->country->name );
+        $tokens->{description} = '';
+        $tokens->{description} .= $address->company . ', ' if $address->company;
+        $tokens->{description} .= $address->city . ', ' if $address->city;
+        $tokens->{description} .= $address->country->name;
     }
 
     template 'speaker', $tokens;
