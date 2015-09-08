@@ -23,7 +23,7 @@
                 options => {
                     integer => 1,
                     min     => 20,
-                    max     => 40,
+                    max     => 600,
                 }
             },
             required => 1,
