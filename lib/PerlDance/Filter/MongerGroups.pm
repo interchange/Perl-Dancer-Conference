@@ -18,9 +18,10 @@ use base 'Template::Flute::Filter';
 # pm groups NOT in %lookup get translated to Group.pm.org
 # undef value means no website
 my %lookup = (
-    'drinkers.pm' => undef,
+    'Bicycle.pm'   => 'Bicycle.pm',
+    'drinkers.pm'  => undef,
     'Ljubljana.pm' => 'www.meetup.com/Ljubljana-pm-Perl-Mongers',
-    'Hannover.pm' => 'Hannover.pm',
+    'Hannover.pm'  => 'Hannover.pm',
 );
 
 sub filter {
