@@ -291,6 +291,7 @@ sub seo_uri {
     my $title = lc( $self->title );
     $title =~ s/^\s+|\s+$//g;
     $title =~ s/\s+/-/g;
+    $title =~ s/::/-/g;
     return join( '-', $self->id, uri_escape_utf8($title) );
 }
 
