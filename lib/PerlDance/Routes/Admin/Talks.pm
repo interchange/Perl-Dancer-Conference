@@ -47,6 +47,7 @@ get '/admin/talks/create' => require_role admin => sub {
             accepted  => 1,
             confirmed => 0,
             lightning => 0,
+            scheduled => 0,
         }
     );
     $tokens->{form} = $form;
@@ -83,6 +84,7 @@ post '/admin/talks/create' => require_role admin => sub {
                 accepted       => $values{accepted} || 0,
                 confirmed      => $values{confirmed} || 0,
                 lightning      => $values{lightning} || 0,
+                scheduled      => $values{scheduled} || 0,
                 start_time     => $values{start_time} || undef,
                 room           => $values{room} || '',
             }
@@ -136,6 +138,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             accepted        => $talk->accepted,
             confirmed       => $talk->confirmed,
             lightning       => $talk->lightning,
+            scheduled       => $talk->scheduled,
             start_time      => $talk->start_time,
             room            => $talk->room
         }
@@ -183,6 +186,7 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
                 accepted   => $values{accepted} || 0,
                 confirmed  => $values{confirmed} || 0,
                 lightning  => $values{lightning} || 0,
+                scheduled  => $values{scheduled} || 0,
                 start_time => $values{start_time} || undef,
                 room       => $values{room} || '',
 

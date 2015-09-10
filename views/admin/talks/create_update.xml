@@ -12,6 +12,7 @@
     <field name="accepted"/>
     <field name="confirmed"/>
     <field name="lightning"/>
+    <field name="scheduled"/>
     <field name="start_time"/>
     <field name="room"/>
   </form>
@@ -46,6 +47,9 @@
   <value name="lightning_input" field="data.css.lightning" target="class"
     op="append" joiner=" "/>
   <value name="lightning_error" field="data.errors.lightning"/>
+  <value name="scheduled_input" field="data.css.scheduled" target="class"
+    op="append" joiner=" "/>
+  <value name="scheduled_error" field="data.errors.scheduled"/>
   <value name="start_time_input" field="data.css.start_time" target="class"
     op="append" joiner=" "/>
   <value name="start_time_error" field="data.errors.start_time"/>
