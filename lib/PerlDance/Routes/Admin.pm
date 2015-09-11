@@ -42,6 +42,26 @@ get '/admin' => require_role admin => sub {
     template 'admin', $tokens;
 };
 
+get '/admin/tickets' => require_role admin => sub {
+    my $tokens = {};
+
+    $tokens->{title} = "Tickets Sold";
+    
+    my $orders = rset('Order');
+
+    $orders = $orders->search(
+        {
+            payment_status => 'paid',
+        },
+        {
+            prefetch => 'user',
+            order_by => 'orders_id',
+        }
+    )->with_status;
+
+    template 'admin/tickets', $tokens;
+};
+
 get '/admin/news' => require_role admin => sub {
     my $tokens = {};
 

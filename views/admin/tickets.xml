@@ -1,0 +1,9 @@
+<specification>
+  <list name="order-item" iterator="orders">
+    <param name="orders_id"/>
+    <param name="order_date" filter="date_only"/>
+    <param name="name" field="user.name"/>
+    <param name="email"/>
+    <param name="subtotal" filter="currency"/>
+  </list>
+</specification>
