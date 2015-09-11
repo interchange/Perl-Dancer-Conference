@@ -49,7 +49,7 @@ get '/admin/tickets' => require_role admin => sub {
     
     my $orders = rset('Order');
 
-    $orders = $orders->search(
+    $tokens->{orders} = $orders->search(
         {
             payment_status => 'paid',
         },
