@@ -84,6 +84,17 @@ get '/talks' => sub {
     template 'talks', $tokens;
 };
 
+=head2 get /talks/tag/:tag
+
+Tag cloud links in /talks
+
+=cut
+
+get '/talks/tag/:tag' => sub {
+    var tag => param('tag');
+    forward '/talks';
+};
+
 =head2 get /talks/{add|remove}/:id
 
 Add/remove talks from personal schedule
@@ -447,17 +458,6 @@ get '/talks/submit' => sub {
     PerlDance::Routes::add_navigation_tokens($tokens);
 
     template 'cfp', $tokens;
-};
-
-=head2 get /talks/tag/:tag
-
-Tag cloud links in /talks
-
-=cut
-
-get '/talks/tag/:tag' => sub {
-    var tag => param('tag');
-    forward '/talks';
 };
 
 =head2 get /talks/{id}.*
