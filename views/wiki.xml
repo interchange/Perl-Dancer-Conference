@@ -11,4 +11,5 @@
   <value name="edit" field="uri" target="href" op="append"/>
   <value name="history" field="uri" target="href" op="append"/>
   <value name="user_link" field="node.author.id" target="href" op="append"/>
+  <value name="wiki-toc" op="hook" include="fragments/wiki_toc.html"/>
 </specification>

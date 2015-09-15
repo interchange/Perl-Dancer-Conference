@@ -9,4 +9,5 @@
     <param name="author_name" field="author.name"/>
     <param name="nickname" field="author.nickname" pattern="nickpat"/>
   </list>
+  <value name="wiki-toc" op="hook" include="../fragments/wiki_toc.html"/>
 </specification>

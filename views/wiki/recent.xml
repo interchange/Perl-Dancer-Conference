@@ -11,4 +11,5 @@
   <form name="wiki-recent" link="name">
     <field name="period" iterator="periods"/>
   </form>
+  <value name="wiki-toc" op="hook" include="../fragments/wiki_toc.html"/>
 </specification>

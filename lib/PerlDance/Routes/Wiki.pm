@@ -81,6 +81,8 @@ get '/wiki/diff/*/**' => sub {
     $tokens->{title} = "Wiki - $title Diff $version -> " . ( $version + 1 );
     $tokens->{uri} = $title;
 
+    add_wiki_toc($tokens);
+
     template 'wiki/diff', $tokens;
 };
 
@@ -127,40 +129,6 @@ get '/wiki/edit/**' => require_login sub {
 Preview or save node.
 
 =cut
-
-sub translate_wiki_user {
-    my $arg = shift;
-    my $user;
-    if ( $arg eq 'me' ) {
-        $user = logged_in_user;
-    }
-    else {
-        if ( $arg =~ /.+\@.+/ ) {
-
-            # smells like email so try username
-            $user = rset('User')->find( { username => lc($arg) } );
-        }
-        if ( !$user && $arg =~ /^(\d+)/ ) {
-
-            # could be users_id
-            $user = rset('User')->find($1);
-        }
-        if ( !$user ) {
-
-            # try nickname
-
-            $user =
-              rset('User')
-              ->search( \[ 'LOWER(nickname) = ?', lc($arg) ], { rows => 1 } )
-              ->first;
-        }
-    }
-    return "[user:$arg]" unless $user;
-
-    my $name = $user->name;
-    $name .= " (" . $user->nickname . ")" if $user->nickname;
-    return "[$name](/users/" . $user->uri . ")";
-}
 
 post '/wiki/edit/**' => require_login sub {
     my $tokens = {};
@@ -245,6 +213,8 @@ get '/wiki/history/**' => sub {
 
     $tokens->{title} = "Wiki - $title History";
 
+    add_wiki_toc($tokens);
+
     template 'wiki/history', $tokens;
 };
 
@@ -276,6 +246,8 @@ get '/wiki/node/**' => sub {
     $tokens->{node}        = $nodes->first;
     $tokens->{title}       = "Wiki - $title";
     $tokens->{uri}         = $title;
+
+    add_wiki_toc($tokens);
 
     template 'wiki', $tokens;
 };
@@ -346,6 +318,8 @@ any [ 'get', 'post' ] => '/wiki/recent' => sub {
 
     $tokens->{title} = "Wiki - Recent changes";
 
+    add_wiki_toc($tokens);
+
     template 'wiki/recent', $tokens;
 };
 
@@ -386,6 +360,8 @@ get '/wiki/tags' => sub {
 
     $tokens->{title} = "Wiki - Tags";
 
+    add_wiki_toc($tokens);
+
     template 'wiki/tags', $tokens;
 };
 
@@ -421,6 +397,8 @@ get '/wiki/tags/:tag' => sub {
 
     $tokens->{nodes} = \@nodes;
     $tokens->{title} = "Wiki - Pages tagged $tag";
+
+    add_wiki_toc($tokens);
 
     template 'wiki/tagged_pages', $tokens;
 };
@@ -463,7 +441,61 @@ get '/wiki/version/*/**' => sub {
     $tokens->{uri}     = $title;
     $tokens->{version} = $version;
 
+    add_wiki_toc($tokens);
+
     template 'wiki/version', $tokens;
 };
+
+sub add_wiki_toc {
+    my $tokens = shift;
+    $tokens->{toc} = [
+        rset('Message')->search(
+            {
+                'message_type.name' => 'wiki_node',
+                'me.title'          => { '!=' => 'HomePage' },
+            },
+            {
+                join     => 'message_type',
+                order_by => 'me.title',
+                columns  => 'title',
+                distinct => 1,
+            }
+        )->hri->all
+    ];
+}
+
+sub translate_wiki_user {
+    my $arg = shift;
+    my $user;
+    if ( $arg eq 'me' ) {
+        $user = logged_in_user;
+    }
+    else {
+        if ( $arg =~ /.+\@.+/ ) {
+
+            # smells like email so try username
+            $user = rset('User')->find( { username => lc($arg) } );
+        }
+        if ( !$user && $arg =~ /^(\d+)/ ) {
+
+            # could be users_id
+            $user = rset('User')->find($1);
+        }
+        if ( !$user ) {
+
+            # try nickname
+
+            $user =
+              rset('User')
+              ->search( \[ 'LOWER(nickname) = ?', lc($arg) ], { rows => 1 } )
+              ->first;
+        }
+    }
+    return "[user:$arg]" unless $user;
+
+    my $name = $user->name;
+    $name .= " (" . $user->nickname . ")" if $user->nickname;
+    return "[$name](/users/" . $user->uri . ")";
+}
 
 true;

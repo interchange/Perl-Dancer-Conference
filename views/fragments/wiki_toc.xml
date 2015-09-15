@@ -1,0 +1,6 @@
+<specification>
+  <list name="toc" iterator="toc">
+    <param name="title"/>
+    <param name="link" field="title" class="title" target="href" op="append"/>
+  </list>
+</specification>

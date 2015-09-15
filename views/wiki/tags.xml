@@ -1,4 +1,5 @@
 <specification>
   <value name="cloud" op="hook"/>
   <value name="title" class="panel-title"/>
+  <value name="wiki-toc" op="hook" include="../fragments/wiki_toc.html"/>
 </specification>

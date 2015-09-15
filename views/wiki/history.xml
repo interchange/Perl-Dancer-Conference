@@ -18,4 +18,5 @@
     <param name="author_name" field="node.author.name"/>
     <param name="nickname" field="node.author.nickname" pattern="nickpat"/>
   </list>
+  <value name="wiki-toc" op="hook" include="../fragments/wiki_toc.html"/>
 </specification>
