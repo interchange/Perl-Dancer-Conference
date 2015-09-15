@@ -18,11 +18,13 @@ use warnings;
 use base 'Template::Flute::Filter';
 use HTML::Scrubber;
 use Text::Markdown;
+use URI::Escape;
 
 sub filter {
     my ( $self, $value ) = @_;
 
-    $value =~ s{\[wiki:(.+?)\]}{[$1](/wiki/node/$1)}g;
+    $value =~
+      s{\[wiki:(.+?)\]}{"[$1](/wiki/node/" . uri_escape_utf8($1) . ")"}eg;
 
     my $markdown_filter = PerlDance::Filter::Markdown->new;
     return $markdown_filter->filter($value);
