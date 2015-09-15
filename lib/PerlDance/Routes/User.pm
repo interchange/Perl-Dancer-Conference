@@ -30,13 +30,13 @@ get '/speakers' => sub {
     template 'speakers', $tokens;
 };
 
-=head2 get /speakers/{id}.*
+=head2 get /(speakers|users)/{id}.*
 
-Individual speaker
+Individual speaker/user
 
 =cut
 
-get qr{/speakers/(?<id>\d+).*} => sub {
+get qr{/(speakers|users)/(?<id>\d+).*} => sub {
     my $users_id = captures->{id};
     my $tokens = {};
 
@@ -345,17 +345,6 @@ get '/users/statistics' => sub {
     $tokens->{title} = "User Statistics";
 
     template 'users/stats', $tokens;
-};
-
-=head2 get /users/:name
-
-=cut
-
-get '/users/:name' => sub {
-    my $name = param('name');
-    my $user = rset('User')->find({ nickname => $name });
-    $name = $user->id if $user;
-    forward "/speakers/$name";
 };
 
 =head1 METHODS
