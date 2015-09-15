@@ -8,5 +8,4 @@
   <value name="nickname" field="node.author.nickname" pattern="nickpat"/>
   <value name="edit" field="uri" target="href" op="append"/>
   <value name="history" field="uri" target="href" op="append"/>
-  <value name="wiki-toc" op="hook" include="../fragments/wiki_toc.html"/>
 </specification>
