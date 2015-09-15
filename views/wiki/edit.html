@@ -1,3 +1,5 @@
+<div class="row">
+  <div class="col-sm-9">
   <form method="post">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -16,11 +18,22 @@
             <label>Tags: </label>
             <input type="text" class="form-control tags" name="tags" placeholder="add tags for this page">
           </div>
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="submit" class="btn btn-default" name="preview" value="1">Preview</button>
-          <a class="btn btn-default cancel" href="/wiki/node/">Cancel</a>
-          <button type="button" class="btn btn-default" data-toggle="popover" data-content="Wiki pages are formatted using <a target='_blank' href='http://daringfireball.net/projects/markdown/'>Markdown</a> though some tags are scrubbed for safety.<br>For links to other Wiki pages use [wiki:OtherPage] and for links to users use [user:NickName]." data-html="true" data-trigger="focus">Help</button>
+          <div class="btn-group" role="group">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-default" name="preview" value="1">Preview</button>
+            <a class="btn btn-default cancel" href="/wiki/node/">Cancel</a>
+          </div>
         </div>
       </div>
     </div>
   </form>
+  </div>
+  <div class="col-sm-3">
+    <div class="panel panel-default">
+      <div class="panel-body">
+      <p>Wiki pages are formatted using <a target='_blank' href='http://daringfireball.net/projects/markdown/'>Markdown</a> though some tags are scrubbed for safety.</p>
+      <p>For links to other Wiki pages use [wiki:OtherPage].</p><p>For links to users use [user:NickName], [user:username] or simply [me]. These will be translated to full wiki links on preview or save.</p>
+    </div>
+    </div>
+  </div>
+</div>
