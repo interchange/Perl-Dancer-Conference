@@ -128,17 +128,57 @@ Preview or save node.
 
 =cut
 
+sub translate_wiki_user {
+    my $arg = shift;
+    my $user;
+    if ( $arg eq 'me' ) {
+        $user = logged_in_user;
+    }
+    else {
+        if ( $arg =~ /.+\@.+/ ) {
+
+            # smells like email so try username
+            $user = rset('User')->find( { username => lc($arg) } );
+        }
+        if ( !$user && $arg =~ /^(\d+)/ ) {
+
+            # could be users_id
+            $user = rset('User')->find($1);
+        }
+        if ( !$user ) {
+
+            # try nickname
+
+            $user =
+              rset('User')
+              ->search( \[ 'LOWER(nickname) = ?', lc($arg) ], { rows => 1 } )
+              ->first;
+        }
+    }
+    return "[user:$arg]" unless $user;
+
+    my $name = $user->name;
+    $name .= " (" . $user->nickname . ")" if $user->nickname;
+    return "[$name](/users/" . $user->uri . ")";
+}
+
 post '/wiki/edit/**' => require_login sub {
     my $tokens = {};
 
     my ($splat) = splat;
     my $title = join( '/', @$splat );
 
+    my $user_id = logged_in_user->id;
+
+    my $content = param('content');
+    $content =~ s(\[user:(.+?)\])(translate_wiki_user($1))gie;
+    $content =~ s(\[me\])(translate_wiki_user('me'))gie;
+
     if ( param('preview') ) {
 
         # back to the edit page with a preview shown above
-        $tokens->{content} = param('content');
-        $tokens->{preview} = param('content');
+        $tokens->{content} = $content;
+        $tokens->{preview} = $content;
         $tokens->{tags}    = param('tags');
         $tokens->{title}   = "Wiki - editing $title";
         $tokens->{uri}     = $title;
@@ -149,7 +189,6 @@ post '/wiki/edit/**' => require_login sub {
     }
     else {
 
-        my $content = param('content');
         $content =~ s/\r\n/\n/g;
 
         my $tags = param('tags');
@@ -263,7 +302,7 @@ any [ 'get', 'post' ] => '/wiki/recent' => sub {
     my $days = $values->{period};
     $days = 7 unless ( $days && $days =~ /^\d+$/ );
 
-    $form->fill({ period => $days });
+    $form->fill( { period => $days } );
 
     $tokens->{form} = $form;
 
@@ -294,10 +333,10 @@ any [ 'get', 'post' ] => '/wiki/recent' => sub {
     $tokens->{changes} = \@changes;
 
     $tokens->{periods} = [
-        { value => 1, label => "1 day" },
-        { value => 2, label => "2 days" },
-        { value => 3, label => "3 days" },
-        { value => 7, label => "1 week" },
+        { value => 1,  label => "1 day" },
+        { value => 2,  label => "2 days" },
+        { value => 3,  label => "3 days" },
+        { value => 7,  label => "1 week" },
         { value => 14, label => "2 weeks" },
         { value => 30, label => "1 month" },
         { value => 60, label => "2 months" },
@@ -364,7 +403,7 @@ get '/wiki/tags/:tag' => sub {
     my $rset = rset('Message')->search(
         {
             'message_type.name' => 'wiki_node',
-            'me.tags' => { like => '%' . $tag . '%' }
+            'me.tags'           => { like => '%' . $tag . '%' }
         },
         {
             join     => 'message_type',

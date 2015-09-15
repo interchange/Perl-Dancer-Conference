@@ -23,7 +23,6 @@ sub filter {
     my ( $self, $value ) = @_;
 
     $value =~ s{\[wiki:(.+?)\]}{[$1](/wiki/node/$1)}g;
-    $value =~ s{\[user:(.+?)\]}{[$1](/users/$1)}g;
 
     my $markdown_filter = PerlDance::Filter::Markdown->new;
     return $markdown_filter->filter($value);
