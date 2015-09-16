@@ -34,7 +34,11 @@ get qr{/events/(?<id>\d+).*} => sub {
         },
     );
 
-    pass unless $event;
+    if ( !$event ) {
+        $tokens->{title} = "Event Not Found";
+        status 'not_found';
+        return template '404', $tokens;
+    }
 
     $tokens->{event} = $event;
     $tokens->{title} = $event->title;
@@ -126,7 +130,9 @@ get '/talks/schedule' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        pass;
+        $tokens->{title} = "Not Found";
+        status 'not_found';
+        return template '404', $tokens;
     }
 
     my $dt    = $conference->start_date->clone;
@@ -145,7 +151,11 @@ get '/talks/schedule/:date' => sub {
     my $tokens = {};
 
     my $date = param 'date';
-    pass unless $date =~ m/^(\d+)-(\d+)-(\d+)$/;
+    if ( $date !~ m/^(\d+)-(\d+)-(\d+)$/ ) {
+        $tokens->{title} = "Not Found";
+        status 'not_found';
+        return template '404', $tokens;
+    }
 
     my $dt_date = DateTime->new( year => $1, month => $2, day => $3 );
     my $conference = rset('Conference')->find( setting('conferences_id') );
@@ -163,7 +173,9 @@ get '/talks/schedule/:date' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        pass;
+        $tokens->{title} = "Not Found";
+        status 'not_found';
+        return template '404', $tokens;
     }
 
     # days token
@@ -511,7 +523,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     if ( !$talk ) {
         $tokens->{title} = "Talk Not Found";
         status 'not_found';
-        template '404', $tokens;
+        return template '404', $tokens;
     }
 
     $tokens->{talk}          = $talk;
