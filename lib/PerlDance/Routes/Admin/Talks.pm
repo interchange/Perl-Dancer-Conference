@@ -28,6 +28,10 @@ get '/admin/talks' => require_role admin => sub {
         {
             conferences_id => setting('conferences_id'),
         },
+        {
+            prefetch => 'author',
+            order_by => [ 'author.last_name', 'author.first_name', 'title' ],
+        }
     );
 
     PerlDance::Routes::add_javascript( $tokens, '/js/admin.js' );
