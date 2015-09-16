@@ -109,6 +109,287 @@ get '/talks' => sub {
     template 'talks', $tokens;
 };
 
+=head2 get /talks/schedule
+
+Talks schedule
+
+=cut
+
+get '/talks/schedule' => sub {
+    my $tokens     = {};
+    my $conference = rset('Conference')->find( setting('conferences_id') );
+
+    # paranoia checks on conference
+    if (   !$conference
+        || !$conference->start_date
+        || !$conference->end_date
+        || $conference->end_date < $conference->start_date )
+    {
+        warning "Conference record missing or start/end dates missing/broken";
+        pass;
+    }
+
+    my $dt    = $conference->start_date->clone;
+    my $today = DateTime->today();
+
+    if ( $today >= $conference->start_date && $today <= $conference->end_date )
+    {
+        redirect '/talks/schedule/' . $today->ymd;
+    }
+    else {
+        redirect '/talks/schedule/' . $conference->start_date->ymd;
+    }
+};
+
+get '/talks/schedule/:date' => sub {
+    my $tokens = {};
+
+    my $date = param 'date';
+    pass unless $date =~ m/^(\d+)-(\d+)-(\d+)$/;
+
+    my $dt_date = DateTime->new( year => $1, month => $2, day => $3 );
+    my $conference = rset('Conference')->find( setting('conferences_id') );
+
+    if (   $dt_date < $conference->start_date
+        || $dt_date > $conference->end_date )
+    {
+        redirect '/talks/schedule/' . $conference->start_date->ymd;
+    }
+
+    # paranoia checks on conference
+    if (   !$conference
+        || !$conference->start_date
+        || !$conference->end_date
+        || $conference->end_date < $conference->start_date )
+    {
+        warning "Conference record missing or start/end dates missing/broken";
+        pass;
+    }
+
+    # days token
+    for (
+        my $i = $conference->start_date->clone ;
+        $i <= $conference->end_date ;
+        $i->add( days => 1 )
+      )
+    {
+        my $data = {
+            uri   => $i->ymd,
+            label => $i->day_name
+        };
+        $data->{class} = "active" if $i == $dt_date;
+        push @{ $tokens->{days} }, $data;
+    }
+
+    my $schema = schema;
+
+    # base Event and Talk searches
+    my $events = rset('Event')->search(
+        {
+            conferences_id => setting('conferences_id'),
+            room           => { '!=' => '' },
+            start_time     => {
+                '!=' => undef,
+                '>=' => $schema->format_datetime($dt_date),
+                '<=' =>
+                  $schema->format_datetime( $dt_date->clone->add( days => 1 ) )
+            },
+        },
+        {
+            order_by => 'start_time',
+        }
+    );
+
+    my $talks = rset('Talk')->search(
+        {
+            accepted       => 1,
+            conferences_id => setting('conferences_id'),
+            room           => { '!=' => '' },
+            start_time     => {
+                '!=' => undef,
+                '>=' => $schema->format_datetime($dt_date),
+                '<=' =>
+                  $schema->format_datetime( $dt_date->clone->add( days => 1 ) )
+            },
+        },
+        {
+            order_by => 'start_time',
+            prefetch => 'author',
+        }
+    )->with_attendee_count;
+
+    if ( my $user = logged_in_user ) {
+        $talks = $talks->with_attendee_status( $user->id );
+    }
+
+    if ( user_has_role('admin') ) {
+
+        # admins are also shown accepted talks and events which have
+        # no start_time or no room defined
+
+        my @events = rset('Event')->search(
+            {
+                conferences_id => setting('conferences_id'),
+                -or            => {
+                    room       => '',
+                    start_time => undef,
+                },
+            },
+            {
+                order_by => 'start_time',
+            }
+        )->all;
+
+        $tokens->{unscheduled_events} = \@events if @events;
+
+        my @talks = rset('Talk')->search(
+            {
+                accepted       => 1,
+                conferences_id => setting('conferences_id'),
+                -or            => {
+                    room       => '',
+                    start_time => undef,
+                },
+            },
+            {
+                order_by => 'start_time',
+                prefetch => 'author',
+            }
+        )->all;
+
+        $tokens->{unscheduled_talks} = \@talks if @talks;
+
+    }
+    else {
+
+        # non-Admins can only see things that are 'scheduled'
+        $events = $events->search( { scheduled => 1 } );
+        $talks = $talks->search( { scheduled => 1 } );
+    }
+
+    # css classes for event cells (just a little colouring)
+    my %classes = (
+        1 => "success",
+        2 => "danger",
+        3 => "info",
+        0 => "warning",
+    );
+
+    my @all =
+      sort { $a->start_time cmp $b->start_time } ( $events->all, $talks->all );
+
+    # unique room names
+    my %rooms = map { $_->room => 1 } @all;
+    my @rooms = sort keys %rooms;
+    $tokens->{rooms} = [ map { { name => $_ } } @rooms ];
+
+    # track overlapped cells due to rowspans
+    my %emptycell;
+
+    if (@all) {
+
+        # we have some talks/events
+
+        # we need a unique set of all start and end times
+        my %times =
+          map { $_->strftime("%H:%M") => $_ }
+          map { $_->start_time, $_->end_time } @all;
+
+        my $i = 0;
+        %times =
+          map { $_ => { row => ++$i, datetime => $times{$_} } }
+          sort keys %times;
+
+        # spin through all collected times - we will have one row for each
+        my @rows;
+        foreach my $time ( sort keys %times ) {
+
+            my $val = $times{$time};
+            my $dt  = $val->{datetime};
+            my $row = $val->{row};
+
+            my @slots;
+            my $col = 0;
+
+            # add room columns
+          ROOM: foreach my $room (@rooms) {
+
+                my $data = {};
+                $col++;
+
+                next ROOM if ( $emptycell{"$row:$col"} );
+
+                my @found =
+                  grep { $_->start_time == $dt && $_->room eq $room } @all;
+
+                if (@found) {
+                    if ( @found > 1 ) {
+
+                        # more than one talk at this time in this room
+                        # this is ** BAD **
+                        $data =
+                          {     title => "WARNING: "
+                              . ( scalar @found )
+                              . "talks clash: "
+                              . join( " | ", map { $_->title } @found ) };
+
+                    }
+                    else {
+
+                        # a Talk or an Event
+                        my $e = $found[0];
+                        $data = {
+                            class    => $classes{ $col % 4 },
+                            title    => $e->title,
+                            duration => $e->duration,
+                            uri      => $e->seo_uri,
+                        };
+
+                        my $last_row =
+                          $times{ $e->end_time->strftime("%H:%M") }->{row};
+
+                        if ( $last_row > $row ) {
+                            $data->{rowspan} = $last_row - $row;
+                            foreach my $i ( $row .. --$last_row ) {
+                                $emptycell{"$i:$col"} = 1;
+                            }
+                        }
+
+                        if ( $e->$_can("talks_id") ) {
+
+                            # a Talk so add more stuff
+                            $data->{is_talk}         = 1;
+                            $data->{author_name}     = $e->author->name;
+                            $data->{author_nickname} = $e->author->nickname;
+                            $data->{author_uri}      = $e->author->uri;
+                            $data->{stars}           = $e->attendee_count;
+                            $data->{id}              = $e->id;
+                            if (logged_in_user) {
+                                $data->{attendee_status} = $e->attendee_status;
+                            }
+                        }
+                        else {
+                            $data->{is_event} = 1;
+                        }
+                    }
+                }
+                else {
+                    $data = { is_empty => 1 };
+                }
+                push @slots, $data;
+            }
+            push @rows, { time => $time, slots => \@slots };
+        }
+
+        $tokens->{rows} = \@rows;
+    }
+
+    $tokens->{title} = "Talks Schedule for $date";
+    $tokens->{date} = $dt_date;
+
+    template 'schedule', $tokens;
+};
+
 =head2 get /talks/tag/:tag
 
 Tag cloud links in /talks
@@ -192,282 +473,6 @@ get '/talks/favourite' => sub {
       [ sort { $b->attendee_count <=> $a->attendee_count } $talks->all ];
 
     template 'talks/favourite', $tokens;
-};
-
-=head2 get /talks/schedule
-
-Talks schedule
-
-=cut
-
-get '/talks/schedule' => sub {
-    my $tokens = {};
-
-    my $conference = rset('Conference')->find( setting('conferences_id') );
-
-    # paranoia checks on conference
-    if (   !$conference
-        || !$conference->start_date
-        || !$conference->end_date
-        || $conference->end_date < $conference->start_date )
-    {
-        warning "Conference record missing or start/end dates missing/broken";
-        $tokens->{title} = "Not found";
-        status 'not_found';
-        template '404', $tokens;
-    }
-
-    PerlDance::Routes::add_javascript( $tokens, '/js/schedule.js' );
-    PerlDance::Routes::add_navigation_tokens($tokens);
-
-    my $dt    = $conference->start_date->clone;
-    my $today = DateTime->today();
-
-    # one tab for each day of the conference
-    my @days;
-    while ( $dt <= $conference->end_date ) {
-        my $data = {
-            datetime => $dt->clone,
-            id       => lc( $dt->day_name ),
-            label    => $dt->day_name
-        };
-        if (   $today >= $conference->start_date
-            && $today <= $conference->start_date )
-        {
-            # during conference set active day to today
-            $data->{class} = "active" if $dt == $today;
-        }
-        elsif ( $dt == $conference->start_date ) {
-
-            # otherwise first day is active
-            $data->{class} = "active";
-        }
-        push @days, $data;
-        $dt->add( days => 1 );
-    }
-
-    $tokens->{days} = \@days;
-
-    # base Event and Talk searches
-    my $events = rset('Event')->search(
-        {
-            conferences_id => setting('conferences_id'),
-            room           => { '!=' => '' },
-            start_time     => { '!=' => undef },
-        },
-        {
-            order_by => 'start_time',
-        }
-    );
-
-    my $talks = rset('Talk')->search(
-        {
-            accepted       => 1,
-            conferences_id => setting('conferences_id'),
-            room           => { '!=' => '' },
-            start_time     => { '!=' => undef },
-        },
-        {
-            order_by => 'start_time',
-            prefetch => 'author',
-        }
-    )->with_attendee_count;
-
-    if ( my $user = logged_in_user ) {
-        $talks = $talks->with_attendee_status( $user->id );
-    }
-
-    if ( user_has_role('admin') ) {
-
-        # admins are also shown accepted talks and events which have
-        # no start_time or no room defined
-
-        my @events = rset('Event')->search(
-            {
-                conferences_id => setting('conferences_id'),
-                -or            => {
-                    room       => '',
-                    start_time => undef,
-                },
-            },
-            {
-                order_by => 'start_time',
-            }
-        )->all;
-
-        $tokens->{unscheduled_events} = \@events if @events;
-
-        my @talks = rset('Talk')->search(
-            {
-                accepted       => 1,
-                conferences_id => setting('conferences_id'),
-                -or            => {
-                    room       => '',
-                    start_time => undef,
-                },
-            },
-            {
-                order_by => 'start_time',
-                prefetch => 'author',
-            }
-        )->all;
-
-        $tokens->{unscheduled_talks} = \@talks if @talks;
-
-    }
-    else {
-
-        # non-Admins can only see things that are 'scheduled'
-        $events = $events->search( { scheduled => 1 } );
-        $talks = $talks->search( { scheduled => 1 } );
-    }
-
-    my @events = $events->all;
-    my @talks  = $talks->all;
-
-    my @tabs;
-
-    # css classes for event cells
-
-    my %classes = (
-        1 => "success",
-        2 => "danger",
-        3 => "info",
-        0 => "warning",
-    );
-
-    # process talks/events one day at a time
-  DAY: foreach my $day (@days) {
-        my $tab = { id => $day->{id}, date => $day->{datetime} };
-
-        # find all talks and events for this day and group them
-        # together in array @all
-        my $next_day = $day->{datetime}->clone->add( days => 1 );
-        my @talks = grep {
-                 $_->start_time >= $day->{datetime}
-              && $_->start_time < $next_day
-        } @talks;
-        my @events = grep {
-                 $_->start_time >= $day->{datetime}
-              && $_->start_time < $next_day
-        } @events;
-
-        my @all =
-          sort { $a->start_time cmp $b->start_time } ( @talks, @events );
-
-        # unique room names
-        my %rooms = map { $_->room => 1 } @all;
-        my @rooms = sort keys %rooms;
-        $tab->{rooms} = [ map { { name => $_ } } @rooms ];
-
-        # track overlapped cells due to rowspans
-        my %emptycell;
-
-        if (@all) {
-
-            # we have some talks/events
-
-            # we need a unique set of all start and end times
-            my %times =
-              map { $_->strftime("%H:%M") => $_ }
-              map { $_->start_time, $_->end_time } @all;
-
-            my $i = 0;
-            %times =
-              map { $_ => { row => ++$i, datetime => $times{$_} } }
-              sort keys %times;
-
-            # spin through all collected times - we will have one row for each
-            my @rows;
-            foreach my $time ( sort keys %times ) {
-
-                my $val = $times{$time};
-                my $dt  = $val->{datetime};
-                my $row = $val->{row};
-
-                my @slots;
-                my $col = 0;
-
-                # add room columns
-              ROOM: foreach my $room (@rooms) {
-
-                    my $data = {};
-                    $col++;
-
-                    next ROOM if ( $emptycell{"$row:$col"} );
-
-                    my @found =
-                      grep { $_->start_time == $dt && $_->room eq $room } @all;
-
-                    if (@found) {
-                        if ( @found > 1 ) {
-
-                            # more than one talk at this time in this room
-                            # this is ** BAD **
-                            $data =
-                              {     title => "WARNING: "
-                                  . ( scalar @found )
-                                  . "talks clash: "
-                                  . join( " | ", map { $_->title } @found ) };
-
-                        }
-                        else {
-
-                            # a Talk or an Event
-                            my $e = $found[0];
-                            $data = {
-                                class    => $classes{ $col % 4 },
-                                title    => $e->title,
-                                duration => $e->duration,
-                                uri      => $e->seo_uri,
-                            };
-
-                            my $last_row =
-                              $times{ $e->end_time->strftime("%H:%M") }->{row};
-
-                            if ( $last_row > $row ) {
-                                $data->{rowspan} = $last_row - $row;
-                                foreach my $i ( $row .. --$last_row ) {
-                                    $emptycell{"$i:$col"} = 1;
-                                }
-                            }
-
-                            if ( $e->$_can("talks_id") ) {
-
-                                # a Talk so add more stuff
-                                $data->{is_talk}         = 1;
-                                $data->{author_name}     = $e->author->name;
-                                $data->{author_nickname} = $e->author->nickname;
-                                $data->{author_uri}      = $e->author->uri;
-                                $data->{stars}           = $e->attendee_count;
-                                $data->{id}              = $e->id;
-                                if (logged_in_user) {
-                                    $data->{attendee_status} =
-                                      $e->attendee_status;
-                                }
-                            }
-                            else {
-                                $data->{is_event} = 1;
-                            }
-                        }
-                    }
-                    else {
-                        $data = { is_empty => 1 };
-                    }
-                    push @slots, $data;
-                }
-                push @rows, { time => $time, slots => \@slots };
-            }
-
-            $tab->{rows} = \@rows;
-        }
-
-        push @tabs, $tab;
-    }
-
-    $tokens->{tabs} = \@tabs;
-
-    template 'schedule', $tokens;
 };
 
 =head2 get /talks/submit

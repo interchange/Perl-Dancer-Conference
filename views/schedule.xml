@@ -2,44 +2,40 @@
   <container name="show-stars" value="logged_in_user"/>
   <container name="show-unscheduled-events" value="unscheduled_events"/>
   <container name="show-unscheduled-talks" value="unscheduled_talks"/>
+  <container name="has_rows" value="rows"/>
+  <container name="no_rows" value="!rows"/>
   <pattern name="durationpat" type="string">10</pattern>
   <pattern name="nicknamepat" type="string">NickName</pattern>
   <list name="nav_day" iterator="days">
-    <param name="href" class="link" field="id" target="href" op="append"/>
-    <param name="aria" class="link" field="id" target="aria-controls"/>
+    <param name="uri" class="link" target="href" op="append"/>
     <param name="class" class="nav_day" target="class" op="append" joiner=" "/>
     <param name="label" class="link"/>
   </list>
-  <list name="tab-pane" iterator="tabs">
-    <container name="has_rows" value="rows"/>
-    <container name="no_rows" value="!rows"/>
-    <param name="id" class="tab-pane" target="id"/>
-    <param name="date" filter="date_only"/>
-    <list name="room-name" iterator="rooms">
-      <param name="name"/>
-    </list>
-    <list name="timeslot" iterator="rows">
-      <param name="time"/>
-      <list name="slot" iterator="slots">
-        <container name="remove_talk" value="attendee_status"/>
-        <container name="add_talk" value="!attendee_status"/>
-        <param name="picked" field="id" target="href" op="append"/>
-        <param name="unpicked" field="id" target="href" op="append"/>
-        <param name="rowspan" class="slot" target="rowspan"/>
-        <param name="is_talk" field="author_name" op="toggle" args="tree"/>
-        <param name="is_event" op="toggle" args="tree"/>
-        <param name="is_empty" op="toggle" args="tree"/>
-        <param name="author_name"/>
-        <param name="author_nickname" op="toggle" args="tree"
-          pattern="nicknamepat"/>
-        <param name="author_uri" target="href" op="append"/>
-        <param name="title"/>
-        <param name="talk-uri" class="title" field="uri"
-          target="href" op="append"/>
-        <param name="class" class="slot" target="class" op="append" joiner=" "/>
-        <param name="duration" pattern="durationpat"/>
-        <param name="stars"/>
-      </list>
+  <value name="date" filter="date_only"/>
+  <list name="room-name" iterator="rooms">
+    <param name="name"/>
+  </list>
+  <list name="timeslot" iterator="rows">
+    <param name="time"/>
+    <list name="slot" iterator="slots">
+      <container name="remove_talk" value="attendee_status"/>
+      <container name="add_talk" value="!attendee_status"/>
+      <param name="picked" field="id" target="href" op="append"/>
+      <param name="unpicked" field="id" target="href" op="append"/>
+      <param name="rowspan" class="slot" target="rowspan"/>
+      <param name="is_talk" field="author_name" op="toggle" args="tree"/>
+      <param name="is_event" op="toggle" args="tree"/>
+      <param name="is_empty" op="toggle" args="tree"/>
+      <param name="author_name"/>
+      <param name="author_nickname" op="toggle" args="tree"
+        pattern="nicknamepat"/>
+      <param name="author_uri" target="href" op="append"/>
+      <param name="title"/>
+      <param name="talk-uri" class="title" field="uri"
+        target="href" op="append"/>
+      <param name="class" class="slot" target="class" op="append" joiner=" "/>
+      <param name="duration" pattern="durationpat"/>
+      <param name="stars"/>
     </list>
   </list>
   <list name="unscheduled_event" iterator="unscheduled_events">
