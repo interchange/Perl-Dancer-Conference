@@ -1,0 +1,7 @@
+<specification>
+  <value name="title" class="panel-title" field="event.title"/>
+  <value name="abstract" field="event.abstract" op="hook" filter="markdown"/>
+  <value name="date" field="event.start_time" filter="date_only"/>
+  <value name="duration_display" field="event.duration_display"/>
+  <value name="location" field="event.room"/>
+</specification>

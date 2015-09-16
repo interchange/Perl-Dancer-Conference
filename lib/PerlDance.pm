@@ -130,7 +130,7 @@ hook 'before_layout_render' => sub {
     }
 
     # display sidebar?
-    if ( request->path =~ m{^/($|speakers|talks|tickets|users/)} ) {
+    if ( request->path =~ m{^/($|events|speakers|talks|tickets|users/)} ) {
         $tokens->{show_sidebar} = 1;
     }
 };

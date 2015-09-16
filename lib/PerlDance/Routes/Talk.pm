@@ -2,7 +2,7 @@ package PerlDance::Routes::Talk;
 
 =head1 NAME
 
-PerlDance::Routes::Talk - Talk routes for PerlDance conference application
+PerlDance::Routes::Talk - Talk/Event routes for PerlDance conference application
 
 =cut
 
@@ -16,6 +16,31 @@ use Safe::Isa;
 use Try::Tiny;
 
 =head1 ROUTES
+
+=head2 get /events/{id}.*
+
+Individual event
+
+=cut
+
+get qr{/events/(?<id>\d+).*} => sub {
+    my $id     = captures->{id};
+    my $tokens = {};
+
+    my $event = rset('Event')->find(
+        {
+            events_id      => $id,
+            conferences_id => setting('conferences_id'),
+        },
+    );
+
+    pass unless $event;
+
+    $tokens->{event} = $event;
+    $tokens->{title} = $event->title;
+
+    template 'event', $tokens;
+};
 
 =head2 get /talks
 
@@ -303,7 +328,7 @@ get '/talks/schedule' => sub {
     my @tabs;
 
     # css classes for event cells
-    
+
     my %classes = (
         1 => "success",
         2 => "danger",
@@ -372,8 +397,7 @@ get '/talks/schedule' => sub {
                     next ROOM if ( $emptycell{"$row:$col"} );
 
                     my @found =
-                      grep { $_->start_time == $dt && $_->room eq $room }
-                      @all;
+                      grep { $_->start_time == $dt && $_->room eq $room } @all;
 
                     if (@found) {
                         if ( @found > 1 ) {
