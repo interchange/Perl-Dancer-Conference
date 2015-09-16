@@ -30,7 +30,8 @@
         <param name="is_event" op="toggle" args="tree"/>
         <param name="is_empty" op="toggle" args="tree"/>
         <param name="author_name"/>
-        <param name="author_nickname" pattern="nicknamepat"/>
+        <param name="author_nickname" op="toggle" args="tree"
+          pattern="nicknamepat"/>
         <param name="author_uri" target="href" op="append"/>
         <param name="title"/>
         <param name="talk-uri" class="title" field="uri"
