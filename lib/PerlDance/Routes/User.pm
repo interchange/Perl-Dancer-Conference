@@ -378,6 +378,7 @@ sub add_speakers_tokens {
                 'conferences_attended', 'talks_authored',
                 { user_attributes => 'attribute' }
             ],
+            order_by => { -desc => 'guru_level' },
         }
     )->all;
 

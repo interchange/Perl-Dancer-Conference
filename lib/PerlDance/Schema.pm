@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 13;
+our $VERSION = 14;
 
 use Interchange6::Schema::Result::Address;
 package Interchange6::Schema::Result::Address;
@@ -67,6 +67,7 @@ __PACKAGE__->add_columns(
     monger_groups =>
       { data_type => "varchar", size => 256, default_value => '' },
     pause_id => { data_type => "varchar", size => 128, default_value => '' },
+    guru_level => { data_type => "integer", default_value => 0 },
 );
 
 =head2 METHODS
