@@ -66,7 +66,6 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
         {
             conferences_id => setting('conferences_id'),
             accepted       => 1,
-            confirmed      => 1,
         }
     );
 
