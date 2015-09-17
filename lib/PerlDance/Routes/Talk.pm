@@ -59,7 +59,7 @@ get '/talks' => sub {
 
     my $talks = rset('Talk')->search(
         {
-            conferences_id => setting('conferences_id'),
+            'me.conferences_id' => setting('conferences_id'),
         },
     );
     $tokens->{talks_submitted} = $talks->count;
@@ -84,10 +84,11 @@ get '/talks' => sub {
     }
 
     $talks = $talks->search(
-        undef,
+        { "conferences_attended.conferences_id" => setting('conferences_id') },
         {
             order_by => [ 'author.first_name', 'author.last_name' ],
             prefetch => 'author',
+            join => { author => 'conferences_attended' },
         }
     );
 
