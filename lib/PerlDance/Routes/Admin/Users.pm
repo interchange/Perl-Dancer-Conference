@@ -81,6 +81,7 @@ post '/admin/users/create' => require_role admin => sub {
             monger_groups => $values{monger_groups} || '',
             pause_id      => $values{pause_id} || '',
             bio           => $values{bio} || '',
+            guru_level    => $values{guru_level} || 0,
             conferences_attended => [
                 {
                     conferences_id => setting('conferences_id'),
@@ -149,6 +150,7 @@ get '/admin/users/edit/:id' => require_role admin => sub {
         nickname      => $user->nickname,
         monger_groups => $user->monger_groups,
         pause_id      => $user->pause_id,
+        guru_level    => $user->guru_level,
         bio           => $user->bio,
     );
 
@@ -223,6 +225,7 @@ post '/admin/users/edit/:id' => require_role admin => sub {
             nickname      => $values{nickname},
             monger_groups => $values{monger_groups} || '',
             pause_id      => $values{pause_id} || '',
+            guru_level    => $values{guru_level} || 0,
             bio           => $values{bio} || '',
         }
     );

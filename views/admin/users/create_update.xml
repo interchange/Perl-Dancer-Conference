@@ -2,6 +2,7 @@
   <form name="update_create_users" link="name">
     <field name="email"/>
     <field name="first_name"/>
+    <field name="guru_level"/>
     <field name="last_name"/>
     <field name="nickname"/>
     <field name="company"/>

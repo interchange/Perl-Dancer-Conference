@@ -1,6 +1,7 @@
 <specification>
   <list name="users-item" iterator="users">
     <param name="username"/>
+    <param name="guru_level"/>
     <param name="nickname"/>
     <param name="first_name" class="first-name"/>
     <param name="last_name" class="last-name"/>
