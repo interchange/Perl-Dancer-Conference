@@ -89,7 +89,7 @@ Add navigation (menus).
 hook 'before_layout_render' => sub {
     my $tokens = shift;
 
-    my @nav = shop_navigation->search(
+    my $nav = shop_navigation->search(
         {
             'me.active'       => 1,
             'me.type'         => 'nav',
@@ -97,8 +97,17 @@ hook 'before_layout_render' => sub {
             'children.active' => [ undef, 1 ],
         },
         { prefetch => 'children', }
-      )->order_by('!me.priority,me.name,!children.priority,children.name')
-      ->hri->all;
+      )->order_by('!me.priority,me.name,!children.priority,children.name');
+
+    # ugly hack so issue raised:
+    # https://github.com/interchange/interchange6-schema/issues/186
+    if ( !logged_in_user ) {
+        $nav = $nav->search(
+            { 'children.uri' => [ undef, { '!=' => 'myschedule' } ] },
+        );
+    }
+
+    my @nav = $nav->hri->all;
 
     # add class to highlight current page in menu
     foreach my $record (@nav) {
