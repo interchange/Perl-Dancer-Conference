@@ -35,4 +35,9 @@
     <param name="location" field="room"/>
     <param name="short_abstract"/>
   </list>
+  <container name="attending-talks" value="attending.count"/>
+  <list name="attending" iterator="attending">
+    <param name="title" class="link"/>
+    <param name="seo_uri" class="link" target="href" op="append"/>
+  </list>
 </specification>

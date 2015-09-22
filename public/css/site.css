@@ -442,3 +442,7 @@ span.tagcloud24 a {text-decoration: none;}
 .sidebar .well div, #sponsors div {
     margin-bottom: 40px;
 }
+.attending-talks li {
+  margin-left: 1.5em;
+  text-indent: -1.5em;
+}

@@ -44,15 +44,22 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
         {
             'me.users_id'                         => $users_id,
             'conferences_attended.conferences_id' => setting('conferences_id'),
-            'addresses.type'                      => [undef, 'primary'],
+            'addresses.type'                      => [ undef, 'primary' ],
+            'talk.conferences_id'                 => setting('conferences_id'),
         },
         {
-            prefetch =>
-              [ { addresses => 'country', }, 'photo' ],
+            prefetch => [ { addresses => 'country', }, 'photo' ],
             join => 'conferences_attended',
         }
     );
     $tokens->{user} = $user;
+
+    $tokens->{attending} =
+      $user->related_resultset('attendee_talks')
+      ->search_related( 'talk',
+        { 'talk.conferences_id' => setting('conferences_id') } )
+      ->order_by('talk.title');
+
     my $address = $user->addresses->first;
 
     if ( !$tokens->{user} ) {
