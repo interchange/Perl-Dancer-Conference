@@ -120,9 +120,15 @@ Talks schedule
 
 =cut
 
+get '/myschedule' => require_login sub {
+    var uri => '/myschedule';
+    forward '/talks/schedule';
+};
+
 get '/talks/schedule' => sub {
     my $tokens     = {};
     my $conference = rset('Conference')->find( setting('conferences_id') );
+    my $uri = var('uri') || '/talks/schedule';
 
     # paranoia checks on conference
     if (   !$conference
@@ -141,11 +147,16 @@ get '/talks/schedule' => sub {
 
     if ( $today >= $conference->start_date && $today <= $conference->end_date )
     {
-        redirect '/talks/schedule/' . $today->ymd;
+        redirect path( $uri, $today->ymd );
     }
     else {
-        redirect '/talks/schedule/' . $conference->start_date->ymd;
+        redirect path( $uri, $conference->start_date->ymd );
     }
+};
+
+get '/myschedule/:date' => require_login sub {
+    var myschedule => 1;
+    forward path( '/talks/schedule', param('date') );
 };
 
 get '/talks/schedule/:date' => sub {
@@ -180,6 +191,7 @@ get '/talks/schedule/:date' => sub {
     }
 
     # days token
+    my $base_uri = var('myschedule') ? '/myschedule' : '/talks/schedule';
     for (
         my $i = $conference->start_date->clone ;
         $i <= $conference->end_date ;
@@ -187,7 +199,7 @@ get '/talks/schedule/:date' => sub {
       )
     {
         my $data = {
-            uri   => $i->ymd,
+            uri   => path($base_uri, $i->ymd),
             label => $i->day_name
         };
         $data->{class} = "active" if $i == $dt_date;
@@ -232,7 +244,21 @@ get '/talks/schedule/:date' => sub {
     )->with_attendee_count;
 
     if ( my $user = logged_in_user ) {
+
         $talks = $talks->with_attendee_status( $user->id );
+
+        if ( var('myschedule') ) {
+
+            # personal schedule (forwarded from /myschedule/:date)
+            $talks = $talks->search(
+                {
+                    'attendee_talks.users_id' => logged_in_user->id,
+                },
+                {
+                    join => 'attendee_talks',
+                }
+            );
+        }
     }
 
     if ( user_has_role('admin') ) {
@@ -397,7 +423,12 @@ get '/talks/schedule/:date' => sub {
         $tokens->{rows} = \@rows;
     }
 
-    $tokens->{title} = "Talks Schedule for $date";
+    if ( var('myschedule') ) {
+        $tokens->{title} = "Personal Schedule for $date";
+    }
+    else {
+        $tokens->{title} = "Talks Schedule for $date";
+    }
     $tokens->{date} = $dt_date;
 
     template 'schedule', $tokens;

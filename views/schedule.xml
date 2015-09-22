@@ -7,7 +7,7 @@
   <pattern name="durationpat" type="string">10</pattern>
   <pattern name="nicknamepat" type="string">NickName</pattern>
   <list name="nav_day" iterator="days">
-    <param name="uri" class="link" target="href" op="append"/>
+    <param name="uri" class="link" target="href"/>
     <param name="class" class="nav_day" target="class" op="append" joiner=" "/>
     <param name="label" class="link"/>
   </list>
