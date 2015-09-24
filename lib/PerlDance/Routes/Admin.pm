@@ -67,21 +67,33 @@ get '/admin/t-shirts' => require_role admin => sub {
 
     $tokens->{title} = "T-shirts required";
     
-    my $users = rset('User');
+    my $users = rset('User')->search(
+        {
+            'conferences_attended.conferences_id' => setting('conferences_id'),
+            'conferences_attended.confirmed' => 1,
+        },
+        {
+            columns => [ 'first_name', 'last_name', 't_shirt_size' ],
+            join    => 'conferences_attended',
+        }
+    );
+
+    my %shirts;
+    while ( my $user = $users->next ) {
+        next unless $user->name =~ /\S/;
+        my $size = $user->t_shirt_size || 'Unknown';
+        $shirts{$size}{count}++;
+        push @{ $shirts{$size}{users} }, $user->name;
+    }
 
     $tokens->{shirts} = [
-        rset('User')->search(
+        map {
             {
-                'conferences_attended.conferences_id' =>
-                  setting('conferences_id'),
-            },
-            {
-                join     => 'conferences_attended',
-                columns  => [ 't_shirt_size', { count => { count => '*' } } ],
-                group_by => 't_shirt_size',
-                order_by => 't_shirt_size',
+                size  => $_,
+                count => $shirts{$_}{count},
+                users => join( ", ", sort @{ $shirts{$_}{users} } )
             }
-        )->hri->all
+        } sort keys %shirts
     ];
 
     template 'admin/tshirts', $tokens;
