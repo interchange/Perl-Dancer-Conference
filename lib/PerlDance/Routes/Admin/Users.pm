@@ -55,6 +55,8 @@ get '/admin/users/create' => require_role admin => sub {
     $form->reset;
     $tokens->{form} = $form;
 
+    PerlDance::Routes::add_tshirt_sizes( $tokens );
+
     PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
         '/js/profile-edit.js' );
 
@@ -82,6 +84,7 @@ post '/admin/users/create' => require_role admin => sub {
             pause_id      => $values{pause_id} || '',
             bio           => $values{bio} || '',
             guru_level    => $values{guru_level} || 0,
+            t_shirt_size  => $values{t_shirt_size} || undef,
             conferences_attended => [
                 {
                     conferences_id => setting('conferences_id'),
@@ -152,6 +155,7 @@ get '/admin/users/edit/:id' => require_role admin => sub {
         pause_id      => $user->pause_id,
         guru_level    => $user->guru_level,
         bio           => $user->bio,
+        t_shirt_size  => $user->t_shirt_size,
     );
 
     my $address = $user->search_related(
@@ -190,6 +194,8 @@ get '/admin/users/edit/:id' => require_role admin => sub {
     # set the appropriate state as "selected"
     $tokens->{state} = $values{state} if $values{state};
 
+    PerlDance::Routes::add_tshirt_sizes( $tokens, $values{t_shirt_size} );
+
     PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
         '/js/profile-edit.js' );
 
@@ -227,6 +233,7 @@ post '/admin/users/edit/:id' => require_role admin => sub {
             pause_id      => $values{pause_id} || '',
             guru_level    => $values{guru_level} || 0,
             bio           => $values{bio} || '',
+            t_shirt_size  => $values{t_shirt_size} || undef,
         }
     );
 

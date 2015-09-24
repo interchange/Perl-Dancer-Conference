@@ -246,6 +246,29 @@ sub add_navigation_tokens {
     $tokens->{description} = $nav->description;
 }
 
+=head2 add_tshirt_sizes( $tokens, $current_value );
+
+Add 'shirts' iterator token with available T-shirt sizes
+
+=cut
+
+sub add_tshirt_sizes {
+    my ( $tokens, $value ) = @_;
+    my @t_shirt_sizes = (
+        'XS',      'XS (W)', 'S',    'S (W)',  'M',   'M (W)',
+        'L',       'L (W)',  'XL',   'XL (W)', 'XLT', 'XXL',
+        'XXL (W)', 'XXLT',   'XXXL', '4XL',    '5XL', '6XL',
+    );
+
+    $tokens->{t_shirt_sizes} =
+      [ map { { value => $_, label => $_ } } @t_shirt_sizes ];
+
+    if ( !$value || !grep { $_ eq $value } @t_shirt_sizes ) {
+        unshift @{ $tokens->{t_shirt_sizes} },
+          { value => undef, label => "Select T-shirt size" };
+    }
+}
+
 =head2 send_email( $args_hash );
 
 The following keys are required:

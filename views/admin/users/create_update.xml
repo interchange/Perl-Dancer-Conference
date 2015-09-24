@@ -12,6 +12,7 @@
     <field name="longitude"/>
     <field name="country" iterator="countries"
       iterator_value_key="country_iso_code" iterator_name_key="name"/>
+    <field name="t_shirt_size" iterator="t_shirt_sizes"/>
     <field name="monger_groups"/>
     <field name="pause_id"/>
     <field name="bio"/>

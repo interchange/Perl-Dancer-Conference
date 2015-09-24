@@ -226,21 +226,7 @@ get '/edit' => sub {
     # set the appropriate state as "selected"
     $tokens->{state} = $values{state} if $values{state};
 
-    my @t_shirt_sizes = (
-        'XS',      'XS (W)', 'S',    'S (W)',  'M',   'M (W)',
-        'L',       'L (W)',  'XL',   'XL (W)', 'XLT', 'XXL',
-        'XXL (W)', 'XXLT',   'XXXL', '4XL',    '5XL', '6XL',
-    );
-
-    $tokens->{t_shirt_sizes} =
-      [ map { { value => $_, label => $_ } } @t_shirt_sizes ];
-
-    if (   !$values{t_shirt_size}
-        || !grep { $_ eq $values{t_shirt_size} } @t_shirt_sizes )
-    {
-        unshift @{ $tokens->{t_shirt_sizes} },
-          { value => undef, label => "Select T-shirt size" };
-    }
+    PerlDance::Routes::add_tshirt_sizes( $tokens, $values{t_shirt_size} );
 
     PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
         '/js/profile-edit.js' );
