@@ -66,6 +66,7 @@ get '/admin/t-shirts' => require_role admin => sub {
     my $tokens = {};
 
     $tokens->{title} = "T-shirts required";
+    $tokens->{description} = "Confirmed users only";
     
     my $users = rset('User')->search(
         {
