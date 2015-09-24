@@ -1,0 +1,6 @@
+<specification>
+  <list name="shirt" iterator="shirts">
+    <param name="t_shirt_size"/>
+    <param name="count"/>
+  </list>
+</specification>

@@ -62,6 +62,31 @@ get '/admin/tickets' => require_role admin => sub {
     template 'admin/tickets', $tokens;
 };
 
+get '/admin/t-shirts' => require_role admin => sub {
+    my $tokens = {};
+
+    $tokens->{title} = "T-shirts required";
+    
+    my $users = rset('User');
+
+    $tokens->{shirts} = [
+        rset('User')->search(
+            {
+                'conferences_attended.conferences_id' =>
+                  setting('conferences_id'),
+            },
+            {
+                join     => 'conferences_attended',
+                columns  => [ 't_shirt_size', { count => { count => '*' } } ],
+                group_by => 't_shirt_size',
+                order_by => 't_shirt_size',
+            }
+        )->hri->all
+    ];
+
+    template 'admin/tshirts', $tokens;
+};
+
 get '/admin/news' => require_role admin => sub {
     my $tokens = {};
 
