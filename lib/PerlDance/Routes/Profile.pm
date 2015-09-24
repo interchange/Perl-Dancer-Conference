@@ -138,6 +138,7 @@ get '/edit' => sub {
         monger_groups => $user->monger_groups,
         pause_id      => $user->pause_id,
         bio           => $user->bio,
+        t_shirt_size  => $user->t_shirt_size,
     );
 
     my $address = $user->search_related(
@@ -225,6 +226,22 @@ get '/edit' => sub {
     # set the appropriate state as "selected"
     $tokens->{state} = $values{state} if $values{state};
 
+    my @t_shirt_sizes = (
+        'XS',      'XS (W)', 'S',    'S (W)',  'M',   'M (W)',
+        'L',       'L (W)',  'XL',   'XL (W)', 'XLT', 'XXL',
+        'XXL (W)', 'XXLT',   'XXXL', '4XL',    '5XL', '6XL',
+    );
+
+    $tokens->{t_shirt_sizes} =
+      [ map { { value => $_, label => $_ } } @t_shirt_sizes ];
+
+    if (   !$values{t_shirt_size}
+        || !grep { $_ eq $values{t_shirt_size} } @t_shirt_sizes )
+    {
+        unshift @{ $tokens->{t_shirt_sizes} },
+          { value => undef, label => "Select T-shirt size" };
+    }
+
     PerlDance::Routes::add_javascript( $tokens, '/data/states.js',
         '/js/profile-edit.js' );
 
@@ -254,7 +271,8 @@ post '/edit' => sub {
             nickname      => $values{nickname},
             monger_groups => $values{monger_groups} || '',
             pause_id      => $values{pause_id}      || '',
-            bio           => $values{bio}           || ''
+            bio           => $values{bio}           || '',
+            t_shirt_size  => $values{t_shirt_size}  || undef,
         }
     );
 
