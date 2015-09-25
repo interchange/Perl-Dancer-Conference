@@ -83,6 +83,10 @@ get '/admin/t-shirts' => require_role admin => sub {
         }
     );
 
+    my $i = 0;
+    my %t_shirt_sizes =
+      map { $_ => $i++ } ( @{ setting('t_shirt_sizes') }, 'Unknown' );
+
     my %shirts;
     while ( my $user = $users->next ) {
 
@@ -100,7 +104,7 @@ get '/admin/t-shirts' => require_role admin => sub {
                 size  => $_,
                 %{$shirts{$_}},
             }
-        } sort keys %shirts
+        } sort { $t_shirt_sizes{$a} <=> $t_shirt_sizes{$b} } keys %shirts
     ];
 
     template 'admin/tshirts', $tokens;

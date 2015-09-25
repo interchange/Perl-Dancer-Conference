@@ -6,6 +6,25 @@ server_tokens: 0
 require_environment: 1
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2015"
+t_shirt_sizes:
+  - 'XS'
+  - 'XS (W)'
+  - 'S'
+  - 'S (W)'
+  - 'M'
+  - 'M (W)'
+  - 'L'
+  - 'L (W)'
+  - 'XL'
+  - 'XL (W)'
+  - 'XLT'
+  - 'XXL'
+  - 'XXL (W)'
+  - 'XXLT'
+  - 'XXXL'
+  - '4XL'
+  - '5XL'
+  - '6XL'
 
 geoip_database:
   city: /usr/share/GeoIP/GeoLiteCity.dat

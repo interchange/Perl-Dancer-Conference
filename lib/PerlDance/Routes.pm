@@ -254,11 +254,7 @@ Add 'shirts' iterator token with available T-shirt sizes
 
 sub add_tshirt_sizes {
     my ( $tokens, $value ) = @_;
-    my @t_shirt_sizes = (
-        'XS',      'XS (W)', 'S',    'S (W)',  'M',   'M (W)',
-        'L',       'L (W)',  'XL',   'XL (W)', 'XLT', 'XXL',
-        'XXL (W)', 'XXLT',   'XXXL', '4XL',    '5XL', '6XL',
-    );
+    my @t_shirt_sizes = @{ setting('t_shirt_sizes') };
 
     $tokens->{t_shirt_sizes} =
       [ map { { value => $_, label => $_ } } @t_shirt_sizes ];
