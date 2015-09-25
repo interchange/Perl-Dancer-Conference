@@ -2,6 +2,10 @@
   <list name="shirt" iterator="shirts">
     <param name="size"/>
     <param name="count"/>
-    <param name="users"/>
+    <list name="user" iterator="users">
+      <param name="name" class="id"/>
+      <param name="id" target="href" op="append"/>
+      <separator name="sep"/>
+    </list>
   </list>
 </specification>

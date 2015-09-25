@@ -74,27 +74,30 @@ get '/admin/t-shirts' => require_role admin => sub {
             'conferences_attended.confirmed'      => 1,
         },
         {
-            columns =>
-              [ 'username', 'first_name', 'last_name', 't_shirt_size' ],
+            columns => [
+                'users_id', 'username', 'first_name', 'last_name',
+                't_shirt_size',
+            ],
             join => 'conferences_attended',
         }
     );
 
     my %shirts;
     while ( my $user = $users->next ) {
-        my $name = $user->name;
-        $name = $user->username unless $name =~ /\S/;
+
+        my $name = $user->name =~ /\S/ ? $user->name : $user->username;
+
         my $size = $user->t_shirt_size || 'Unknown';
         $shirts{$size}{count}++;
-        push @{ $shirts{$size}{users} }, $name;
+
+        push @{ $shirts{$size}{users} }, { name => $name, id => $user->id };
     }
 
     $tokens->{shirts} = [
         map {
             {
                 size  => $_,
-                count => $shirts{$_}{count},
-                users => join( ", ", sort @{ $shirts{$_}{users} } )
+                %{$shirts{$_}},
             }
         } sort keys %shirts
     ];
