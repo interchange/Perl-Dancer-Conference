@@ -71,20 +71,22 @@ get '/admin/t-shirts' => require_role admin => sub {
     my $users = rset('User')->search(
         {
             'conferences_attended.conferences_id' => setting('conferences_id'),
-            'conferences_attended.confirmed' => 1,
+            'conferences_attended.confirmed'      => 1,
         },
         {
-            columns => [ 'first_name', 'last_name', 't_shirt_size' ],
-            join    => 'conferences_attended',
+            columns =>
+              [ 'username', 'first_name', 'last_name', 't_shirt_size' ],
+            join => 'conferences_attended',
         }
     );
 
     my %shirts;
     while ( my $user = $users->next ) {
-        next unless $user->name =~ /\S/;
+        my $name = $user->name;
+        $name = $user->username unless $name =~ /\S/;
         my $size = $user->t_shirt_size || 'Unknown';
         $shirts{$size}{count}++;
-        push @{ $shirts{$size}{users} }, $user->name;
+        push @{ $shirts{$size}{users} }, $name;
     }
 
     $tokens->{shirts} = [
