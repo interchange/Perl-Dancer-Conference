@@ -87,6 +87,8 @@ get '/admin/t-shirts' => require_role admin => sub {
     my %t_shirt_sizes =
       map { $_ => $i++ } ( @{ setting('t_shirt_sizes') }, 'Unknown' );
 
+    $tokens->{total_shirts} = 0;
+
     my %shirts;
     while ( my $user = $users->next ) {
 
@@ -94,6 +96,8 @@ get '/admin/t-shirts' => require_role admin => sub {
 
         my $size = $user->t_shirt_size || 'Unknown';
         $shirts{$size}{count}++;
+
+        $tokens->{total_shirts}++;
 
         push @{ $shirts{$size}{users} }, { name => $name, id => $user->id };
     }

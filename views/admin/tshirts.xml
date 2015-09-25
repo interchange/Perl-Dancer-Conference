@@ -8,4 +8,5 @@
       <separator name="sep"/>
     </list>
   </list>
+  <value name="total_shirts"/>
 </specification>
