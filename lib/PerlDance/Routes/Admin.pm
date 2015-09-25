@@ -79,6 +79,7 @@ get '/admin/t-shirts' => require_role admin => sub {
                 't_shirt_size',
             ],
             join => 'conferences_attended',
+            order_by => [qw/first_name last_name/],
         }
     );
 
