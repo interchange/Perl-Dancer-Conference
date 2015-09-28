@@ -22,7 +22,7 @@
                 class   => "NumericRange",
                 options => {
                     integer => 1,
-                    min     => 20,
+                    min     => 5,
                     max     => 600,
                 }
             },
