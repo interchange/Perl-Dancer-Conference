@@ -138,8 +138,8 @@ get '/paypal/getrequest' => sub {
                 $user = schema->resultset('User')->create({
                     username => $username,
                     email => $email,
-                    first_name => $details{FirstName},
-                    last_name => $details{LastName},
+                    first_name => $details{FirstName} || '',
+                    last_name => $details{LastName} || '',
                 });
 
 
@@ -177,9 +177,9 @@ get '/paypal/getrequest' => sub {
         # register successful payment
         debug "Paypal complete: ", $details{PayerID};
 
-        my %order_details = (first_name => $details{FirstName},
-                             last_name => $details{LastName},
-                             city => $details{CityName},
+        my %order_details = (first_name => $details{FirstName} || '',
+                             last_name => $details{LastName} || '',
+                             city => $details{CityName} || '',
                              company => $details{PayerBusiness} || '',
                              address => $details{Street1} || '',
                              address_2 => $details{Street2} || '',
