@@ -6,5 +6,7 @@
     <param name="sku"/>
     <param name="buy-ticket" field="cart_uri" target="href"/>
     <param name="tickets_left" />
+    <container name="ticket-left-container" value="tickets_left"/>
+    <container name="sold-out" value="!tickets_left"/>
   </list>
 </specification>

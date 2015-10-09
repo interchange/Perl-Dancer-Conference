@@ -6,12 +6,20 @@
         <div class="ticket-left-container">
           Only <span class="tickets_left">9999</span> tickets left
         </div>
+        <div class="sold-out">
+          No longer available
+        </div>
       </div>
       <div class="description ticket-content">Ticket description</div>
       <form action="/cart" method="post">
         <input type="hidden" class="sku" name="sku">
         <!--button type="submit" class="btn btn-primary">Book Now</button-->
-        <a href="/register" class="btn btn-primary buy-ticket">Buy Now</a>
+        <div class="ticket-left-container">
+          <a href="/register" class="btn btn-primary buy-ticket">Buy Now</a>
+        </div>
+        <div class="sold-out">
+          <button class="btn btn-primary buy-ticket" disabled="disabled">No longer available</button>
+        </div>
       </form>
     </div>
   </div>
