@@ -165,7 +165,7 @@ post '/wiki/edit/**' => require_login sub {
         rset('Message')->create(
             {
                 title           => $title,
-                content         => param('content'),
+                content         => $content,
                 type            => 'wiki_node',
                 format          => 'markdown',
                 author_users_id => logged_in_user->id,
