@@ -8,7 +8,7 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
 }).addTo(map);
 var marker1 = L.marker([48.21008, 16.35578]).addTo(map);
 var marker2 = L.marker([48.18246, 16.38075]).addTo(map);
-marker1.bindPopup("<b>Amerikaus</b><br>Friedrich-Schmidt-Platz 2<br>Training Venue<br>19/20 Oct");
+marker1.bindPopup("<b>Amerikahaus</b><br>Friedrich-Schmidt-Platz 2<br>Training Venue<br>19/20 Oct");
 marker2.bindPopup("<b>Hotel Schani Wien</b><br>Karl-Popper-Straße 22<br>Conference Venue<br>21/22 Oct");
 $("#marker1").click(function(){
     marker1.openPopup();
