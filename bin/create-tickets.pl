@@ -35,7 +35,7 @@ my $preamble = <<'EOF';
 \usepackage[paperwidth=85mm,paperheight=60mm,%
   margin=5mm,nohead,nofoot]{geometry}
 \usepackage[pages=all]{background}
-\backgroundsetup{scale=0.8,color=black,opacity=0.2,angle=0,%
+\backgroundsetup{scale=0.75,color=black,opacity=0.2,angle=0,%
   contents={\includegraphics[width=\paperwidth]{bw-logo.png}}}
 
 \pagestyle{empty}
@@ -47,7 +47,7 @@ push @chunks, $preamble;
 
 foreach my $user (@users) {
     my $name = $user->first_name . ' ' . $user->last_name;
-    my $nick = $user->nickname || "\\strut";
+    my $nick = $user->nickname || "~";
     my $body = <<"LATEX";
 
 \\begin{center}
@@ -55,15 +55,12 @@ $conference
 
 \\vfill
 
-{\\LARGE \\par $name}
-
-\\bigskip
-
-{\\large $nick}
+{\\LARGE\\textbf{$name}}
 
 \\vfill
 
-\\strut
+{\\large \\textbf{$nick}}
+
 \\end{center}
 \\clearpage
 
@@ -83,5 +80,7 @@ print $fh @chunks;
 close $fh;
 
 chdir $outdir or die $!;
-system(xelatex => '-interaction=nonstopmode', $outtex) == 0 or die;
+for (1..3) {
+    system(xelatex => '-interaction=nonstopmode', $outtex) == 0 or die;
+}
 
