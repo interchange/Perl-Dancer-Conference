@@ -32,9 +32,9 @@ my $preamble = <<'EOF';
 % http://www.fontsquirrel.com/fonts/montserrat
 \setmainfont{Montserrat}
 \usepackage[paperwidth=85mm,paperheight=60mm,%
-  margin=5mm,nohead,nofoot]{geometry}
+  margin=8mm,nohead,nofoot]{geometry}
 \usepackage[pages=all]{background}
-\backgroundsetup{scale=0.75,color=black,opacity=0.2,angle=0,%
+\backgroundsetup{scale=0.73,color=black,opacity=0.2,angle=0,%
   contents={\includegraphics[width=\paperwidth]{bw-logo.png}}}
 
 \pagestyle{empty}
@@ -82,4 +82,7 @@ chdir $outdir or die $!;
 for (1..3) {
     system(xelatex => '-interaction=nonstopmode', $outtex) == 0 or die;
 }
+# and prepare the sheet.
+system(pdflatex => '-interaction=nonstopmode', 'print.tex') == 0 or die;
+
 
