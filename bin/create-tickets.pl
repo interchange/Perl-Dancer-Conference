@@ -36,7 +36,8 @@ my $preamble = <<'EOF';
 \usepackage[pages=all]{background}
 \backgroundsetup{scale=0.73,color=black,opacity=0.2,angle=0,%
   contents={\includegraphics[width=\paperwidth]{bw-logo.png}}}
-
+% comment this if you don't want cropmarks
+\usepackage[cam,center,height=70mm,width=100mm]{crop}
 \pagestyle{empty}
 \begin{document}
 EOF
