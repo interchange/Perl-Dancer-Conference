@@ -10,8 +10,6 @@ use Dancer::Plugin::DBIC;
 use File::Spec;
 binmode STDOUT, ':encoding(UTF-8)';
 
-
-
 my $schema = schema;
 my $conference = config->{conference_name};
 my $outdir = File::Spec->catdir(config->{appdir}, 'lanyards');
@@ -31,7 +29,8 @@ my @chunks;
 my $preamble = <<'EOF';
 \documentclass[12pt]{article}
 \usepackage{fontspec}
-\setmainfont{TeX Gyre Pagella}
+% http://www.fontsquirrel.com/fonts/montserrat
+\setmainfont{Montserrat}
 \usepackage[paperwidth=85mm,paperheight=60mm,%
   margin=5mm,nohead,nofoot]{geometry}
 \usepackage[pages=all]{background}
@@ -55,11 +54,11 @@ $conference
 
 \\vfill
 
-{\\LARGE\\textbf{$name}}
+{\\LARGE $name}
 
 \\vfill
 
-{\\large \\textbf{$nick}}
+{\\large $nick}
 
 \\end{center}
 \\clearpage
