@@ -5,10 +5,12 @@
   <container name="session-location" value="talk.room"/>
   <container name="remove_talk" value="attendee_status"/>
   <container name="add_talk" value="!attendee_status"/>
+  <container name="talk-uri-container" value="talk.url"/>
   <value name="picked" field="talk.id" target="href" op="append"/>
   <value name="unpicked" field="talk.id" target="href" op="append"/>
   <value name="title" class="panel-title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" op="hook" filter="markdown"/>
+  <value name="talk-uri" field="talk.url" target="href"/>
   <value name="photo-link" target="href" op="append" field="talk.author.uri"/>
   <value name="speaker-link" target="href" op="append" field="talk.author.uri"/>
   <value name="author" class="speaker-link" field="talk.author.name"/>
