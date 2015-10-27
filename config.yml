@@ -148,3 +148,237 @@ paypal:
   currencycode: EUR
   sandbox: 1
   maintenance: 0
+
+surveys:
+  -
+    author: peter@sysnix.com
+    title: Post-conference survey
+    sections:
+      -
+        section: Demographics
+        text: These questions will help us understand who our attendees are.
+        questions:
+          -
+            title: 'Age Band:'
+            options:
+              - under 20
+              - '20 - 29'
+              - '30 - 39'
+              - '40 - 49'
+              - '50 - 59'
+              - 60 and over
+          -
+            title: 'Job Type:'
+            text: "If your position covers many roles, please base this on your most senior responsibility. Also base this on the role you perform, rather than your job title. For example, a 'QA Developer' would be a 'Developer' role, and 'Information Manager' would a Manager role (Technical or Non-Technical depending upon your responsibilites)"
+            options:
+              - CEO/Company Director/Senior Manager
+              - Non-Technical Manager
+              - Technical Manager
+              - Technical Architect/Analyst
+              - Developer
+              - Engineer
+              - SysAdmin
+              - Student
+              - Lecturer/Teacher/Trainer
+              - Human Resources
+              - Researcher
+              - Unemployed
+              - Other
+            other: If "Other" please enter your professional job role or title
+          -
+            title: 'Industry:'
+            text: 'If you or your company undertake work within mulitple industry sectors, please select the primary one you are currently working within.'
+            options:
+              - Automotive
+              - Education
+              - Engineering
+              - Finance
+              - Government
+              - IT Services
+              - Internet/Web
+              - Legal
+              - Logistics
+              - Media/Entertainment
+              - Medical/Healthcare
+              - Property
+              - Research
+              - Retail
+              - Telecommunications
+              - Travel
+              - Unemployed
+              - Other
+            other: If "Other" please enter your industry sector
+          -
+            title: 'Region:'
+            text: 'Please note this is the region you were a resident in, prior to attending the conference.'
+            options:
+              - Austria
+              - Africa
+              - Asia
+              - Australasia
+              - Europe
+              - North America
+              - South America
+      -
+        section: 'The Perl and Dancer Communities, Conferences and Workshops'
+        text: 'These questions are designed to help us understand our attendees level of involvement in the Perl, Dancer and DBIC communities.'
+        questions:
+          -
+            title: How do you rate your Perl knowledge?
+            options:
+              - Beginner
+              - Intermediate
+              - Advanced
+          -
+            title: How do you rate your Dancer knowledge?
+            options:
+              - Beginner
+              - Intermediate
+              - Advanced
+          -
+            title: How do you rate your DBIx::Class knowledge?
+            options:
+              - Beginner
+              - Intermediate
+              - Advanced
+          -
+            title: How long have you been programming in Perl?
+            options:
+              - less than a year
+              - 1-2 years
+              - 3-5 years
+              - 5-10 years
+              - more than 10 years
+          -
+            title: How long have you been using Dancer?
+            options:
+              - less than a year
+              - 1-2 years
+              - 3-5 years
+              - more than 5 years
+          -
+            title: How long have you been using DBIx::Class?
+            options:
+              - less than a year
+              - 1-2 years
+              - 3-5 years
+              - 5-10 years
+              - more than 10 years
+          -
+            title: Did you attend Perl Dancer Conference 2014?
+            options:
+              - Yes
+              - No
+          -
+            title: How many previous Perl-related conferences/workshops have you attended?
+            text: Please include technical conferences which included a Perl track.
+            options:
+              - 0
+              - 1
+              - '2 - 5'
+              - '6 - 10'
+              - 10 or more
+          -
+            title: Do you plan to attend a future Perl Dancer conference?
+            options:
+              - Yes
+              - Maybe
+              - Don't Know
+              - No
+          -
+            title: What other areas of the Perl Community do you contribute to?
+            type: checkbox
+            options:
+              - I'm a CPAN Author
+              - I'm a CPAN Tester
+              - "I'm a Perl event organiser (e.g. YAPC, Perl Workshop, QA Hackathon, local technical meetings, etc.)"
+              - "I'm a board or committee member of a recognised Perl body (e.g. TPF, EPO, YEF, JPF, etc.)"
+              - "I'm a Perl project developer (e.g. Dancer, Catalyst, Mojo, DBIx::Class, etc.)"
+              - I have a technical blog (e.g. on blogs.perl.org or a personal blog)
+              - 'I use or contribute to PerlMonks, Stackoverflow or other discussion forums'
+              - 'I use IRC (e.g. #dancer, #yapc, #drinkers.pm, etc.)'
+              - 'I contribute to Perl mailing lists (e.g. Dancer, P5P, Perl QA, etc)'
+              - Other
+            other: If "Other" please enter your area of contribution
+      -
+        section: 'Perl Dancer Conference 2015'
+        text: 'Regarding Perl Dancer Conference 2015 specifically, please answer the following as best as you can.'
+        questions:
+          -
+            title: 'When did you decide to come to this conference?'
+            options:
+              - After Perl Dancer Conference 2014
+              - After reading a blog post about the Perl Dancer Conference
+              - I was nominated to attend by manager/colleague
+              - I was recommended to attend by friend/colleague
+              - After reading the Perl Weekly
+              - After seeing a link or advert on a Perl specific website
+              - After seeing a link or advert on a non-Perl website
+              - After seeing a link on Twitter, Facebook or other social media website.
+              - After reading an email sent to a mailing list I was on
+              - After seeing other promotions online/in the press
+              - Other
+            other: 'If "Other" when did you decide?'
+          -
+            title: 'Were you a speaker?'
+            text: 'Note that "similar conferences" includes other Workshops and/or YAPCs, as well as Linux, Open Source or large technical events.'
+            options:
+              - No
+              - No, but I have spoken before at similar conferences
+              - Yes, and I have spoken before at similar conferences
+              - Yes, and it was my first time as a speaker
+          -
+            title: "If you weren't a speaker, would you consider speaking at a future conference?"
+            options:
+              - Yes
+              - No
+              - Ask me later
+          -
+            title: 'What was your motivation for coming?'
+            type: checkbox
+            options:
+              - the list of speakers
+              - the quality of the talks scheduled
+              - to be a speaker
+              - to meet with Dancer/DBIx::Class co-contributors
+              - to socialise with Perl geeks
+              - to visit Vienna
+              - Other
+            other: 'If "other" please let us know your motivation for coming'
+          -
+            title: 'What aspects of the conference do you feel gave value for money?'
+            type: checkbox
+            options:
+              - the talks / speakers
+              - the conference venue
+              - the city of Vienna
+              - the attendees
+              - Other
+            other: 'If "Other" please enter your suggestions'
+          -
+            title: 'What kinds of talks would you prefer at future Perl Dancer Conferences?'
+            options:
+              - More beginner level talks
+              - More intermediate level talks
+              - More advanced level talks
+              - It's about right
+              - No preference
+          -
+            title: 'Are there any topics you would specifically like to see featured?'
+            other: 'Please enter you suggestions here:'
+          -
+            title: 'How do you rate the Conference?'
+            text: 'How would you rate your overall satisfaction of the following areas of the conference?'
+            type: grid
+            options:
+              - Newsletters/Updates
+              - Web site
+              - Registration process
+              - Directions/Maps
+              - Content of the talks
+              - Schedule efficiency
+              - Social events
+              - Facilities
+              - Staff
+              - Overall experience 
+              - Value for money
