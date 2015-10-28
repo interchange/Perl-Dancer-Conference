@@ -1,0 +1,12 @@
+<specification>
+  <list name="survey" iterator="surveys">
+    <param name="title"/>
+    <param name="author" field="author.name"/>
+    <param name="public" filter="boolean"/>
+    <param name="closed" filter="boolean"/>
+    <param name="created" filter="date"/>
+    <param name="last_modified" filter="date"/>
+    <param name="edit" field="survey_id" target="href" op="append"/>
+    <param name="delete" field="survey_id" target="href" op="append"/>
+  </list>
+</specification>

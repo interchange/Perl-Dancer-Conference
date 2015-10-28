@@ -21,6 +21,7 @@ use PerlDance::Routes::Admin;
 use PerlDance::Routes::Data;
 use PerlDance::Routes::PayPal;
 use PerlDance::Routes::Profile;
+use PerlDance::Routes::Survey;
 use PerlDance::Routes::Talk;
 use PerlDance::Routes::User;
 use PerlDance::Routes::Wiki;

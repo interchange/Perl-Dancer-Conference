@@ -1,0 +1,88 @@
+#!/usr/bin/env perl
+
+use Dancer ':script';
+use Dancer::Plugin::DBIC;
+
+my $schema = schema;
+
+my $conference =
+  rset('Conference')->find( { name => setting('conference_name') } );
+die "conference not found" unless $conference;
+
+my $surveys = setting('surveys');
+
+foreach my $survey (@$surveys) {
+
+    print "Processing survey with title: ", $survey->{title}, "\n";
+
+    my $survey_result =
+      rset('Survey')
+      ->find(
+        { conferences_id => $conference->id, title => $survey->{title} } );
+
+    if ($survey_result) {
+        print "Skipping: survey already in db\n";
+        next;
+    }
+
+    my $author = rset('User')->find( { username => $survey->{author} } );
+    die "author not found" unless $author;
+
+    $survey_result = rset('Survey')->create(
+        {
+            conferences_id => $conference->id,
+            title          => $survey->{title},
+            author_id      => $author->id
+        }
+    );
+
+    my $survey_id = $survey_result->id;
+
+    my $section_prio = 1000;
+
+    foreach my $section ( @{ $survey->{sections} } ) {
+        next unless $section->{section};
+
+        my $survey_section = rset('SurveySection')->create(
+            {
+                title       => $section->{section},
+                description => $section->{text},
+                priority    => $section_prio,
+                survey_id   => $survey_id,
+            }
+        );
+        $section_prio -= 10;
+
+        my $question_prio = 1000;
+
+        foreach my $question ( @{ $section->{questions} } ) {
+            my $type = $question->{type} || "radio";
+            my $survey_question = rset('SurveyQuestion')->create(
+                {
+                    title             => $question->{title},
+                    description       => $question->{text} || '',
+                    type              => $type,
+                    priority          => $question_prio,
+                    survey_section_id => $survey_section->id,
+                    other             => $question->{other} || '',
+                }
+            );
+            $question_prio -= 10;
+
+            my $option_prio = 1000;
+
+            foreach my $option ( @{ $question->{options} } ) {
+
+                rset('SurveyQuestionOption')->create(
+                    {
+                        title              => $option,
+                        priority           => $option_prio,
+                        survey_question_id => $survey_question->id,
+                    }
+                );
+
+                $option_prio -= 10;
+            }
+        }
+    }
+}

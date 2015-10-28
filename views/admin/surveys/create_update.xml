@@ -1,0 +1,39 @@
+<specification>
+  <form name="update-create-event" link="name">
+    <field name="title"/>
+    <field name="abstract"/>
+    <field name="url"/>
+    <field name="scheduled"/>
+    <field name="start_time"/>
+    <field name="room"/>
+  </form>
+
+  <value name="duration_input" field="data.css.duration" target="class"
+    op="append" joiner=" "/>
+  <value name="duration_error" field="data.errors.duration"/>
+
+  <value name="title_input" field="data.css.title" target="class"
+    op="append" joiner=" "/>
+  <value name="title_error" field="data.errors.title"/>
+
+  <value name="abstract_input" field="data.css.abstract" target="class"
+    op="append" joiner=" "/>
+  <value name="abstract_error" field="data.errors.abstract"/>
+
+  <value name="url_input" field="data.css.url" target="class"
+    op="append" joiner=" "/>
+  <value name="url_error" field="data.errors.url"/>
+
+  <value name="scheduled_input" field="data.css.scheduled" target="class"
+    op="append" joiner=" "/>
+  <value name="scheduled_error" field="data.errors.scheduled"/>
+
+  <value name="start_time_input" field="data.css.start_time" target="class"
+    op="append" joiner=" "/>
+  <value name="start_time_error" field="data.errors.start_time"/>
+
+  <value name="room_input" field="data.css.room" target="class"
+    op="append" joiner=" "/>
+  <value name="room_error" field="data.errors.room"/>
+
+</specification>

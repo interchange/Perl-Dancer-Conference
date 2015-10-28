@@ -14,6 +14,7 @@ use Try::Tiny;
 
 use PerlDance::Routes::Admin::Events;
 use PerlDance::Routes::Admin::Navigation;
+use PerlDance::Routes::Admin::Surveys;
 use PerlDance::Routes::Admin::Talks;
 use PerlDance::Routes::Admin::Users;
 

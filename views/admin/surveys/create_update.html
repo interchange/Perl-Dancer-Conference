@@ -1,0 +1,81 @@
+  <form class="form-horizontal" method="post" name="update-create-event">
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <a class="btn btn-default" href="/admin/events">View Events List</a>
+      </div>
+    </div>
+
+    <div class="form-group duration_input">
+      <label class="col-sm-2 control-label">Duration</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="duration" placeholder="Duration in minutes" required>
+        <div class="help-block duration_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group title_input">
+      <label class="col-sm-2 control-label">Title</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="title" placeholder="Title" required>
+        <div class="help-block title_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group abstract_input">
+      <label class="col-sm-2 control-label">Abstract</label>
+      <div class="col-sm-10">
+        <textarea rows="10" class="form-control" name="abstract" placeholder="Abstract" required></textarea>
+        <span class="help-block">Abstract should be written in Markdown</span>
+        <div class="help-block abstract_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group url_input">
+      <label class="col-sm-2 control-label">Optional Url</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="url" placeholder="Url">
+        <div class="help-block url_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group scheduled_input">
+      <label class="col-sm-2 control-label">Scheduled</label>
+      <div class="col-sm-10">
+        <label class="radio-inline">
+          <input type="radio" name="scheduled" value="1">Yes
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="scheduled" value="0">No
+        </label>
+        <div class="help-block scheduled_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group start_time_input">
+      <label class="col-sm-2 control-label">Start Time</label>
+      <div class="col-sm-4">
+        <div class="input-group date form_datetime" data-date-format="dd MM yyyy - HH:ii p" data-link-field="start_time">
+          <input class="form-control" name="start_time" size="16" type="text" value="">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+          <span class="input-group-addon"><span class="glyphicon glyphicon-th"></span></span>
+          <div class="help-block start_time_error"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group room_input">
+      <label class="col-sm-2 control-label">Room</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" name="room" placeholder="Room">
+        <div class="help-block room_error"></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary submit">Submit</button>
+      </div>
+    </div>
+
+  </form>

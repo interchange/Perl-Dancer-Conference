@@ -1,0 +1,20 @@
+<specification>
+  <value name="survey_id" field="survey.id"/>
+  <list name="survey" iterator="survey.sections">
+    <param name="title"/>
+    <param name="description"/>
+    <param name="survey_section_id" class="title" target="data-section"/>
+    <list name="question" iterator="questions">
+      <param name="title"/>
+      <param name="description" op="toggle"/>
+      <param name="type" class="options" target="data-type"/>
+      <list name="option" iterator="options">
+        <param name="id" class="value" target="value"/>
+        <param name="title"/>
+      <param name="survey_question_id" class="title" target="data-question"/>
+      </list>
+      <param name="other-container" field="other" op="toggle" args="tree"/>
+      <param name="other"/>
+    </list>
+  </list>
+</specification>
