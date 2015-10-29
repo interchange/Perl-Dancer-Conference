@@ -17,7 +17,6 @@ use Dancer::Plugin::Form;
 
 =cut
 
-#get '/surveys' => require_login sub {
 get '/surveys' => sub {
     my $tokens = {};
 
@@ -47,25 +46,12 @@ get qr{/surveys/(?<id>\d+).*} => sub {
     my $id     = captures->{id};
     my $tokens = {};
 
-    my $survey = rset('Survey')->find(
+    my $surveys_rs = rset('Survey')->search(
         {
             'me.conferences_id' => setting('conferences_id'),
             'me.survey_id'      => $id,
             -bool               => 'me.public',
         },
-    );
-
-    if ( !$survey ) {
-
-        # not the survey you were looking for
-        status 'not_found';
-        return template '404', $tokens;
-    }
-
-    $tokens->{title} = $survey->title;
-
-    my $surveys_rs = rset('Survey')->search(
-        { 'me.survey_id' => $id },
         {
             prefetch => { sections => { questions => "options" } },
             rows     => 1,
@@ -78,9 +64,51 @@ get qr{/surveys/(?<id>\d+).*} => sub {
         }
     );
 
-    $tokens->{survey} = $surveys_rs->next;
+    my $attendee = 0;
 
-    template '/survey', $tokens;
+    if ( my $user = logged_in_user ) {
+
+        # conference attendee?
+        my $result = rset('ConferenceAttendee')->find(
+            {
+                conferences_id => setting('conferences_id'),
+                users_id       => $user->id
+            }
+        );
+        if ($result) {
+            $attendee = 1;
+        }
+        else {
+
+            # not marked as an attendee so closed surveys only
+            $surveys_rs = $surveys_rs->search( { -bool => 'me.closed' } );
+        }
+    }
+    else {
+
+        # not logged in so closed surveys only
+        $surveys_rs = $surveys_rs->search( { -bool => 'me.closed' } );
+    }
+
+    if ( !$surveys_rs->count ) {
+
+        # no survey found
+        status 'not_found';
+        return template '404', $tokens;
+    }
+
+    $tokens->{survey} = $surveys_rs->hri->next;
+
+    $tokens->{title} = $tokens->{survey}->{title};
+
+    if ( $tokens->{survey}->{closed} ) {
+
+        template '/surveys/results', $tokens;
+    }
+    else {
+        PerlDance::Routes::add_javascript( $tokens, "/js/survey-questions.js" );
+        template '/surveys/questions', $tokens;
+    }
 };
 
 true;

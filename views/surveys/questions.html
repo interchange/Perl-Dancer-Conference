@@ -1,0 +1,81 @@
+<form class="form survey" action="/survey" method="post">
+<input type="hidden" class="survey_id" name="survey_id">
+
+<div class="section">
+  <h2 class="title">Section Name</h2>
+  <p class="description">Explanatory text</p>
+  <div class="panel panel-default question">
+    <div class="panel-heading title">
+      Question/title
+    </div>
+    <div class="panel-body">
+      <span class="description">Additional text</span>
+
+      <div class="options-container">
+        <div class="options">
+          <div class="option"><span class="title">Option name</span></div>
+        </div>
+      </div>
+
+      <div class="other-container">
+        <span class="other">replacement text goes here</span>:
+        <textarea class="form-control othername" name="other_" rows="3"></textarea>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<div id="templates" class="hidden">
+
+  <div class="radio-container">
+    <div class="form-group">
+      <div class="radio">
+        <label>
+          <input class="value" type="radio" name="" value="">
+          <span class="title">Option name</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="checkbox-container">
+    <div class="form-group">
+      <div class="checkbox">
+        <label>
+          <input class="value" type="checkbox" name="" value="">
+          <span class="title">Option name</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Choices</th>
+          <th>Very satisfied</th>
+          <th>Somewhat satisfied</th>
+          <th>Somewhat un-satisfied</th>
+          <th>Very un-satisfied</th>
+          <th>N/A</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="option-row">
+          <td class="title">Option name</td>
+          <td class="option1"><input type="radio" class="radio" value="1"></td>
+          <td class="option2"><input type="radio" class="radio" value="2"></td>
+          <td class="option3"><input type="radio" class="radio" value="3"></td>
+          <td class="option4"><input type="radio" class="radio" value="4"></td>
+          <td class="option5"><input type="radio" class="radio" value="5"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
