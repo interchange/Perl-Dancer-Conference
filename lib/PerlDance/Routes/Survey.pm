@@ -64,8 +64,6 @@ get qr{/surveys/(?<id>\d+).*} => sub {
         }
     );
 
-    my $attendee = 0;
-
     if ( my $user = logged_in_user ) {
 
         # conference attendee?
@@ -75,10 +73,7 @@ get qr{/surveys/(?<id>\d+).*} => sub {
                 users_id       => $user->id
             }
         );
-        if ($result) {
-            $attendee = 1;
-        }
-        else {
+        if ( !$result ) {
 
             # not marked as an attendee so closed surveys only
             $surveys_rs = $surveys_rs->search( { -bool => 'me.closed' } );
@@ -90,11 +85,14 @@ get qr{/surveys/(?<id>\d+).*} => sub {
         $surveys_rs = $surveys_rs->search( { -bool => 'me.closed' } );
     }
 
+    # if we got here and have an open survey then user is both logged in
+    # and a conference attendee
+
     if ( !$surveys_rs->count ) {
 
         # no survey found
         status 'not_found';
-        return template '404', $tokens;
+        return template '404';
     }
 
     $tokens->{survey} = $surveys_rs->hri->next;
@@ -109,6 +107,37 @@ get qr{/surveys/(?<id>\d+).*} => sub {
         PerlDance::Routes::add_javascript( $tokens, "/js/survey-questions.js" );
         template '/surveys/questions', $tokens;
     }
+};
+
+post '/surveys' => require_login sub {
+    my $params = params('body');
+
+    my $survey = rset('Survey')->find( delete $params->{survey_id} );
+    my $user   = logged_in_user;
+
+    # conference attendee?
+    my $attendee = rset('ConferenceAttendee')->find(
+        {
+            conferences_id => setting('conferences_id'),
+            users_id       => $user->id
+        }
+    );
+
+    if ( !$survey || !$attendee ) {
+        status 'not_found';
+        return template '404';
+    }
+
+    # TODO: make sure user has not already submitted the survey
+
+    # clean up params
+    delete $params->{xsrf_token};
+    map { /^other_/ && $params->{$_} eq '' && delete $params->{$_} }
+      keys %$params;
+
+    print STDERR to_dumper($params);
+    #
+
 };
 
 true;
