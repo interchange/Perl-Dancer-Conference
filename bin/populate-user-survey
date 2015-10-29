@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+
+use Dancer ':script';
+use Dancer::Plugin::DBIC;
+
+my $schema = schema;
+
+# username, training, conference
+my @data = (
+    [ 'akrivopolenov@icloud.com',             0, 1, ],
+    [ 'andrew@pullingshots.ca',               1, 1, ],
+    [ 'andy@andybev.com',                     0, 1, ],
+    [ 'dance@jlavin.com',                     1, 1, ],
+    [ 'db@m-and-d.com',                       0, 1, ],
+    [ 'domm@plix.at',                         0, 1, ],
+    [ 'fall@tbi.univie.ac.at',                1, 1, ],
+    [ 'fgabolde@weborama.com',                0, 1, ],
+    [ 'grega.pompe@informa.si',               0, 1, ],
+    [ 'gr@univie.ac.at',                      1, 1, ],
+    [ 'jure@informa.si',                      0, 1, ],
+    [ 'kabanoid@cpan.org',                    0, 1, ],
+    [ 'mail@davidschmidt.at',                 0, 1, ],
+    [ 'manfred.sickinger@aon.at',             1, 1, ],
+    [ 'marcus.wolf@mac.com',                  0, 1, ],
+    [ 'mario.paumann@apa.at',                 1, 0, ],
+    [ 'mark@hofstetter.at',                   0, 1, ],
+    [ 'melmothx@gmail.com',                   0, 1, ],
+    [ 'michael.wolfinger@gmail.com',          1, 1, ],
+    [ 'mickey75@gmail.com',                   0, 1, ],
+    [ 'natalia.strelkova@ncm.at',             0, 1, ],
+    [ 'peter@sysnix.com',                     0, 1, ],
+    [ 'rabbit@rabbit.us',                     0, 1, ],
+    [ 'racke@linuxia.de',                     0, 1, ],
+    [ 'rhartig@netsuite.com',                 0, 1, ],
+    [ 'russell.jenkins@strategicdata.com.au', 0, 1, ],
+    [ 'sbatschelet@mac.com',                  0, 1, ],
+    [ 'simun.k@gmail.com',                    0, 1, ],
+    [ 'sukria@gmail.com',                     0, 1, ],
+    [ 'wyngle+perldance@wyngle.com',          0, 1, ],
+    [ 'xsawyerx@cpan.org',                    0, 1, ],
+    [ 'zloucka@netsuite.com',                 0, 1, ],
+);
