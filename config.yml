@@ -365,9 +365,9 @@ surveys:
               - No preference
           -
             title: 'Are there any topics you would specifically like to see featured?'
-            other: 'Please enter you suggestions here'
+            other: 'Please enter your suggestions here'
           -
-            title: 'How do you rate the Conference?'
+            title: 'How would you rate the Conference?'
             text: 'How would you rate your overall satisfaction of the following areas of the conference?'
             type: grid
             options:
