@@ -382,3 +382,59 @@ surveys:
               - Staff
               - Overall experience 
               - Value for money
+      section: 'talk_survey'
+        text: 'These questions are designed to give feedback to speakers as well as improve topics for the future.'
+        questions:
+          -
+            title: 'Did you find the talk interesting?'
+            options:
+              - Not at all
+              - Not really
+              - Somewhat
+              - Mostly
+              - Very
+          -
+            title: 'Did the speaker communicate well?'
+            options:
+              - Not at all
+              - Not really
+              - Somewhat
+              - Mostly
+              - Very
+          -
+            title: 'Was the speaker well prepared for the topic?'
+            options:
+              - Not at all
+              - Not really
+              - Somewhat
+              - Mostly
+              - Very
+          -
+            title: 'How was the quality of the slides?'
+            options:
+              - N/A
+              - Horrible
+              - Not so good
+              - OK
+              - Good
+              - Excellent
+          -
+            title: 'Was the subject explained in sufficient detail?'
+            options:
+              - Not at all
+              - Not really
+              - Somewhat
+              - Mostly
+              - Definitely
+          -
+            title: 'Overall talk rating?'
+            options:
+              - N/A
+              - Horrible
+              - Not so good
+              - OK
+              - Good
+              - Excellent
+          -
+            title: 'Any other comments?'
+            other: 'Please enter you suggestions here:'
