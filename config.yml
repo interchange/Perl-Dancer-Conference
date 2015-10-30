@@ -382,59 +382,63 @@ surveys:
               - Staff
               - Overall experience 
               - Value for money
-      section: 'talk_survey'
+  -
+    author: sbatschelet@mac.com
+    title: Talk review
+    sections:
+      -
+        section: 'Review of talk: '
         text: 'These questions are designed to give feedback to speakers as well as improve topics for the future.'
         questions:
           -
             title: 'Did you find the talk interesting?'
             options:
-              - Not at all
-              - Not really
-              - Somewhat
-              - Mostly
               - Very
+              - Mostly
+              - Somewhat
+              - Not really
+              - Not at all
           -
             title: 'Did the speaker communicate well?'
             options:
-              - Not at all
-              - Not really
-              - Somewhat
-              - Mostly
               - Very
+              - Mostly
+              - Somewhat
+              - Not really
+              - Not at all
           -
             title: 'Was the speaker well prepared for the topic?'
             options:
-              - Not at all
-              - Not really
-              - Somewhat
-              - Mostly
               - Very
+              - Mostly
+              - Somewhat
+              - Not really
+              - Not at all
           -
             title: 'How was the quality of the slides?'
             options:
-              - N/A
-              - Horrible
-              - Not so good
-              - OK
-              - Good
               - Excellent
+              - Good
+              - OK
+              - Not so good
+              - Horrible
+              - N/A
           -
             title: 'Was the subject explained in sufficient detail?'
             options:
-              - Not at all
-              - Not really
-              - Somewhat
-              - Mostly
               - Definitely
+              - Mostly
+              - Somewhat
+              - Not really
+              - Not at all
           -
-            title: 'Overall talk rating?'
+            title: 'Overall talk rating'
             options:
-              - N/A
-              - Horrible
-              - Not so good
-              - OK
-              - Good
               - Excellent
+              - Good
+              - OK
+              - Not so good
+              - Horrible
           -
             title: 'Any other comments?'
-            other: 'Please enter you suggestions here:'
+            other: 'Please enter you suggestions here'
