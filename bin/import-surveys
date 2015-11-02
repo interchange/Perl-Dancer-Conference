@@ -2,6 +2,7 @@
 
 use Dancer ':script';
 use Dancer::Plugin::DBIC;
+binmode STDOUT, ":utf8";
 
 my $schema = schema;
 
@@ -13,28 +14,66 @@ my $surveys = setting('surveys');
 
 foreach my $survey (@$surveys) {
 
-    print "Processing survey with title: ", $survey->{title}, "\n";
+    if ( $survey->{title} eq 'Talk review' ) {
 
-    my $survey_result =
-      rset('Survey')
-      ->find(
-        { conferences_id => $conference->id, title => $survey->{title} } );
+        my $talks = rset('Talk')->search(
+            { -bool => 'scheduled', conferences_id => $conference->id, },
+            {
+                prefetch => 'author'
+            }
+        );
+
+        while ( my $talk = $talks->next ) {
+            import_survey( $survey, $talk );
+        }
+    }
+    else {
+        import_survey($survey);
+    }
+}
+
+sub import_survey {
+    my ( $survey, $talk ) = @_;
+
+    my $title = $survey->{title};
+
+    if ($talk) {
+        $title .= ": " . $talk->title . " by " . $talk->author->name;
+        if ( $talk->lightning ) {
+            $title = "Lightning " . $title;
+        }
+    }
+
+    print "Processing survey with title: $title\n";
+
+    my $survey_result = rset('Survey')
+      ->find( { conferences_id => $conference->id, title => $title } );
 
     if ($survey_result) {
         print "Skipping: survey already in db\n";
-        next;
+        return;
     }
 
     my $author = rset('User')->find( { username => $survey->{author} } );
     die "author not found" unless $author;
 
+    my $priority = 0;
+    $priority = 200 unless $talk;
+    $priority = 100 if ( $talk && $talk->duration > 60 );
+    $priority = -100 if ( $talk && $talk->lightning );
+
     $survey_result = rset('Survey')->create(
         {
             conferences_id => $conference->id,
-            title          => $survey->{title},
-            author_id      => $author->id
+            title          => $title,
+            author_id      => $author->id,
+            priority       => $priority,
         }
     );
+
+    if ( $talk ) {
+        $talk->update({ survey_id => $survey_result->id });
+    }
 
     my $survey_id = $survey_result->id;
 
@@ -43,9 +82,14 @@ foreach my $survey (@$surveys) {
     foreach my $section ( @{ $survey->{sections} } ) {
         next unless $section->{section};
 
+        my $title = $section->{section};
+        if ($talk) {
+            $title .= ": " . $talk->title;
+        }
+
         my $survey_section = rset('SurveySection')->create(
             {
-                title       => $section->{section},
+                title       => $title,
                 description => $section->{text},
                 priority    => $section_prio,
                 survey_id   => $survey_id,

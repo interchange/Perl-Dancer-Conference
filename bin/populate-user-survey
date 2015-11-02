@@ -5,6 +5,7 @@ use strict;
 
 use Dancer ':script';
 use Dancer::Plugin::DBIC;
+binmode STDOUT, ":utf8";
 
 my $schema = schema;
 
@@ -43,3 +44,29 @@ my @data = (
     [ 'xsawyerx@cpan.org',                    0, 1, ],
     [ 'zloucka@netsuite.com',                 0, 1, ],
 );
+
+foreach my $line (@data) {
+    my ( $username, $train, $conf ) = @$line;
+    print "Procesing $username\n";
+
+    my $user = rset('User')->find( { username => $username } );
+    die "$user not found" unless $user;
+
+    my $surveys = rset('Survey')->search( undef, { prefetch => 'talk' } );
+    while ( my $survey = $surveys->next ) {
+        my $talk = $survey->talk;
+        if (   !$talk
+            || ( $talk->duration > 60  && $train )
+            || ( $talk->duration <= 60 && $conf ) )
+        {
+            # Manfred was not at Sawyer's training
+            next
+              if ( $username eq 'manfred.sickinger@aon.at'
+                && $survey->title eq
+                'Talk review: Programming the web with Dancer by Sawyer X' );
+
+            rset('UserSurvey')
+              ->create( { users_id => $user->id, survey_id => $survey->id } );
+        }
+    }
+}

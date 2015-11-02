@@ -35,6 +35,16 @@ FK on L<PerlDance::Schema::Result::Survey/survey_id>
 
 column survey_id => { data_type => "integer" };
 
+=head2 completed
+
+Whether survey has been completed by user.
+
+Defaults to false.
+
+=cut
+
+column completed => { data_type => "boolean", default_value => 0 };
+
 =head1 UNIQUE CONSTRAINT
 
 =head2 users_id_survey_id

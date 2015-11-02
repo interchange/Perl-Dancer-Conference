@@ -190,6 +190,14 @@ column room => {
     default_value => "",
 };
 
+=head2 survey_id
+
+Nullable FK on L<PerlDance::Schema::Result::Survey/survey_id>
+
+=cut
+
+column survey_id => { data_type => "integer", is_nullable => 1 };
+
 =head1 METHODS
 
 =head2 attendee_count
@@ -362,5 +370,17 @@ Related object: L<PerlDance::Schema::Result::Conference>
 
 belongs_to
   conference => 'PerlDance::Schema::Result::Conference', "conferences_id";
+
+=head2 survey
+
+Type: belongs_to
+
+Related object: L<PerlDance::Schema::Result::Survey>
+
+=cut
+
+belongs_to
+  conference => 'PerlDance::Schema::Result::Survey',
+  "survey_id", { join_type => 'left', on_delete => 'SET NULL' };
 
 1;

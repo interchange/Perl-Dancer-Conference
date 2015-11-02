@@ -85,6 +85,14 @@ Value is auto-set on insert and update.
 column last_modified =>
   { data_type => "datetime", set_on_create => 1, set_on_update => 1 };
 
+=head2 priority
+
+Display priority
+
+=cut
+
+column priority => { data_type => "integer", default_value => 0 };
+
 =head1 UNIQUE CONSTRAINTS
 
 =head2 surveys_conferences_id_title
@@ -130,5 +138,17 @@ Related object: L<PerlDance::Schema::Result::SurveySection>
 has_many
   sections => 'PerlDance::Schema::Result::SurveySection',
   "survey_id";
+
+=head2 talk
+
+Type: might_have
+
+Related object: L<PerlDance::Schema::Result::Talk>
+
+=cut
+
+might_have
+  talk => 'PerlDance::Schema::Result::Talk',
+  "survey_id", { cascade_delete => 0 };
 
 1;

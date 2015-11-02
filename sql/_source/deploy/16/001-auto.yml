@@ -341,7 +341,7 @@ schema:
           type: NORMAL
       name: attendee_talks
       options: []
-      order: 54
+      order: 56
     attribute_values:
       constraints:
         - deferrable: 1
@@ -2765,7 +2765,7 @@ schema:
           type: NORMAL
       name: order_comments
       options: []
-      order: 58
+      order: 59
     order_statuses:
       constraints:
         - deferrable: 1
@@ -4134,7 +4134,7 @@ schema:
           type: NORMAL
       name: product_reviews
       options: []
-      order: 56
+      order: 57
     products:
       constraints:
         - deferrable: 1
@@ -5326,7 +5326,7 @@ schema:
           type: NORMAL
       name: survey_question_options
       options: []
-      order: 59
+      order: 60
     survey_questions:
       constraints:
         - deferrable: 1
@@ -5434,7 +5434,93 @@ schema:
           type: NORMAL
       name: survey_questions
       options: []
-      order: 57
+      order: 58
+    survey_responses:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_response_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_question_option_id
+          match_type: ''
+          name: survey_responses_fk_survey_question_option_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - survey_question_option_id
+          reference_table: survey_question_options
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - user_survey_id
+          match_type: ''
+          name: survey_responses_fk_user_survey_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - user_survey_id
+          reference_table: user_surveys
+          type: FOREIGN KEY
+      fields:
+        survey_question_option_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: survey_question_option_id
+          order: 3
+          size:
+            - 0
+        survey_response_id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: survey_response_id
+          order: 1
+          size:
+            - 0
+        user_survey_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: user_survey_id
+          order: 2
+          size:
+            - 0
+      indices:
+        - fields:
+            - survey_question_option_id
+          name: survey_responses_idx_survey_question_option_id
+          options: []
+          type: NORMAL
+        - fields:
+            - user_survey_id
+          name: survey_responses_idx_user_survey_id
+          options: []
+          type: NORMAL
+      name: survey_responses
+      options: []
+      order: 61
     survey_sections:
       constraints:
         - deferrable: 1
@@ -5522,7 +5608,7 @@ schema:
           type: NORMAL
       name: survey_sections
       options: []
-      order: 55
+      order: 53
     surveys:
       constraints:
         - deferrable: 1
@@ -5627,6 +5713,16 @@ schema:
           order: 8
           size:
             - 0
+        priority:
+          data_type: integer
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: priority
+          order: 9
+          size:
+            - 0
         public:
           data_type: boolean
           default_value: 0
@@ -5702,15 +5798,15 @@ schema:
         - deferrable: 1
           expression: ''
           fields:
-            - conferences_id
+            - survey_id
           match_type: ''
-          name: talks_fk_conferences_id
-          on_delete: CASCADE
-          on_update: CASCADE
+          name: talks_fk_survey_id
+          on_delete: SET NULL
+          on_update: ''
           options: []
           reference_fields:
-            - conferences_id
-          reference_table: conferences
+            - survey_id
+          reference_table: surveys
           type: FOREIGN KEY
       fields:
         abstract:
@@ -5823,6 +5919,16 @@ schema:
           order: 14
           size:
             - 0
+        survey_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: survey_id
+          order: 16
+          size:
+            - 0
         tags:
           data_type: varchar
           default_value: ~
@@ -5871,13 +5977,13 @@ schema:
           options: []
           type: NORMAL
         - fields:
-            - conferences_id
-          name: talks_idx_conferences_id
+            - survey_id
+          name: talks_idx_survey_id
           options: []
           type: NORMAL
       name: talks
       options: []
-      order: 53
+      order: 54
     taxes:
       constraints:
         - deferrable: 1
@@ -6400,6 +6506,115 @@ schema:
       name: user_roles
       options: []
       order: 48
+    user_surveys:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - user_survey_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - users_id
+            - survey_id
+          match_type: ''
+          name: users_id_survey_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_id
+          match_type: ''
+          name: user_surveys_fk_survey_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - survey_id
+          reference_table: surveys
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - users_id
+          match_type: ''
+          name: user_surveys_fk_users_id
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields:
+            - users_id
+          reference_table: users
+          type: FOREIGN KEY
+      fields:
+        completed:
+          data_type: boolean
+          default_value: 0
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: completed
+          order: 4
+          size:
+            - 0
+        survey_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: survey_id
+          order: 3
+          size:
+            - 0
+        user_survey_id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: user_survey_id
+          order: 1
+          size:
+            - 0
+        users_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: users_id
+          order: 2
+          size:
+            - 0
+      indices:
+        - fields:
+            - survey_id
+          name: user_surveys_idx_survey_id
+          options: []
+          type: NORMAL
+        - fields:
+            - users_id
+          name: user_surveys_idx_users_id
+          options: []
+          type: NORMAL
+      name: user_surveys
+      options: []
+      order: 55
     users:
       constraints:
         - deferrable: 1
@@ -6957,6 +7172,7 @@ translator:
       - Survey
       - SurveyQuestion
       - SurveyQuestionOption
+      - SurveyResponse
       - SurveySection
       - Talk
       - Tax
@@ -6965,6 +7181,7 @@ translator:
       - UserAttribute
       - UserAttributeValue
       - UserRole
+      - UserSurvey
       - Zone
       - ZoneCountry
       - ZoneState

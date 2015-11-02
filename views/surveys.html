@@ -1,35 +1,23 @@
 <form class="form" action="/survey" method="post">
 <input type="hidden" class="survey_id" name="survey_id">
 
-<div class="survey">
-  <h2 class="title">Section Name</h2>
-  <p class="description">Explanatory text</p>
-  <div class="panel panel-default question">
-    <div class="panel-heading title">
-      Question/title
-    </div>
-    <div class="panel-body">
-      <span class="description">Additional text</span>
-
-      <div class="radio-buttons">
-        <div class="form-group option">
-          <div class="radio">
-            <label>
-              <input class="value" type="radio" name="" value="">
-              <span class="title">Option name</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="option-other">
-        <span class="other">replacement text goes here</span>:
-        <textarea class="form-control othername" name="" rows="3"></textarea>
-      </div>
-      </div>
-    </div>
-  </div>
+<div class="no-surveys">
+  <p class="lead">You have no surveys to complete at this time</a>
 </div>
 
-<button type="submit" class="btn btn-primary">Submit</button>
+<div class="survey-list">
+  <p><strong>We respect your privacy and so:</strong></p>
+  <ul>
+    <li>Talk reviews are sent to the presenter of the talk but presenters do not receive any details about who submitted the review.</li>
+    <li>Talk reviews will never be made public in any way.</li>
+    <li>Results of main conference survey will be aggregated and made public at a later date. Any personally identifying information will be removed before aggregated results are made public.</li>
+  </ul>
+
+  <p>Please do <strong>not</strong> feel obliged to complete all surveys. We would really like you to complete as many as possible and the talk reviews are very short but we understand that your time is valuable. At the same time the more surveys and reviews that are completed the more chance we will have to deliver an even better conference next year.</p>
+
+  <p>Thanks again for your support.</p>
+
+  <ul>
+    <li class="survey"><a class="title" href="/surveys/">Survey title</span></li>
+  </ul>
 </form>

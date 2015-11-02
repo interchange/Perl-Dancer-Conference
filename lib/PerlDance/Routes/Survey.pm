@@ -17,29 +17,59 @@ use Dancer::Plugin::Form;
 
 =cut
 
-get '/surveys' => sub {
+get '/surveys' => require_login sub {
     my $tokens = {};
 
     $tokens->{title} = "Conference Surveys";
 
-    my $surveys_rs = rset('Survey')->search(
+    my $surveys_rs = rset('UserSurvey')->search(
         {
-            'me.conferences_id' => setting('conferences_id'),
-            -bool               => 'me.public',
+            'survey.conferences_id' => setting('conferences_id'),
+            -bool                   => 'survey.public',
+            -not_bool               => 'me.completed',
+            'me.users_id'           => logged_in_user->id,
         },
-    );
-
-    if ( !logged_in_user ) {
-
-        # closed surveys only (see results)
-        $surveys_rs = $surveys_rs->search( { -bool => 'me.closed' } );
-    }
+        {
+            join => 'survey',
+        }
+    )->related_resultset('survey')->order_by('!survey.priority,survey.title');
 
     $tokens->{survey_count} = $surveys_rs->count;
 
     $tokens->{surveys} = $surveys_rs;
 
     template '/surveys', $tokens;
+};
+
+post '/surveys' => require_login sub {
+    my $params = params('body');
+
+    my $survey = rset('Survey')->find( delete $params->{survey_id} );
+    my $user   = logged_in_user;
+
+    # conference attendee?
+    my $attendee = rset('ConferenceAttendee')->find(
+        {
+            conferences_id => setting('conferences_id'),
+            users_id       => $user->id
+        }
+    );
+
+    if ( !$survey || !$attendee ) {
+        status 'not_found';
+        return template '404';
+    }
+
+    # TODO: make sure user has not already submitted the survey
+
+    # clean up params
+    delete $params->{xsrf_token};
+    map { /^other_/ && $params->{$_} eq '' && delete $params->{$_} }
+      keys %$params;
+
+    print STDERR to_dumper($params);
+    #
+
 };
 
 get qr{/surveys/(?<id>\d+).*} => sub {
@@ -107,37 +137,6 @@ get qr{/surveys/(?<id>\d+).*} => sub {
         PerlDance::Routes::add_javascript( $tokens, "/js/survey-questions.js" );
         template '/surveys/questions', $tokens;
     }
-};
-
-post '/surveys' => require_login sub {
-    my $params = params('body');
-
-    my $survey = rset('Survey')->find( delete $params->{survey_id} );
-    my $user   = logged_in_user;
-
-    # conference attendee?
-    my $attendee = rset('ConferenceAttendee')->find(
-        {
-            conferences_id => setting('conferences_id'),
-            users_id       => $user->id
-        }
-    );
-
-    if ( !$survey || !$attendee ) {
-        status 'not_found';
-        return template '404';
-    }
-
-    # TODO: make sure user has not already submitted the survey
-
-    # clean up params
-    delete $params->{xsrf_token};
-    map { /^other_/ && $params->{$_} eq '' && delete $params->{$_} }
-      keys %$params;
-
-    print STDERR to_dumper($params);
-    #
-
 };
 
 true;

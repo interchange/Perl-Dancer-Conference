@@ -1,0 +1,8 @@
+<specification>
+  <container name="no-surveys" value="!survey_count"/>
+  <container name="survey-list" value="survey_count"/>
+  <list name="survey" iterator="surveys">
+    <param name="title"/>
+    <param name="id" class="title" target="href" op="append"/>
+  </list>
+</specification>

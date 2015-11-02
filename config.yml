@@ -387,7 +387,7 @@ surveys:
     title: Talk review
     sections:
       -
-        section: 'Review of talk: '
+        section: 'Review of talk'
         text: 'These questions are designed to give feedback to speakers as well as improve topics for the future.'
         questions:
           -
