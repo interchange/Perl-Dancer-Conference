@@ -1,0 +1,35 @@
+<specification>
+  <value name="survey_id" field="survey.survey_id"/>
+  <list name="section" iterator="survey.sections">
+    <param name="title"/>
+    <param name="description"/>
+    <param name="survey_section_id" class="title" target="data-section"/>
+    <list name="question" iterator="questions">
+      <param name="options_table" op="toggle" args="tree"/>
+      <param name="is_simple" op="toggle" args="tree"/>
+      <param name="is_grid" op="toggle" args="tree"/>
+      <param name="title"/>
+      <param name="description" op="toggle"/>
+      <param name="type" class="options" target="data-type"/>
+      <param name="survey_question_id" class="options" target="data-question"/>
+      <list name="option" iterator="options">
+        <param name="title"/>
+        <param name="is_simple" op="toggle" args="tree"/>
+        <param name="show_count1" op="toggle" args="tree"/>
+        <param name="show_count2" op="toggle" args="tree"/>
+        <param name="show_count3" op="toggle" args="tree"/>
+        <param name="show_count4" op="toggle" args="tree"/>
+        <param name="show_count5" op="toggle" args="tree"/>
+        <param name="count1"/>
+        <param name="count2"/>
+        <param name="count3"/>
+        <param name="count4"/>
+        <param name="count5"/>
+      </list>
+      <param name="other-container" field="other" op="toggle" args="tree"/>
+      <param name="other"/>
+      <param name="othername" field="survey_question_id" target="name"
+        op="append"/>
+    </list>
+  </list>
+</specification>

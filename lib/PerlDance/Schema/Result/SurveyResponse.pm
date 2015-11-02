@@ -36,6 +36,14 @@ L<PerlDance::Schema::Result::SurveyQuestionOption/survey_question_option_id>
 
 column survey_question_option_id => { data_type => "integer" };
 
+=head2 value
+
+Value is used for questions of type 'grid'.
+
+=cut
+
+column value => { data_type => "integer", is_nullable => 1 };
+
 =head1 RELATIONS
 
 =head2 user_survey

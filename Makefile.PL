@@ -49,6 +49,7 @@ WriteMakefile(
         'Template::Flute'                  => '0.0184',
         'Text::Diff'                       => 0,
         'Text::Markdown'                   => 0,
+        'Try::Tiny'                        => 0,
         'URI::Escape'                      => 0,
         # PayPal payments
         'Business::PayPal::API' => 0,

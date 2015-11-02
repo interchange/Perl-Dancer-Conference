@@ -1,0 +1,10 @@
+<specification>
+  <container name="no-surveys" value="!survey_count"/>
+  <container name="survey-list" value="survey_count"/>
+  <container name="is_admin" class="closed" value="is_admin"/>
+  <list name="survey" iterator="surveys">
+    <param name="closed"/>
+    <param name="title"/>
+    <param name="id" class="title" target="href" op="append"/>
+  </list>
+</specification>

@@ -139,6 +139,18 @@ has_many
   sections => 'PerlDance::Schema::Result::SurveySection',
   "survey_id";
 
+=head2 user_surveys
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::UserSurvey>
+
+=cut
+
+has_many
+  user_surveys => 'PerlDance::Schema::Result::UserSurvey',
+  "survey_id";
+
 =head2 talk
 
 Type: might_have
