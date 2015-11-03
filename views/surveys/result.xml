@@ -1,9 +1,8 @@
 <specification>
-  <value name="survey_id" field="survey.survey_id"/>
+  <container name="no_responses" value="no_responses"/>
   <list name="section" iterator="survey.sections">
     <param name="title"/>
     <param name="description"/>
-    <param name="survey_section_id" class="title" target="data-section"/>
     <list name="question" iterator="questions">
       <param name="options_table" op="toggle" args="tree"/>
       <param name="is_simple" op="toggle" args="tree"/>
