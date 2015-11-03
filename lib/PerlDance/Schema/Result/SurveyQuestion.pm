@@ -100,4 +100,16 @@ has_many
   options => 'PerlDance::Schema::Result::SurveyQuestionOption',
   'survey_question_id';
 
+=head2 responses
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::SurveyResponse>
+
+=cut
+
+has_many
+  responses => 'PerlDance::Schema::Result::SurveyResponse',
+  'survey_question_id';
+
 1;

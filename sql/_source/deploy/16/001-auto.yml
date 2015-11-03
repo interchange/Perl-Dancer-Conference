@@ -5435,6 +5435,102 @@ schema:
       name: survey_questions
       options: []
       order: 58
+    survey_response_options:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_response_option_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_question_option_id
+          match_type: ''
+          name: survey_response_options_fk_survey_question_option_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - survey_question_option_id
+          reference_table: survey_question_options
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_response_id
+          match_type: ''
+          name: survey_response_options_fk_survey_response_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - survey_response_id
+          reference_table: survey_responses
+          type: FOREIGN KEY
+      fields:
+        survey_question_option_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: survey_question_option_id
+          order: 3
+          size:
+            - 0
+        survey_response_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: survey_response_id
+          order: 2
+          size:
+            - 0
+        survey_response_option_id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: survey_response_option_id
+          order: 1
+          size:
+            - 0
+        value:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: value
+          order: 4
+          size:
+            - 0
+      indices:
+        - fields:
+            - survey_question_option_id
+          name: survey_response_options_idx_survey_question_option_id
+          options: []
+          type: NORMAL
+        - fields:
+            - survey_response_id
+          name: survey_response_options_idx_survey_response_id
+          options: []
+          type: NORMAL
+      name: survey_response_options
+      options: []
+      order: 62
     survey_responses:
       constraints:
         - deferrable: 1
@@ -5452,15 +5548,28 @@ schema:
         - deferrable: 1
           expression: ''
           fields:
-            - survey_question_option_id
+            - user_survey_id
+            - survey_question_id
           match_type: ''
-          name: survey_responses_fk_survey_question_option_id
+          name: user_survey_survey_question
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+        - deferrable: 1
+          expression: ''
+          fields:
+            - survey_question_id
+          match_type: ''
+          name: survey_responses_fk_survey_question_id
           on_delete: CASCADE
           on_update: CASCADE
           options: []
           reference_fields:
-            - survey_question_option_id
-          reference_table: survey_question_options
+            - survey_question_id
+          reference_table: survey_questions
           type: FOREIGN KEY
         - deferrable: 1
           expression: ''
@@ -5476,13 +5585,23 @@ schema:
           reference_table: user_surveys
           type: FOREIGN KEY
       fields:
-        survey_question_option_id:
+        other:
+          data_type: text
+          default_value: ''
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: other
+          order: 4
+          size:
+            - 0
+        survey_question_id:
           data_type: integer
           default_value: ~
           is_nullable: 0
           is_primary_key: 0
-          is_unique: 0
-          name: survey_question_option_id
+          is_unique: 1
+          name: survey_question_id
           order: 3
           size:
             - 0
@@ -5502,15 +5621,15 @@ schema:
           default_value: ~
           is_nullable: 0
           is_primary_key: 0
-          is_unique: 0
+          is_unique: 1
           name: user_survey_id
           order: 2
           size:
             - 0
       indices:
         - fields:
-            - survey_question_option_id
-          name: survey_responses_idx_survey_question_option_id
+            - survey_question_id
+          name: survey_responses_idx_survey_question_id
           options: []
           type: NORMAL
         - fields:
@@ -6539,8 +6658,8 @@ schema:
             - survey_id
           match_type: ''
           name: user_surveys_fk_survey_id
-          on_delete: ''
-          on_update: ''
+          on_delete: CASCADE
+          on_update: CASCADE
           options: []
           reference_fields:
             - survey_id
@@ -7173,6 +7292,7 @@ translator:
       - SurveyQuestion
       - SurveyQuestionOption
       - SurveyResponse
+      - SurveyResponseOption
       - SurveySection
       - Talk
       - Tax

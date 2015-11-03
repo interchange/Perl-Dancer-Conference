@@ -93,15 +93,24 @@ post '/surveys' => require_login sub {
                 $user_survey->update( { completed => 1 } );
 
                 foreach my $param ( keys %$params ) {
-                    if ( $param =~ /^q_(\d+)$/ ) {
+                    next unless $param =~ /^(q|other)_(\d+)/;
+
+                    my $question = $2;
+
+                    if ( !grep { $_ == $question } @questions ) {
+                        die "Question $question not valid";
+                    }
+
+                    my $response = rset('SurveyResponse')->find_or_create(
+                        {
+                            user_survey_id     => $user_survey->id,
+                            survey_question_id => $question,
+                        }
+                    );
+
+                    if ( $param =~ /^q_\d+$/ ) {
 
                         # radio or checkbox
-
-                        my $question = $1;
-
-                        if ( !grep { $_ == $question } @questions ) {
-                            die "Question $question not valid";
-                        }
 
                         my @options = ( $params->{$param} );
                         if ( ref( $params->{$param} ) eq 'ARRAY' ) {
@@ -110,37 +119,35 @@ post '/surveys' => require_login sub {
                             @options = @{ $params->{$param} };
                         }
                         foreach my $option (@options) {
-                            rset('SurveyResponse')->create(
+                            rset('SurveyResponseOption')->create(
                                 {
-                                    user_survey_id => $user_survey->id,
+                                    survey_response_id        => $response->id,
                                     survey_question_option_id => $option,
                                 }
                             );
                         }
                     }
-                    elsif ( $param =~ /^q_(\d+)_o_(\d+)$/ ) {
+                    elsif ( $param =~ /^q_\d+_o_(\d+)$/ ) {
 
                         # grid
 
-                        my ( $question, $option ) = ( $1, $2 );
+                        my $option = $1;
 
-                        if ( !grep { $_ == $question } @questions ) {
-                            die "Question $question not valid";
-                        }
-
-                        rset('SurveyResponse')->create(
+                        rset('SurveyResponseOption')->create(
                             {
-                                user_survey_id            => $user_survey->id,
+                                survey_response_id        => $response->id,
                                 survey_question_option_id => $option,
                                 value                     => $params->{$param},
                             }
                         );
 
                     }
-                    elsif ( $param =~ /^other_(\d+)$/ ) {
+                    elsif ( $param =~ /^other_\d+$/ ) {
+                        if ( $params->{$param} =~ /\S/ ) {
 
-                        # 'other' TODO: put this in Message?
-                        my $question = $1;
+                            # 'other' with some content
+                            $response->update( { other => $params->{$param} } );
+                        }
                     }
                     else {
                         warning "Unexpected param: $param";
@@ -215,7 +222,7 @@ get '/survey-results' => sub {
     if ( my $user = logged_in_user ) {
         if ( user_has_role('admin') ) {
 
-            # admins can see all survey results
+            # admins can see all survey results whether closed or not
             $tokens->{is_admin} = 1;
         }
         else {
@@ -267,7 +274,10 @@ get '/survey-results/:id' => sub {
         {
             join     => 'user_surveys',
             prefetch => {
-                sections => { questions => { options => 'selected_options' } }
+                sections => {
+                    questions =>
+                      [ 'responses', { options => 'response_options' } ]
+                },
             },
             order_by => {
                 -desc => [
@@ -281,11 +291,24 @@ get '/survey-results/:id' => sub {
 
     foreach my $section ( @{ $survey->{sections} } ) {
         foreach my $question ( @{ $section->{questions} } ) {
+
             if ( @{ $question->{options} } ) {
+
+                # not just 'other' so display options table
                 $question->{options_table} = 1;
             }
+
+            # see if we have 'other' responses
+            my @other;
+            foreach my $response ( @{ $question->{responses} } ) {
+                push @other, { response => $response->{other} }
+                  if $response->{other} =~ /\S/;
+            }
+            delete $question->{responses};
+            $question->{others} = \@other if scalar @other;
+
             foreach my $option ( @{ $question->{options} } ) {
-                my $selected = delete $option->{selected_options};
+                my $selected = delete $option->{response_options};
                 if ( $question->{type} =~ /^(checkbox|radio)$/ ) {
                     $question->{is_simple} = 1;
                     $option->{count1}      = scalar @$selected;

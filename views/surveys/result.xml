@@ -26,10 +26,11 @@
         <param name="count4"/>
         <param name="count5"/>
       </list>
-      <param name="other-container" field="other" op="toggle" args="tree"/>
+      <param name="other-container" field="others" op="toggle" args="tree"/>
       <param name="other"/>
-      <param name="othername" field="survey_question_id" target="name"
-        op="append"/>
+      <list name="other-response" iterator="others">
+        <param name="response"/>
+      </list>
     </list>
   </list>
 </specification>

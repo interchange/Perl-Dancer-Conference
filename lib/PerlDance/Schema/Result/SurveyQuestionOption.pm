@@ -57,16 +57,16 @@ belongs_to
   question => 'PerlDance::Schema::Result::SurveyQuestion',
   'survey_question_id';
 
-=head2 selected_options
+=head2 response_options
 
 Type: has_many
 
-Related object: L<PerlDance::Schema::Result::SurveyResponse>
+Related object: L<PerlDance::Schema::Result::SurveyResponseOption>
 
 =cut
 
 has_many
-  selected_options => 'PerlDance::Schema::Result::SurveyResponse',
+  response_options => 'PerlDance::Schema::Result::SurveyResponseOption',
   'survey_question_option_id';
 
 1;

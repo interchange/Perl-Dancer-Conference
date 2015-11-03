@@ -27,22 +27,33 @@ FK on L<Interchange6::Schema::Result::UserSurvey/user_survey_id>
 
 column user_survey_id => { data_type => "integer" };
 
-=head2 survey_question_option_id
+=head2 survey_question_id
 
 FK on
 L<PerlDance::Schema::Result::SurveyQuestionOption/survey_question_option_id>
 
 =cut
 
-column survey_question_option_id => { data_type => "integer" };
+column survey_question_id => { data_type => "integer" };
 
-=head2 value
+=head2 other
 
-Value is used for questions of type 'grid'.
+Text added to 'other' option.
 
 =cut
 
-column value => { data_type => "integer", is_nullable => 1 };
+column other => { data_type => "text", default_value => '' };
+
+=head1 UNIQUE CONSTRAINTS
+
+=head2 user_survey_survey_question
+
+Unique constraint on: L</user_survey_id> and L</survey_question_id>
+
+=cut
+
+unique_constraint user_survey_survey_question =>
+  [qw/user_survey_id survey_question_id/];
 
 =head1 RELATIONS
 
@@ -58,7 +69,7 @@ belongs_to
   user_survey => 'PerlDance::Schema::Result::UserSurvey',
   'user_survey_id';
 
-=head2 survey_question_option
+=head2 question
 
 Type: belongs_to
 
@@ -67,7 +78,19 @@ Related object: L<PerlDance::Schema::Result::SurveyQuestionOption>
 =cut
 
 belongs_to
-  survey_question_option => 'PerlDance::Schema::Result::SurveyQuestionOption',
-  'survey_question_option_id';
+  question => 'PerlDance::Schema::Result::SurveyQuestion',
+  'survey_question_id';
+
+=head2 response_options
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::SurveyResponseOption>
+
+=cut
+
+has_many
+  response_options => 'PerlDance::Schema::Result::SurveyResponseOption',
+  'survey_response_id';
 
 1;

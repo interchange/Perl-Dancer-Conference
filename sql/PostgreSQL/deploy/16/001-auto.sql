@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::PostgreSQL
--- Created on Mon Nov  2 13:12:51 2015
+-- Created on Tue Nov  3 11:28:29 2015
 -- 
 ;
 --
@@ -994,11 +994,27 @@ CREATE INDEX "survey_question_options_idx_survey_question_id" on "survey_questio
 CREATE TABLE "survey_responses" (
   "survey_response_id" serial NOT NULL,
   "user_survey_id" integer NOT NULL,
-  "survey_question_option_id" integer NOT NULL,
-  PRIMARY KEY ("survey_response_id")
+  "survey_question_id" integer NOT NULL,
+  "other" text DEFAULT '' NOT NULL,
+  PRIMARY KEY ("survey_response_id"),
+  CONSTRAINT "user_survey_survey_question" UNIQUE ("user_survey_id", "survey_question_id")
 );
-CREATE INDEX "survey_responses_idx_survey_question_option_id" on "survey_responses" ("survey_question_option_id");
+CREATE INDEX "survey_responses_idx_survey_question_id" on "survey_responses" ("survey_question_id");
 CREATE INDEX "survey_responses_idx_user_survey_id" on "survey_responses" ("user_survey_id");
+
+;
+--
+-- Table: survey_response_options
+--
+CREATE TABLE "survey_response_options" (
+  "survey_response_option_id" serial NOT NULL,
+  "survey_response_id" integer NOT NULL,
+  "survey_question_option_id" integer NOT NULL,
+  "value" integer,
+  PRIMARY KEY ("survey_response_option_id")
+);
+CREATE INDEX "survey_response_options_idx_survey_question_option_id" on "survey_response_options" ("survey_question_option_id");
+CREATE INDEX "survey_response_options_idx_survey_response_id" on "survey_response_options" ("survey_response_id");
 
 ;
 --
@@ -1323,7 +1339,7 @@ ALTER TABLE "talks" ADD CONSTRAINT "talks_fk_survey_id" FOREIGN KEY ("survey_id"
 
 ;
 ALTER TABLE "user_surveys" ADD CONSTRAINT "user_surveys_fk_survey_id" FOREIGN KEY ("survey_id")
-  REFERENCES "surveys" ("survey_id") DEFERRABLE;
+  REFERENCES "surveys" ("survey_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE "user_surveys" ADD CONSTRAINT "user_surveys_fk_users_id" FOREIGN KEY ("users_id")
@@ -1362,11 +1378,19 @@ ALTER TABLE "survey_question_options" ADD CONSTRAINT "survey_question_options_fk
   REFERENCES "survey_questions" ("survey_question_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;
-ALTER TABLE "survey_responses" ADD CONSTRAINT "survey_responses_fk_survey_question_option_id" FOREIGN KEY ("survey_question_option_id")
-  REFERENCES "survey_question_options" ("survey_question_option_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+ALTER TABLE "survey_responses" ADD CONSTRAINT "survey_responses_fk_survey_question_id" FOREIGN KEY ("survey_question_id")
+  REFERENCES "survey_questions" ("survey_question_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;
 ALTER TABLE "survey_responses" ADD CONSTRAINT "survey_responses_fk_user_survey_id" FOREIGN KEY ("user_survey_id")
   REFERENCES "user_surveys" ("user_survey_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+;
+ALTER TABLE "survey_response_options" ADD CONSTRAINT "survey_response_options_fk_survey_question_option_id" FOREIGN KEY ("survey_question_option_id")
+  REFERENCES "survey_question_options" ("survey_question_option_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+;
+ALTER TABLE "survey_response_options" ADD CONSTRAINT "survey_response_options_fk_survey_response_id" FOREIGN KEY ("survey_response_id")
+  REFERENCES "survey_responses" ("survey_response_id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
 
 ;

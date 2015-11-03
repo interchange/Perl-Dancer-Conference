@@ -68,6 +68,7 @@ sub import_survey {
             title          => $title,
             author_id      => $author->id,
             priority       => $priority,
+            public         => 1,
         }
     );
 
