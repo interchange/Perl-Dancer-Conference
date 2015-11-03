@@ -218,11 +218,13 @@ get qr {^/survey-results/?$} => sub {
 
     my $surveys_rs = rset('Survey')->search(
         {
-            'me.conferences_id' => setting('conferences_id'),
-            -bool               => 'me.public',
+            'me.conferences_id'      => setting('conferences_id'),
+            -bool                    => 'me.public',
+            'user_surveys.completed' => 1,
         },
         {
-            join => 'talk',
+            join     => [ 'talk', 'user_surveys' ],
+            distinct => 1,
         }
     )->order_by('!me.priority,me.title');
 
@@ -263,7 +265,7 @@ get qr {^/survey-results/?$} => sub {
 
     $tokens->{survey_count} = $surveys_rs->count;
 
-    $tokens->{surveys} = $surveys_rs;
+    $tokens->{surveys} = [ $surveys_rs->hri->all ];
 
     template '/surveys/results', $tokens;
 };
@@ -302,6 +304,8 @@ get '/survey-results/:id' => sub {
             rows => 1,
         }
     )->hri->next;
+
+    $tokens->{no_responses} = 1 if !$survey;
 
     foreach my $section ( @{ $survey->{sections} } ) {
         foreach my $question ( @{ $section->{questions} } ) {

@@ -380,7 +380,7 @@ Related object: L<PerlDance::Schema::Result::Survey>
 =cut
 
 belongs_to
-  conference => 'PerlDance::Schema::Result::Survey',
+  survey => 'PerlDance::Schema::Result::Survey',
   "survey_id", { join_type => 'left', on_delete => 'SET NULL' };
 
 1;
