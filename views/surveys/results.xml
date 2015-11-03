@@ -5,6 +5,6 @@
   <list name="survey" iterator="surveys">
     <param name="closed"/>
     <param name="title"/>
-    <param name="id" class="title" target="href" op="append"/>
+    <param name="survey_id" class="title" target="href" op="append"/>
   </list>
 </specification>
