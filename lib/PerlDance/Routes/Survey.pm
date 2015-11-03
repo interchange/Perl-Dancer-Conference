@@ -219,15 +219,16 @@ get qr {^/survey-results/?$} => sub {
     my $surveys_rs = rset('Survey');
     $surveys_rs = $surveys_rs->search(
         {
-            'me.conferences_id'      => setting('conferences_id'),
-            -bool                    => 'me.public',
-            'user_surveys.completed' => 1,
+            'me.conferences_id' => setting('conferences_id'),
+            -bool               => 'me.public',
         },
         {
-            join     => [ 'talk', 'user_surveys' ],
-            distinct => 1,
-            '+columns' =>
-              { completed_count => { count => 'user_surveys.user_survey_id' } },
+            join       => [ 'talk', 'user_surveys' ],
+            distinct   => 1,
+            '+columns' => {
+                completed_count => $surveys_rs->correlate('user_surveys')
+                  ->search( { completed => 1 } )->count_rs->as_query
+            },
         }
     )->order_by('!me.priority,me.title');
 
@@ -241,10 +242,12 @@ get qr {^/survey-results/?$} => sub {
             # non-admins can see closed surveys that are either:
             # - not a talk review
             # - is a review of user's own talk
+            # AND where there are completed responses
             $surveys_rs = $surveys_rs->search(
                 {
-                    -bool => 'me.closed',
-                    -or   => [
+                    'user_surveys.completed' => 1,
+                    -bool                    => 'me.closed',
+                    -or                      => [
                         { 'talk.talks_id'  => undef },
                         { 'talk.author_id' => $user->id },
                     ],
