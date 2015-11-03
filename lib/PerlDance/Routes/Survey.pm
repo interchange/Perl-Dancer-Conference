@@ -19,7 +19,7 @@ use Try::Tiny;
 
 =cut
 
-get '/surveys' => require_login sub {
+get qr {^/surveys/?$} => require_login sub {
 
     my $surveys_rs = rset('UserSurvey')->search(
         {
@@ -171,11 +171,18 @@ post '/surveys' => require_login sub {
 
 get '/surveys/:id' => require_login sub {
     my $tokens = {};
+    my $id = param('id');
+
+    if ( $id !~ /^\d+$/ ) {
+        # no survey found
+        status 'not_found';
+        return template '404';
+    }
 
     $tokens->{survey} = rset('Survey')->search(
         {
             'me.conferences_id'     => setting('conferences_id'),
-            'me.survey_id'          => param('id'),
+            'me.survey_id'          => $id,
             -bool                   => 'me.public',
             'user_surveys.users_id' => logged_in_user->id,
             -not_bool               => 'user_surveys.completed',
@@ -206,7 +213,7 @@ get '/surveys/:id' => require_login sub {
     template '/surveys/questions', $tokens;
 };
 
-get '/survey-results' => sub {
+get qr {^/survey-results/?$} => sub {
     my $tokens = {};
 
     my $surveys_rs = rset('Survey')->search(
@@ -263,11 +270,18 @@ get '/survey-results' => sub {
 
 get '/survey-results/:id' => sub {
     my $tokens = {};
+    my $id = param('id');
+
+    if ( $id !~ /^\d+$/ ) {
+        # no survey found
+        status 'not_found';
+        return template '404';
+    }
 
     my $survey = rset('Survey')->search(
         {
             'me.conferences_id' => setting('conferences_id'),
-            'me.survey_id'      => param('id'),
+            'me.survey_id'      => $id,
             -bool               => 'me.public',
             -bool               => 'user_surveys.completed',
         },
@@ -331,7 +345,6 @@ get '/survey-results/:id' => sub {
 
     $tokens->{survey} = $survey;
     $tokens->{title}  = $tokens->{survey}->{title};
-    print STDERR to_dumper($survey);
 
     template '/surveys/result', $tokens;
 };
