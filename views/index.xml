@@ -4,7 +4,7 @@
   </form>
   <container name="main-carousel-container" value="!news"/>
   <container name="has_news" value="news"/>
-  <container name="register-container" value="!logged_in_user"/>
+  <container name="register-container" value="show_register_container"/>
   <value name="has_news" op="hook" include="news.html"/>
   <value name="speaker-item-wrapper" op="hook" include="fragments/speakers.html"/>
   <value name="countdown-timer" op="hook" include="fragments/countdown.html"/>

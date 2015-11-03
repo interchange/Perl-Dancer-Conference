@@ -8,6 +8,7 @@ PerlDance::Routes - routes for PerlDance conference application
 
 use Dancer ':syntax';
 use Dancer::Plugin::Auth::Extensible;
+use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Email;
 use Dancer::Plugin::Form;
 use Dancer::Plugin::Interchange6;
@@ -50,6 +51,12 @@ get '/' => sub {
     PerlDance::Routes::User::add_speakers_tokens($tokens);
 
     $tokens->{title} = "Vienna Austria October 2015";
+
+    # only show 'register now' if we're before 
+    my $conference = rset('Conference')->find( setting('conferences_id') );
+    if ( DateTime->now < $conference->start_date && !logged_in_user ) {
+        $tokens->{show_register_container} = 1;
+    }
 
     my $news = shop_schema->resultset('Message')->search(
         {
