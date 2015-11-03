@@ -421,7 +421,7 @@ surveys:
               - Good
               - OK
               - Not so good
-              - Horrible
+              - Inadequate
               - N/A
           -
             title: 'Was the subject explained in sufficient detail?'
@@ -438,7 +438,7 @@ surveys:
               - Good
               - OK
               - Not so good
-              - Horrible
+              - Lame
           -
             title: 'Any other comments?'
             other: 'Please enter you suggestions here'
