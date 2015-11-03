@@ -216,7 +216,8 @@ get '/surveys/:id' => require_login sub {
 get qr {^/survey-results/?$} => sub {
     my $tokens = {};
 
-    my $surveys_rs = rset('Survey')->search(
+    my $surveys_rs = rset('Survey');
+    $surveys_rs = $surveys_rs->search(
         {
             'me.conferences_id'      => setting('conferences_id'),
             -bool                    => 'me.public',
@@ -225,6 +226,8 @@ get qr {^/survey-results/?$} => sub {
         {
             join     => [ 'talk', 'user_surveys' ],
             distinct => 1,
+            '+columns' =>
+              { completed_count => { count => 'user_surveys.user_survey_id' } },
         }
     )->order_by('!me.priority,me.title');
 
