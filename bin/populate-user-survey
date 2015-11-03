@@ -55,6 +55,10 @@ foreach my $line (@data) {
     my $surveys = rset('Survey')->search( undef, { prefetch => 'talk' } );
     while ( my $survey = $surveys->next ) {
         my $talk = $survey->talk;
+
+        # talk authors don't see their own talk
+        next if ( $talk && $talk->author_id eq $user->id );
+
         if (   !$talk
             || ( $talk->duration > 60  && $train )
             || ( $talk->duration <= 60 && $conf ) )
