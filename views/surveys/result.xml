@@ -10,8 +10,6 @@
       <param name="title"/>
       <param name="has_description" op="toggle" args="tree" field="description"/>
       <param name="description"/>
-      <param name="type" class="options" target="data-type"/>
-      <param name="survey_question_id" class="options" target="data-question"/>
       <list name="option" iterator="options">
         <param name="title"/>
         <param name="is_simple" op="toggle" args="tree"/>
