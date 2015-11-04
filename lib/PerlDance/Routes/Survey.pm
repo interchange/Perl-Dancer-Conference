@@ -171,9 +171,10 @@ post '/surveys' => require_login sub {
 
 get '/surveys/:id' => require_login sub {
     my $tokens = {};
-    my $id = param('id');
+    my $id     = param('id');
 
     if ( $id !~ /^\d+$/ ) {
+
         # no survey found
         status 'not_found';
         return template '404';
@@ -278,9 +279,10 @@ get qr {^/survey-results/?$} => sub {
 
 get '/survey-results/:id' => sub {
     my $tokens = {};
-    my $id = param('id');
+    my $id     = param('id');
 
     if ( $id !~ /^\d+$/ ) {
+
         # no survey found
         status 'not_found';
         return template '404';
@@ -291,16 +293,17 @@ get '/survey-results/:id' => sub {
             'me.conferences_id' => setting('conferences_id'),
             'me.survey_id'      => $id,
             -bool               => 'me.public',
-            -bool               => 'user_surveys.completed',
         },
         {
-            join     => 'user_surveys',
-            prefetch => {
-                sections => {
-                    questions =>
-                      [ 'responses', { options => 'response_options' } ]
+            prefetch => [
+                'user_surveys',
+                {
+                    sections => {
+                        questions =>
+                          [ 'responses', { options => 'response_options' } ]
+                    },
                 },
-            },
+            ],
             order_by => {
                 -desc => [
                     'sections.priority', 'questions.priority',
@@ -352,6 +355,48 @@ get '/survey-results/:id' => sub {
             }
         }
     }
+
+    my $responded =
+      scalar grep { $_->{completed} == 1 } @{ $survey->{user_surveys} };
+    my $no_response =
+      scalar grep { $_->{completed} == 0 } @{ $survey->{user_surveys} };
+    my $total             = $responded + $no_response;
+    my $percent_responded = int( $responded / $total * 100 + 0.5 );
+
+    unshift @{ $survey->{sections} }, {
+        title => 'Responses',
+        description => '',
+        questions => [
+            {
+                title => 'Survey responses received:',
+                description => '',
+                is_simple => 1,
+                options_table => 1,
+                options => [
+                    {
+                        is_simple => 1,
+                        title => 'Responded',
+                        count1 => $responded,
+                    },
+                    {
+                        is_simple => 1,
+                        title => 'No response',
+                        count1 => $no_response,
+                    },
+                    {
+                        is_simple => 1,
+                        title => 'Total',
+                        count1 => $total,
+                    },
+                    {
+                        is_simple => 1,
+                        title => 'Response percentage',
+                        count1 => $percent_responded,
+                    },
+                ],
+            },
+        ],
+    };
 
     $tokens->{survey} = $survey;
     $tokens->{title}  = $tokens->{survey}->{title};

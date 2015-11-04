@@ -8,7 +8,8 @@
       <param name="is_simple" op="toggle" args="tree"/>
       <param name="is_grid" op="toggle" args="tree"/>
       <param name="title"/>
-      <param name="description" op="toggle"/>
+      <param name="has_description" op="toggle" args="tree" field="description"/>
+      <param name="description"/>
       <param name="type" class="options" target="data-type"/>
       <param name="survey_question_id" class="options" target="data-question"/>
       <list name="option" iterator="options">
