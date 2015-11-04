@@ -19,7 +19,7 @@ my @data = (
     [ 'domm@plix.at',                         0, 1, ],
     [ 'fall@tbi.univie.ac.at',                1, 1, ],
     [ 'fgabolde@weborama.com',                0, 1, ],
-    [ 'grega.pompe@informa.si',               0, 1, ],
+    [ 'grega.pompe@informa.si',               1, 1, ],
     [ 'gr@univie.ac.at',                      1, 1, ],
     [ 'jure@informa.si',                      0, 1, ],
     [ 'kabanoid@cpan.org',                    0, 1, ],
@@ -38,7 +38,7 @@ my @data = (
     [ 'rhartig@netsuite.com',                 0, 1, ],
     [ 'russell.jenkins@strategicdata.com.au', 0, 1, ],
     [ 'sbatschelet@mac.com',                  0, 1, ],
-    [ 'simun.k@gmail.com',                    0, 1, ],
+    [ 'simun.k@gmail.com',                    1, 1, ],
     [ 'sukria@gmail.com',                     0, 1, ],
     [ 'wyngle+perldance@wyngle.com',          0, 1, ],
     [ 'xsawyerx@cpan.org',                    0, 1, ],
@@ -70,7 +70,8 @@ foreach my $line (@data) {
                 'Talk review: Programming the web with Dancer by Sawyer X' );
 
             rset('UserSurvey')
-              ->create( { users_id => $user->id, survey_id => $survey->id } );
+              ->find_or_create(
+                { users_id => $user->id, survey_id => $survey->id } );
         }
     }
 }
