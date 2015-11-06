@@ -51,8 +51,8 @@ WriteMakefile(
         'Text::Markdown'                   => 0,
         'Try::Tiny'                        => 0,
         'URI::Escape'                      => 0,
-        # PayPal payments
-        'Business::PayPal::API' => 0,
+        # PayPal payments (with bugfix for umlauts in address)
+        'Business::PayPal::API' => '0.73',
 	# Live requirements
 	'Starman'               => 0,
 	'DBD::Pg'               => 0,
