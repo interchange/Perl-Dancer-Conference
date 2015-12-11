@@ -32,6 +32,10 @@
             validator => "String",
             required => 0,
         },
+        video_url => {
+            validator => "String",
+            required => 0,
+        },
         comments => {
             validator => "String",
             required => 0,

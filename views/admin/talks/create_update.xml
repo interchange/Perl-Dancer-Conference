@@ -8,6 +8,7 @@
     <field name="tags"/>
     <field name="abstract"/>
     <field name="url"/>
+    <field name="video_url"/>
     <field name="comments"/>
     <field name="accepted"/>
     <field name="confirmed"/>
@@ -35,6 +36,9 @@
   <value name="url_input" field="data.css.url" target="class"
     op="append" joiner=" "/>
   <value name="url_error" field="data.errors.url"/>
+  <value name="video_url_input" field="data.css.video_url" target="class"
+    op="append" joiner=" "/>
+  <value name="video_url_error" field="data.errors.video_url"/>
   <value name="comments_input" field="data.css.comments" target="class"
     op="append" joiner=" "/>
   <value name="comments_error" field="data.errors.comments"/>
