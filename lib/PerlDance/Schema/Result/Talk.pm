@@ -109,6 +109,18 @@ column url => {
     default_value => '',
 };
 
+=head2 video_url
+
+Video URL.
+
+=cut
+
+column video_url => {
+    data_type     => "varchar",
+    size          => 255,
+    default_value => '',
+};
+
 =head2 comments
 
 Comments to be communicated to the organisers.
