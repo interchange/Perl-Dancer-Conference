@@ -403,6 +403,8 @@ get '/talks/schedule/:date' => sub {
                             $data->{author_uri}      = $e->author->uri;
                             $data->{stars}           = $e->attendee_count;
                             $data->{id}              = $e->id;
+                            $data->{url}             = $e->url;
+                            $data->{video_url}       = $e->video_url;
                             if (logged_in_user) {
                                 $data->{attendee_status} = $e->attendee_status;
                             }

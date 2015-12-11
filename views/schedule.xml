@@ -35,6 +35,10 @@
         target="href" op="append"/>
       <param name="class" class="slot" target="class" op="append" joiner=" "/>
       <param name="duration" pattern="durationpat"/>
+      <param name="has_slides" field="url" op="toggle" args="tree"/>
+      <param name="url" target="href"/>
+      <param name="has_video" field="video_url" op="toggle" args="tree"/>
+      <param name="video_url" target="href"/>
       <param name="stars"/>
     </list>
   </list>
