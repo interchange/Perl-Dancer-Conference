@@ -4,3 +4,5 @@ Disallow: /checkout
 Disallow: /login
 Disallow: /logout
 Disallow: /register
+Disallow: /reset_password
+Disallow: /wiki/edit/
