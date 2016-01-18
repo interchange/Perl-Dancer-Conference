@@ -1,4 +1,5 @@
 <specification>
   <value name="content" class="content" op="hook"/>
   <value name="conference-logo" target="src"/>
+  <value name="conference-name" field="config.conference_name"/>
 </specification>
