@@ -1,12 +1,12 @@
 <specification>
   <list name="tickets" iterator="tickets">
     <param name="short_description"/>
-    <param name="price" filter="currency"/>
+    <param name="price"/>
     <param name="description" filter="markdown" op="hook"/>
     <param name="sku"/>
-    <param name="buy-ticket" field="cart_uri" target="href"/>
-    <param name="tickets_left" />
-    <container name="ticket-left-container" value="tickets_left"/>
-    <container name="sold-out" value="!tickets_left"/>
+    <param name="buy-ticket" field="sku" target="href" op="append"/>
+    <param name="tickets_left" field="quantity_in_stock"/>
+    <container name="ticket-left-container" value="quantity_in_stock"/>
+    <container name="sold-out" value="!quantity_in_stock"/>
   </list>
 </specification>

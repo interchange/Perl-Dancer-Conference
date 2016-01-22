@@ -188,15 +188,8 @@ get '/tickets' => sub {
 
     add_navigation_tokens($tokens);
 
-    $tokens->{tickets} =
-      [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
-          ->tickets->active->prefetch('inventory')->hri->all ];
+    $tokens->{tickets} = [ shop_schema->resultset('Conference')->find( setting('conferences_id') )->tickets->with_lowest_selling_price->with_quantity_in_stock->active->all ];
 
-    for my $ticket (@{$tokens->{tickets}}) {
-        $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
-        $ticket->{tickets_left} = $ticket->{inventory}->{quantity};
-    }
-    # debug to_dumper($tokens->{tickets});
     template 'tickets', $tokens;
 };
 
