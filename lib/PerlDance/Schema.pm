@@ -236,6 +236,8 @@ package PerlDance::Schema;
 
 use base 'Interchange6::Schema';
 
+__PACKAGE__->load_components( 'Schema::Config' );
+
 Interchange6::Schema->load_namespaces(
     default_resultset_class => 'ResultSet',
     result_namespace        => [ 'Result', '+PerlDance::Schema::Result' ],
