@@ -10,7 +10,7 @@ use Dancer2 appname => 'PerlDance';
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DataTransposeValidator;
 use Dancer2::Plugin::DBIC;
-use Dancer2::Plugin::Form;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES 
