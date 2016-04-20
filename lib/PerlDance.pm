@@ -73,7 +73,14 @@ hook 'before_cart_display' => sub {
 
 hook 'before_template_render' => sub {
     my $tokens = shift;
-    $tokens->{logged_in_user}  = logged_in_user;
+
+    if ( my $user = logged_in_user ) {
+        # D2PAE::Provider::DBIC returns a hashref not a row obj so to save
+        # us having to change code elsewhere get ourselves an object
+        $tokens->{logged_in_user} =
+          shop_user->single( { username => $user->{username} } );
+    }
+
     $tokens->{conference_name} = setting('conference_name');
 };
 
