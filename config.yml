@@ -4,6 +4,7 @@
 
 server_tokens: 0
 require_environment: 1
+session: DBIC
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2016"
 conference_email: "2016@perl.dance"
@@ -58,6 +59,9 @@ template: "template_flute"
 engines:
   JSON:
     allow_blessed: '1'
+  session:
+    DBIC:
+      db_connection_name: default
   template_flute:
     filters:
       boolean:
@@ -114,8 +118,6 @@ plugins:
       dsn: dbi:Pg:dbname=perldance
       schema_class: PerlDance::Schema
       options:
-        RaiseError: 1
-        PrintError: 1
         on_connect_do: 'SET client_min_messages=WARNING;'
         pg_enable_utf8: 1
         quote_names: 1

@@ -2,22 +2,19 @@ package PerlDance;
 
 =head1 NAME
 
-PerlDance - Perl Dancer 2015 conference site
+PerlDance - Perl Dancer 2016 conference site
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Interchange6;
-use Dancer::Plugin::Interchange6::Routes;
+use Dancer2;
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::Interchange6::Routes;
 use PerlDance::Routes;
 use Try::Tiny;
 
 our $VERSION = '0.1';
-
-set session => 'DBIC';
-set session_options => { schema => shop_schema };
 
 set conferences_id => shop_schema->resultset('Conference')
   ->find( { name => setting 'conference_name' } )->id;
