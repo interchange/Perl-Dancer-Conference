@@ -77,8 +77,7 @@ hook 'before_template_render' => sub {
     if ( my $user = logged_in_user ) {
         # D2PAE::Provider::DBIC returns a hashref not a row obj so to save
         # us having to change code elsewhere get ourselves an object
-        $tokens->{logged_in_user} =
-          shop_user->single( { username => $user->{username} } );
+        $tokens->{logged_in_user} = schema->current_user;
     }
 
     $tokens->{conference_name} = setting('conference_name');
@@ -134,13 +133,14 @@ hook 'before_layout_render' => sub {
       setting('conference_name') . ". " . ( $tokens->{description} || '' );
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
+    # FIXME: we use Dancer2::Plugin::Deferred now
     # flash alerts
-    my $flash = flash_flush;
-    foreach my $key ( keys %$flash ) {
-        foreach my $message ( @{$flash->{$key}} ) {
-            push @{$tokens->{alerts}->{$key}}, { message => $message };
-        }
-    }
+    #my $flash = flash_flush;
+    #foreach my $key ( keys %$flash ) {
+    #    foreach my $message ( @{$flash->{$key}} ) {
+    #        push @{$tokens->{alerts}->{$key}}, { message => $message };
+    #    }
+    #}
 
     # display sidebar?
     if ( request->path =~ m{^/($|events|speakers|talks|tickets|users/)} ) {
@@ -149,7 +149,8 @@ hook 'before_layout_render' => sub {
 };
 
 hook after_layout_render => sub {
-    flash_flush;
+    # FIXME: we use Dancer2::Plugin::Deferred now
+    #flash_flush;
 };
 
 =head1 ROUTES

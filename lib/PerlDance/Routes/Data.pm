@@ -6,9 +6,8 @@ PerlDance::Routes::Data - Data routes under prefix /data
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::DBIC;
 
 =head1 PREFIX
 

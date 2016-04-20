@@ -6,11 +6,11 @@ PerlDance::Routes::Admin::Talks - /admin/talks routes
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES 

@@ -6,10 +6,10 @@ PerlDance::Routes::User - user/speaker pages
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 
 =head1 ROUTES
 
@@ -79,7 +79,7 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
 
         $tokens->{has_talks} = 1;
 
-        if ( my $user = logged_in_user ) {
+        if ( my $user = schema->current_user ) {
             $talks = $talks->with_attendee_status( $user->id );
         }
 

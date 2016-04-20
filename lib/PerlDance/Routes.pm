@@ -6,13 +6,13 @@ PerlDance::Routes - routes for PerlDance conference application
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Email;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
-use Dancer::Plugin::Interchange6::Routes;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Email;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::Interchange6::Routes;
+use Dancer2::Plugin::TemplateFlute;
 use DateTime;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;

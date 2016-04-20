@@ -6,11 +6,11 @@ PerlDance::Routes::Survey
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES
@@ -26,7 +26,7 @@ get qr {^/surveys/?$} => require_login sub {
             'survey.conferences_id' => setting('conferences_id'),
             -bool                   => 'survey.public',
             -not_bool               => 'me.completed',
-            'me.users_id'           => logged_in_user->id,
+            'me.users_id'           => schema->current_user->id,
         },
         {
             join => 'survey',
@@ -46,7 +46,7 @@ post '/surveys' => require_login sub {
     my $params = params('body');
 
     my $survey_id = delete $params->{survey_id};
-    my $user      = logged_in_user;
+    my $user      = schema->current_user;
 
     my $survey = rset('Survey')->search(
         {
@@ -156,13 +156,13 @@ post '/surveys' => require_login sub {
             }
         );
 
-        flash success => "Thankyou for submitting the survey: "
+        deferred success => "Thankyou for submitting the survey: "
           . $survey->title;
     }
     catch {
         # deal with problem
         error "$_";
-        flash error =>
+        deferred error =>
           "Something went horribly wrong. Please accept our apologies.";
     };
 
@@ -185,7 +185,7 @@ get '/surveys/:id' => require_login sub {
             'me.conferences_id'     => setting('conferences_id'),
             'me.survey_id'          => $id,
             -bool                   => 'me.public',
-            'user_surveys.users_id' => logged_in_user->id,
+            'user_surveys.users_id' => schema->current_user->id,
             -not_bool               => 'user_surveys.completed',
         },
         {

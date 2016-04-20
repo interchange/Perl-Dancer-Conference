@@ -6,12 +6,12 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::TemplateFlute;
+use Dancer2::Plugin::Interchange6;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
@@ -260,10 +260,10 @@ any [ 'get', 'post' ] => qr{
                     subject => "Registration for the " . setting("conference_name"),
                 );
 
-                flash success => "Welcome to the " . setting('conference_name');
+                deferred success => "Welcome to the " . setting('conference_name');
             }
             else {
-                flash success => "Password changed";
+                deferred success => "Password changed";
             }
 
             return redirect '/profile';

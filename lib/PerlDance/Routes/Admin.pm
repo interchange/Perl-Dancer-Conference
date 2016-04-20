@@ -6,10 +6,10 @@ PerlDance::Routes::Admin - admin routes
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 use PerlDance::Routes::Admin::Events;
@@ -151,18 +151,19 @@ get '/admin/news/create' => require_role admin => sub {
 post '/admin/news/create' => require_role admin => sub {
     my $tokens = {};
 
+    my $user   = schema->current_user;
     my $form   = form('update_create_news');
     my %values = %{ $form->values };
     $values{content} =~ s/\r\n/\n/g;
     $values{type}            = "news_item";
-    $values{author_users_id} = logged_in_user->id;
+    $values{author_users_id} = $user->id;
     $values{public} ||= 0;
 
     # TODO: validate values and if OK then try create
     rset('Message')->create(
         {
             type            => "news_item",
-            author_users_id => logged_in_user->id,
+            author_users_id => $user->id,
             public          => $values{public} || 0,
             title           => $values{title},
             uri             => $values{uri} || undef,
@@ -227,7 +228,7 @@ post '/admin/news/edit/:id' => require_role admin => sub {
     # TODO: validate values and if OK then try update
     $news->update(
         {
-            author_users_id => logged_in_user->id,
+            author_users_id => schema->current_user->id,
             public          => $values{public} || 0,
             title           => $values{title},
             uri             => $values{uri} || undef,

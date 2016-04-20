@@ -6,14 +6,14 @@ PerlDance::Routes::Profile - account routes such as login, edit profile, ...
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Email;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Email;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::TemplateFlute;
 use File::Copy;
 use File::Spec;
 use File::Type;
@@ -60,7 +60,7 @@ Profile update top-level page showing available options.
 get '/' => sub {
     my $nav = shop_navigation( { uri => 'profile' } );
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $talks = [
         $user->talks_authored->search(
             { conferences_id => setting('conferences_id') }
@@ -130,7 +130,7 @@ get '/edit' => sub {
           ->hri->all
     ];
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my %values = (
         first_name    => $user->first_name,
         last_name     => $user->last_name,
@@ -252,7 +252,7 @@ post '/edit' => sub {
     $values{bio} =~ s/\r\n/\n/g;
     $values{nickname} = undef unless $values{nickname} =~ /\S/;
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
 
     # TODO: validate values and if OK then try update
     $user->update(
@@ -315,7 +315,7 @@ post '/edit' => sub {
         }
     }
 
-    flash success => "Profile updated.";
+    deferred success => "Profile updated.";
     $form->reset;
     redirect '/profile';
 };
@@ -363,14 +363,15 @@ get '/password' => sub {
 post '/password' => sub {
 
     my $form = form('change-password');
-    my $data = validator( $form->values, 'change-password', logged_in_user );
+    my $user = schema->current_user;
+    my $data = validator( $form->values, 'change-password', $user );
 
     # we don't want form data to leak into the session
     $form->reset;
 
     if ( $data->{valid} ) {
-        logged_in_user->update( { password => $data->{values}->{password} } );
-        flash success => "Password changed.";
+        $user->update( { password => $data->{values}->{password} } );
+        deferred success => "Password changed.";
         redirect '/profile';
     }
     else {
@@ -391,7 +392,8 @@ get '/photo' => sub {
 
     PerlDance::Routes::add_javascript( $tokens, '/js/profile-photo.js' );
 
-    my $photo = logged_in_user->photo;
+    my $user = schema->current_user;
+    my $photo = $user->photo;
 
     debug "User already has photo with id: ", $photo->id if $photo;
 
@@ -450,7 +452,7 @@ post '/photo/upload' => sub {
 post '/photo/crop' => sub {
     use Imager;
     my $file = session('new_photo');
-    my $user = logged_in_user;
+    my $user = schema->current_user;
 
     my $ft = File::Type->new;
     my $mime_type = $ft->checktype_filename($file);
@@ -559,6 +561,7 @@ post '/talk/create' => sub {
 
     my $form = form('create-update-talk');
     my $data = validator( $form->values, 'create-update-talk' );
+    my $user = schema->current_user;
 
     if ($data->{valid}) {
 
@@ -576,7 +579,7 @@ post '/talk/create' => sub {
         try {
             my $talk = shop_schema->resultset('Talk')->create(
                 {
-                    author_id      => logged_in_user->id,
+                    author_id      => $user->id,
                     conferences_id => setting('conferences_id'),
                     title          => $data->{values}->{title},
                     abstract       => $abstract,
@@ -593,7 +596,7 @@ post '/talk/create' => sub {
                 template => '/email/talk_submitted',
                 tokens   => {
                     %{ $data->{values} },
-                    logged_in_user => logged_in_user,
+                    logged_in_user => $user,
                     talk           => $talk,
                 },
                 subject => setting("conference_name") . " talk submitted",
@@ -602,7 +605,7 @@ post '/talk/create' => sub {
             debug "sent email/talk_submitted";
 
             $form->reset;
-            flash success => "Thank you for submitting your talk. We will be in contact soon";
+            deferred success => "Thank you for submitting your talk. We will be in contact soon";
             $success = 1;
         }
         catch {
@@ -636,11 +639,12 @@ get '/talk/:id' => sub {
     $form->reset;
 
     my $talk = shop_schema->resultset('Talk')->find(param('id'));
+    my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
     if (   $talk
         && $talk->conferences_id == setting('conferences_id')
-        && $talk->author->id == logged_in_user->id )
+        && $talk->author->id == $user->id )
     {
         # all good
 
@@ -677,11 +681,12 @@ post '/talk/:id' => sub {
     my $tokens = {};
 
     my $talk = shop_schema->resultset('Talk')->find( param('id') );
+    my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
     if (   $talk
         && $talk->conferences_id == setting('conferences_id')
-        && $talk->author->id == logged_in_user->id )
+        && $talk->author->id == $user->id )
     {
         # all good so validate
 
@@ -718,7 +723,7 @@ post '/talk/:id' => sub {
                     template => '/email/talk_submitted',
                     tokens   => {
                         %{ $data->{values} },
-                        logged_in_user => logged_in_user,
+                        logged_in_user => $user,
                         talk           => $talk,
                     },
                     subject => setting("conference_name") . " talk updated",
@@ -729,7 +734,7 @@ post '/talk/:id' => sub {
             }
             catch {
                 error "Talk update error: $_";
-                flash error => "Talk update error: $_";
+                deferred error => "Talk update error: $_";
             };
         }
         else {
@@ -757,7 +762,8 @@ post '/talk/:id' => sub {
 =cut
 
 get '/orders' => sub {
-    my $orders = logged_in_user->orders->order_by('!order_date');
+    my $user = schema->current_user;
+    my $orders = $user->orders->order_by('!order_date');
     template '/profile/orders', { title => "Your Orders", orders => $orders };
 };
 
@@ -781,7 +787,7 @@ get '/orders/:order_number' => sub {
     }
 
     my $order_user = $order->user;
-    my $current_user = logged_in_user;
+    my $current_user = schema->current_user;
 
     if ($order_user->id != $current_user->id) {
         # order belongs to other customer
@@ -873,7 +879,7 @@ sub user_can_unregister {
     my ($user, $order_rs, $talks) = @_;
     my $conference_id = setting('conferences_id');
 
-    $user ||= logged_in_user;
+    $user ||= schema->current_user;
     return 0 unless $user;
     return 0 unless user_is_registered($user);
     unless ($order_rs) {
@@ -898,41 +904,41 @@ sub user_can_unregister {
 }
 
 get '/unregister' => sub {
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $conference_id = setting('conferences_id');
     if (user_can_unregister($user)) {
         if (my $record = user_is_registered($user)) {
             $record->delete;
-            flash success => "You unregistered from the conference!";
+            deferred success => "You unregistered from the conference!";
         }
         else {
             # shouldn't happen, though
-            flash error => "You are already unregistered!";
+            deferred error => "You are already unregistered!";
         }
     }
     else {
-        flash error => "You can't unregister!";
+        deferred error => "You can't unregister!";
     }
     return redirect '/profile';
 };
 
 get '/register' => sub {
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $conference_id = setting('conferences_id');
     if (user_is_registered($user)) {
-        flash error => "You are already registered!";
+        deferred error => "You are already registered!";
     }
     else {
         $user->conferences_attended
           ->update_or_create({ conferences_id => $conference_id });
-        flash success => "You are registered now!";
+        deferred success => "You are registered now!";
     }
     return redirect '/profile';
 };
 
 
 sub user_is_registered {
-    my $user = shift || logged_in_user;
+    my $user = shift || schema->current_user;
     return unless $user;
     my $conference_id = setting('conferences_id');
     # debug "Checking " . $user->username . " for $conference_id";

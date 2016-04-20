@@ -1,12 +1,12 @@
 package PerlDance::Routes::PayPal;
 
-use Dancer ':syntax';
-use Dancer::Plugin::Interchange6;
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::TemplateFlute;
 
 use Try::Tiny;
 use DateTime;
@@ -20,7 +20,7 @@ post '/paypal/setrequest' => sub {
     my $amount = shop_cart->total;
     my $config = config->{paypal};
     my $ppapi = paypal_api($config);
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $email;
     my $address;
 
@@ -108,7 +108,7 @@ post '/paypal/setrequest' => sub {
 
         my $conf_email = config->{conference_email};
 
-        flash error => qq{Payment with PayPal failed. Please contact <a href="mailto:$conf_email">$conf_email</a> for assistance.};
+        deferred error => qq{Payment with PayPal failed. Please contact <a href="mailto:$conf_email">$conf_email</a> for assistance.};
         warning "No PayPal token: ", \%ppresponse;
         return redirect uri_for('cart');
     }
@@ -124,7 +124,7 @@ get '/paypal/getrequest' => sub {
     debug "Details for $pptoken: ", \%details;
 
     if ($details{Ack} eq 'Success') {
-        my $user = logged_in_user;
+        my $user = schema->current_user;
 
         if (! $user) {
             # use email address passed from PayPal
@@ -255,7 +255,7 @@ post '/paypal/maintenance' => sub {
 
 get '/paypal/cancel' => sub {
     debug "Paypal cancelled";
-    flash info => "Payment with PayPal was cancelled";
+    deferred info => "Payment with PayPal was cancelled";
     return redirect ('/cart');
 };
 

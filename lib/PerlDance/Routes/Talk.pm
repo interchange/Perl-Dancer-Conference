@@ -6,9 +6,9 @@ PerlDance::Routes::Talk - Talk/Event routes for PerlDance conference application
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
 use DateTime;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
@@ -154,7 +154,7 @@ get '/talks' => sub {
         }
     }
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
         $talks = $talks->with_attendee_status( $user->id );
     }
 
@@ -292,7 +292,7 @@ get '/talks/schedule/:date' => sub {
         }
     )->with_attendee_count;
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
 
         $talks = $talks->with_attendee_status( $user->id );
 
@@ -301,7 +301,7 @@ get '/talks/schedule/:date' => sub {
             # personal schedule (forwarded from /myschedule/:date)
             $talks = $talks->search(
                 {
-                    'attendee_talks.users_id' => logged_in_user->id,
+                    'attendee_talks.users_id' => $user->id,
                 },
                 {
                     join => 'attendee_talks',
@@ -454,7 +454,7 @@ get '/talks/schedule/:date' => sub {
                             $data->{id}              = $e->id;
                             $data->{url}             = $e->url;
                             $data->{video_url}       = $e->video_url;
-                            if (logged_in_user) {
+                            if (schema->current_user) {
                                 $data->{attendee_status} = $e->attendee_status;
                             }
                         }
@@ -512,7 +512,7 @@ get '/talks/:action/:id' => require_login sub {
 
     if ( $action =~ /^(add|remove)$/ ) {
         if ( my $talk = rset('Talk')->find($talks_id) ) {
-            my $users_id = logged_in_user->id;
+            my $users_id = schema->current_user->id;
             if ( $action eq 'add' ) {
                 try {
                     $talk->create_related( 'attendee_talks',
@@ -613,7 +613,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
     $tokens->{title}         = $talk->title;
     $tokens->{has_attendees} = $talk->attendee_talks->count;
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
         $tokens->{attendee_status} = $talk->attendee_status( $user->id );
     }
 

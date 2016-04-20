@@ -6,10 +6,10 @@ PerlDance::Routes::Wiki
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use DateTime;
 use HTML::TagCloud;
 use Text::Diff 'diff';
@@ -136,8 +136,6 @@ post '/wiki/edit/**' => require_login sub {
     my ($splat) = splat;
     my $title = join( '/', @$splat );
 
-    my $user_id = logged_in_user->id;
-
     my $content = param('content');
     $content =~ s(\[user:(.+?)\])(translate_wiki_user($1))gie;
     $content =~ s(\[me\])(translate_wiki_user('me'))gie;
@@ -168,7 +166,7 @@ post '/wiki/edit/**' => require_login sub {
                 content         => $content,
                 type            => 'wiki_node',
                 format          => 'markdown',
-                author_users_id => logged_in_user->id,
+                author_users_id => schema->current_user->id,
                 tags            => $tags,
             }
         );
@@ -468,7 +466,7 @@ sub translate_wiki_user {
     my $arg = shift;
     my $user;
     if ( $arg eq 'me' ) {
-        $user = logged_in_user;
+        $user = schema->current_user;
     }
     else {
         if ( $arg =~ /.+\@.+/ ) {
