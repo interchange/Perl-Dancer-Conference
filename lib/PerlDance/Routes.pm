@@ -192,6 +192,8 @@ get '/tickets' => sub {
       [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
           ->tickets->active->prefetch('inventory')->hri->all ];
 
+    $tokens->{count} = @{$tokens->{tickets}};
+
     for my $ticket (@{$tokens->{tickets}}) {
         $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
         $ticket->{tickets_left} = $ticket->{inventory}->{quantity};
