@@ -57,42 +57,44 @@ logger_format: "%t [%P] %L @%D> %m in %f l. %l"
 template: "template_flute"
 
 engines:
-  JSON:
-    allow_blessed: '1'
+  serializer:
+    JSON:
+      allow_blessed: '1'
   session:
     DBIC:
       db_connection_name: default
-  template_flute:
-    filters:
-      boolean:
-        class: "PerlDance::Filter::Boolean"
-      currency:
-        options:
-          int_curr_symbol: "€"
-      date:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%x %R'
-          strict:
-            empty: 0
-      date_only:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%x'
-          strict:
-            empty: 0
-      markdown:
-        class: "PerlDance::Filter::Markdown"
-      monger_groups:
-        class: "PerlDance::Filter::MongerGroups"
-      time_only:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%R'
-          strict:
-            empty: 0
-      wiki:
-        class: "PerlDance::Filter::Wiki"
+  template:
+    template_flute:
+      filters:
+        boolean:
+          class: "PerlDance::Filter::Boolean"
+        currency:
+          options:
+            int_curr_symbol: "€"
+        date:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%x %R'
+            strict:
+              empty: 0
+        date_only:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%x'
+            strict:
+              empty: 0
+        markdown:
+          class: "PerlDance::Filter::Markdown"
+        monger_groups:
+          class: "PerlDance::Filter::MongerGroups"
+        time_only:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%R'
+            strict:
+              empty: 0
+        wiki:
+          class: "PerlDance::Filter::Wiki"
 plugins:
   Auth::Extensible:
     disable_roles: 0
