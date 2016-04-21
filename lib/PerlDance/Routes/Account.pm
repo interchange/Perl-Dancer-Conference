@@ -19,7 +19,7 @@ use Try::Tiny;
 
 =head2 get /login
 
-post is handled by L<Dancer::Plugin::Interchange6>
+post is handled by L<Dancer2::Plugin::Interchange6>
 
 =cut
 
