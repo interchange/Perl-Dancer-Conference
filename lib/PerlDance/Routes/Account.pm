@@ -111,8 +111,9 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     my $action   = $$captures{action};
     my $username = lc($email);
 
-    my $form = form('register-reset');
-    my $data = validator( $form->values, 'email-valid' );
+    my $form = form('register-reset', source => 'body' );
+    # validator currently only supports hashrefs
+    my $data = validator( $form->values->as_hashref, 'email-valid' );
 
     if ( $data->{valid} ) {
 
