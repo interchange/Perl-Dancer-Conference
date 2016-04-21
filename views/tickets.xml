@@ -1,3 +1,4 @@
 <specification>
   <value name="ticket-wrapper" op="hook" include="fragments/tickets.html"/>
+  <container name="ticket-teaser" value="teaser"/>
 </specification>
