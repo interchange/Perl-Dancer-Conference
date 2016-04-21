@@ -26,7 +26,7 @@ WriteMakefile(
         'Dancer2'                          => '0.166001_01',
         'Dancer2::Plugin::Auth::Extensible' => '0.600',
         'Dancer2::Plugin::Auth::Extensible::Provider::DBIC' => '0.600',
-        'Dancer2::Plugin::DataTransposeValidator' => '0',
+        'Dancer2::Plugin::DataTransposeValidator' => '0.009',
         'Dancer2::Plugin::DBIC'             => '0.0013',
         'Dancer2::Plugin::Deferred'         => '0.007016',
         'Dancer2::Plugin::Email'            => '0.0002',
