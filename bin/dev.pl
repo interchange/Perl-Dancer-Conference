@@ -7,7 +7,7 @@ use lib "$FindBin::Bin/../lib";
 
 use Plack::Builder;
 
-use JSON;
+use JSON::MaybeXS;
  
 use Plack::Debugger;
 use Plack::Debugger::Storage;
@@ -24,12 +24,13 @@ use Plack::Debugger::Panel::Warnings;
  
 use PerlDance;
 my $app = PerlDance->to_app;
+my $json = JSON::MaybeXS->new( convert_blessed => 1 );
 
 my $debugger = Plack::Debugger->new(
     storage => Plack::Debugger::Storage->new(
         data_dir     => '/tmp/debugger_panel',
-        serializer   => sub { encode_json( shift ) },
-        deserializer => sub { decode_json( shift ) },
+        serializer   => sub { $json->encode( shift ) },
+        deserializer => sub { $json->decode( shift ) },
         filename_fmt => "%s.json",
     ),
     panels => [
