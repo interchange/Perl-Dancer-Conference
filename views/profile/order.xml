@@ -10,9 +10,9 @@
   <list name="orderline" iterator="order.orderlines">
     <param name="sku"/>
     <param name="name"/>
-    <param name="price" filter="currency"/>
+    <param name="price"/>
     <param name="quantity"/>
-    <param name="subtotal" filter="currency"/>
+    <param name="subtotal"/>
   </list>
-  <value name="total_cost" field="order.total_cost" filter="currency"/>
+  <value name="total_cost" field="order.total_cost"/>
 </specification>

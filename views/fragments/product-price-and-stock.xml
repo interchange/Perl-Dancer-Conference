@@ -4,9 +4,9 @@
     <container name="product-availability" value="product-availability"/>
     <value name="sku" field="product.sku"/>
     <value name="price-and-discount" op="toggle" args="tree" field="discount"/>
-    <value name="price-before" field="product.price" filter="currency"/>
+    <value name="price-before" field="product.price"/>
     <value name="discount" pattern="discount"/>
-    <value name="price" field="product.selling_price" filter="currency"/>
+    <value name="price" field="product.selling_price"/>
     <value name="in-stock" field="low-stock-alert"/>
     <value name="product-availability"/>
 </specification>

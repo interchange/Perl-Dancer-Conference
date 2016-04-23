@@ -52,7 +52,7 @@ post '/paypal/setrequest' => sub {
     # $address->{PostalCode} = 'xyz';
 
     my %pprequest = (
-                     OrderTotal    => $amount,
+                     OrderTotal    => $amount->value,
                      currencyID    => $config->{currencycode},
                      ReturnURL     => $config->{returnurl},
                      CancelURL     => $config->{cancelurl},
@@ -71,8 +71,6 @@ post '/paypal/setrequest' => sub {
     my %payment_data = (
         payment_mode => 'paypal',
         payment_action => 'setrequest',
-        # not supported by Interchange6::Schema
-        # currency => 'EUR',
         sessions_id => session->id,
         amount => $amount,
     );

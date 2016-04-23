@@ -5,10 +5,10 @@
     <param name="name"/>
     <param name="uri" class="name" target="href" op="append"/>
     <param name="remove-sku" field="sku" target="href" pattern="sku"/>
-    <param name="selling_price" filter="currency"/>
+    <param name="selling_price"/>
     <param name="quantity" iterator="quantity_iterator"/>
-    <param name="subtotal" filter="currency"/>
+    <param name="subtotal" field="total"/>
   </list>
-  <value name="cart_subtotal" filter="currency"/>
-  <value name="cart_total" filter="currency"/>
+  <value name="cart_subtotal"/>
+  <value name="cart_total"/>
 </specification>
