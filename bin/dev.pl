@@ -8,9 +8,25 @@ use lib "$FindBin::Bin/../lib";
 use Plack::Builder;
 
 use PerlDance;
-my $app = PerlDance->to_app;
-
+use DBICx::Sugar qw/schema/;
 use Dancer2::Debugger;
+use Plack::Middleware::DBIC::QueryLog;
+
+my $mw = sub {
+    my $app = shift;
+    sub {
+        my $env = shift;
+        my $querylog =
+          Plack::Middleware::DBIC::QueryLog->get_querylog_from_env($env);
+        my $cloned_schema = schema->clone;
+        $cloned_schema->storage->debug(1);
+        $cloned_schema->storage->debugobj($querylog);
+        my $res = $app->($env);
+        return $res;
+    };
+};
+my $app = $mw->( PerlDance->to_app );
+
 my $debugger = Dancer2::Debugger->new(
     panels => [
         'Plack::Debugger::Panel::AJAX',
@@ -20,6 +36,7 @@ my $debugger = Dancer2::Debugger->new(
         #'Plack::Debugger::Panel::Dancer2::Settings',
         'Plack::Debugger::Panel::Dancer2::TemplateTimer',
         'Plack::Debugger::Panel::Dancer2::TemplateVariables',
+        'Plack::Debugger::Panel::DBIC::QueryLog',
         #'Plack::Debugger::Panel::Environment',
         'Plack::Debugger::Panel::Memory',
         #'Plack::Debugger::Panel::ModuleVersions',
@@ -33,6 +50,7 @@ my $debugger = Dancer2::Debugger->new(
 );
 
 builder {
+    enable 'DBIC::QueryLog';
     enable 'Session';
     enable 'XSRFBlock',
       cookie_name    => 'PerlDance-XSRF-Token',
