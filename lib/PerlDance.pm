@@ -9,6 +9,7 @@ PerlDance - Perl Dancer 2016 conference site
 use Dancer2;
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Debugger;
 use Dancer2::Plugin::Deferred;
 use Dancer2::Plugin::Interchange6;
 use Dancer2::Plugin::Interchange6::Routes;
