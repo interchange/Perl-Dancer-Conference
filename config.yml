@@ -5,7 +5,9 @@
 server_tokens: 0
 require_environment: 1
 session_name: perldance.session
-conference_name: "Perl Dancer Conference 2015"
+conference_name: "Perl Dancer Conference 2016"
+guru_min_level_auto_speaker: 80
+
 t_shirt_sizes:
   - 'XS'
   - 'XS (W)'
@@ -118,10 +120,10 @@ plugins:
         quote_names: 1
   Email:
     headers:
-      sender: "2015@perl.dance"
-      from: "Perl Dancer 2015 <2015@perl.dance>"
-      to: "Perl Dancer 2015 <2015@perl.dance>"
-      X-Mailer: "PerlDance2015 1.0"
+      sender: "2016@perl.dance"
+      from: "Perl Dancer Conference 2016 <2016@perl.dance>"
+      to: "Perl Dancer Conference 2016 <2016@perl.dance>"
+      X-Mailer: "PerlDance2016 3.0"
   FlashNote:
     queue: key_multiple
     arguments: single

@@ -9,4 +9,7 @@
     <container name="ticket-left-container" value="tickets_left"/>
     <container name="sold-out" value="!tickets_left"/>
   </list>
+
+  <container name="not-avail" value="!count"/>
+
 </specification>

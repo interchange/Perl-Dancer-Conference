@@ -372,6 +372,8 @@ sub add_speakers_tokens {
             -or                                   => {
                 'talks_authored.accepted'  => 1,
                 'talks_authored.confirmed' => 1,
+                'me.guru_level' => {
+                    '>=', setting('guru_min_level_auto_speaker')},
                 -and                       => {
                     'attribute.name' => 'speaker',
                     'attribute.type' => 'boolean',

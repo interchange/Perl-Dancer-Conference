@@ -1,4 +1,4 @@
 <specification>
   <value name="ticket-wrapper" op="hook" include="fragments/tickets.html"/>
-  <value name="countdown-timer" op="hook" include="fragments/countdown.html"/>
+  <container name="ticket-teaser" value="teaser"/>
 </specification>

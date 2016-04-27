@@ -50,7 +50,7 @@ get '/' => sub {
 
     PerlDance::Routes::User::add_speakers_tokens($tokens);
 
-    $tokens->{title} = "Vienna Austria October 2015";
+    $tokens->{title} = "Vienna Austria October 2016";
 
     # only show 'register now' if we're before 
     my $conference = rset('Conference')->find( setting('conferences_id') );
@@ -191,6 +191,8 @@ get '/tickets' => sub {
     $tokens->{tickets} =
       [ shop_schema->resultset('Conference')->find( setting('conferences_id') )
           ->tickets->active->prefetch('inventory')->hri->all ];
+
+    $tokens->{count} = @{$tokens->{tickets}};
 
     for my $ticket (@{$tokens->{tickets}}) {
         $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
