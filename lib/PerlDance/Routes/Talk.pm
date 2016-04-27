@@ -46,6 +46,49 @@ get qr{/events/(?<id>\d+).*} => sub {
     template 'event', $tokens;
 };
 
+=head2 get /talks/tag/:tag
+
+Tag cloud links in /talks
+
+=cut
+
+get '/talks/archive/:year/tag/:tag' => sub {
+    var tag => param 'tag';
+    my $year = param 'year';
+    forward "/talks/archive/$year";
+};
+
+=head2 get /talks/archive/:year
+
+Talks from previous conference
+
+=cut
+
+get '/talks/archive/:year' => sub {
+    my $tokens = {};
+
+    my $year = param 'year';
+
+    if ( $year !~ /^\d\d\d\d$/ ) {
+        status 'not_found';
+        return template '404', { title => 'Not Found' };
+    }
+
+    my $conference =
+      rset('Conference')->find( { name => "Perl Dancer Conference $year" } );
+
+    if ( !$conference ) {
+        status 'not_found';
+        return template '404', { title => 'Not Found' };
+    }
+
+    var conferences_id => $conference->id;
+    var uri => request->path;
+
+    forward '/talks';
+};
+
+
 =head2 get /talks
 
 Talks list by speaker
@@ -57,15 +100,21 @@ get '/talks' => sub {
 
     PerlDance::Routes::add_navigation_tokens($tokens);
 
+    my $conferences_id = var('conferences_id')
+      || setting('conferences_id');
+
     my $talks = rset('Talk')->search(
         {
-            'me.conferences_id' => setting('conferences_id'),
+            'me.conferences_id' => $conferences_id
         },
     );
     $tokens->{talks_submitted} = $talks->count;
 
     my $talks_accepted = $talks->search( { accepted => 1 } );
     $tokens->{talks_accepted} = $talks_accepted->count;
+
+    my $uri = var('uri') || request->path;
+    $tokens->{uri} = $uri;
 
     my %tags;
     map { $tags{$_}++ } map { s/,/ /g; split( /\s+/, $_ ) }
@@ -75,7 +124,7 @@ get '/talks' => sub {
 
         # add space to tag to force wrapping since TF removes the line breaks
         # added by HTML::TagCloud
-        $cloud->add( "$tag ", "/talks/tag/$tag", $tags{$tag} );
+        $cloud->add( "$tag ", "$uri/tag/$tag", $tags{$tag} );
     }
     $tokens->{cloud} = $cloud->html;
 
@@ -84,7 +133,7 @@ get '/talks' => sub {
     }
 
     $talks = $talks->search(
-        { "conferences_attended.conferences_id" => setting('conferences_id') },
+        { "conferences_attended.conferences_id" => $conferences_id },
         {
             order_by => [ 'author.first_name', 'author.last_name' ],
             prefetch => 'author',

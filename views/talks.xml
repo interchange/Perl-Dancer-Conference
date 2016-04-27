@@ -1,6 +1,7 @@
 <specification>
   <container name="has_tag" value="tag"/>
   <container name="show-stars" value="logged_in_user"/>
+  <value name="uri" class="all_talks" target="href"/>
   <value name="tag"/>
   <value name="talks_submitted"/>
   <value name="talks_accepted"/>

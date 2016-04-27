@@ -249,7 +249,8 @@ Add title and description tokens;
 sub add_navigation_tokens {
     my $tokens = shift;
 
-    ( my $uri = request->path ) =~ s{^/+}{};
+    my $uri = var('uri') || request->path;
+    $uri =~ s{^/+}{};
     my $nav = shop_navigation->find( { uri => $uri } );
 
     $tokens->{title}       = $nav->name;
