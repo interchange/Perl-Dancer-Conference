@@ -188,7 +188,12 @@ get '/edit' => sub {
                         if ( $country && $country->show_states ) {
                             my $state = $country->states->search(
                                 { state_iso_code => uc( $record->region ) } );
-                            $values{state} = $state->id if $state;
+                            if ($state->rows == 1) {
+                                $values{state} = $state->first->id;
+                            }
+                            else {
+                                warning "State not found for country $values{country}, region ", $record->region, " from ip $ipaddress.";
+                            }
                         }
                     }
                 }
