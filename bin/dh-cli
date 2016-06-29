@@ -1,0 +1,22 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use lib 'lib';
+
+use PerlDance::Schema;
+use DBIx::Class::DeploymentHandler::CLI;
+
+my $schema = PerlDance::Schema->connect('PerlDance');
+
+my $dh_cli = DBIx::Class::DeploymentHandler::CLI->new(
+    schema => $schema,
+    databases => 'Pg',
+    args => \@ARGV,
+);
+
+if (my $ret = $dh_cli->run) {
+    print "$ret\n";
+}
+

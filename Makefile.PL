@@ -34,6 +34,7 @@ WriteMakefile(
         'DateTime::Format::ISO8601'        => 0,
         'DateTime::Format::Pg'             => 0,
         'DBIx::Class::DeploymentHandler'   => 0,
+        'DBIx::Class::DeploymentHandler::CLI'  => 0,
         'Email::Sender::Transport::Redirect' => 0,
         'Geo::Coder::OSM'                  => 0,
         'Geo::IP'                          => 0,
