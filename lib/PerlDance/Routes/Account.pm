@@ -132,6 +132,8 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
                         media_id => $media_id,
                     }
                 );
+                # make sure defaults get set
+                $user->discard_changes;
 
             }
             catch {
