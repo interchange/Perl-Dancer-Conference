@@ -126,7 +126,7 @@ get '/admin/news' => require_role admin => sub {
         },
         {
             join     => [ "message_type", "author" ],
-            order_by => "created",
+            order_by => {"-desc" => "created"},
         }
     );
 
