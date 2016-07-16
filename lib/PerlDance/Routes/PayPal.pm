@@ -360,7 +360,7 @@ sub complete_transaction {
                        order   => $transactions,
                        hide_profile_link => 1,
             },
-            to      => setting("conference_email");
+            to      => setting("conference_email"),
             subject => setting("conference_name") . " Order $order_number",
         );
 	return $transactions;
