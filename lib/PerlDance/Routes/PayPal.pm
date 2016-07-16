@@ -106,7 +106,9 @@ post '/paypal/setrequest' => sub {
 
         schema->resultset('PaymentOrder')->create(\%payment_data);
 
-        flash error => 'Payment with PayPal failed. Please contact <a href="mailto:2015@perl.dance">2015@perl.dance</a> for assistance.';
+        my $conf_email = config->{conference_email};
+
+        flash error => qq{Payment with PayPal failed. Please contact <a href="mailto:$conf_email">$conf_email</a> for assistance.};
         warning "No PayPal token: ", \%ppresponse;
         return redirect uri_for('cart');
     }
@@ -358,7 +360,7 @@ sub complete_transaction {
                        order   => $transactions,
                        hide_profile_link => 1,
             },
-            to      => '2015@perl.dance',
+            to      => setting("conference_email");
             subject => setting("conference_name") . " Order $order_number",
         );
 	return $transactions;
