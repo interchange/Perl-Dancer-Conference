@@ -152,6 +152,11 @@ paypal:
   sandbox: 1
   maintenance: 0
 
+# placeholder
+mapbox:
+  id: XXXXXXXX
+  accessToken: XXXXXXXXXXXXXXX
+
 surveys:
   -
     author: peter@sysnix.com

@@ -3,6 +3,8 @@
   <value name="panel-title" field="title"/>
   <value name="total_users"/>
   <value name="count" field="users.count"/>
+  <value name="mapbox-id" id="usermap" field="mapbox.id" target="data-id"/>
+  <value name="mapbox-accessToken" id="usermap" field="mapbox.accessToken" target="data-accesstoken"/>
   <list name="user" iterator="users">
     <param name="latitude" field="addresses.first.latitude"/>
     <param name="longitude" field="addresses.first.longitude"/>
