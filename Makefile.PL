@@ -48,7 +48,7 @@ WriteMakefile(
         'Plack::Middleware::XForwardedFor' => 0,
         'Plack::Middleware::XSRFBlock'     => 0,
         'Plack::Session'                   => 0,
-        'Template::Flute'                  => '0.0184',
+        'Template::Flute'                  => '0.020',
         'Text::Diff'                       => 0,
         'Text::Markdown'                   => 0,
         'Try::Tiny'                        => 0,
