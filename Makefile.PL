@@ -20,7 +20,7 @@ WriteMakefile(
     PL_FILES  => {},
     PREREQ_PM => {
         'Test::More'                       => 0,
-        'YAML'                             => 0,
+        'YAML::XS'                         => 0,
         'Type::Tiny'                       => '0.038',
         'Class::Method::Modifiers'         => '2.11',
         'Dancer2'                          => '0.166001_01',
