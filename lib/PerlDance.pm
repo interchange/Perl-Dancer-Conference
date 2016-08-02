@@ -41,14 +41,11 @@ hook 'before_cart_display' => sub {
 
     if ( request->is_ajax ) {
 
-        content_type 'application/json';
-
         my $html = template( "/fragments/cart", $tokens, { layout => undef } );
         $html =~ s/^.*?body>//;
         $html =~ s/<\/body.*?$//;
 
-        Dancer::Continuation::Route::Templated->new(
-            return_value => to_json( { html => $html } ) )->throw;
+        send_as JSON => +{ html => $html };
     }
     elsif ( request->is_post ) {
 
