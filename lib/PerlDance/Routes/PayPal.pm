@@ -222,7 +222,7 @@ get '/paypal/getrequest' => sub {
         return redirect "/profile/orders/" . $order->order_number;
     }
 
-    flash error => "Sorry: the PayPal payment failed. Please contact us and we will do our best to help.";
+    deferred error => "Sorry: the PayPal payment failed. Please contact us and we will do our best to help.";
     warning "PayPal error: ", \%details;
     redirect '/cart';
 };
