@@ -249,6 +249,17 @@ any [ 'get', 'post' ] => qr{
             session logged_in_user_realm => $realm;
 
             if ( $action eq 'register' ) {
+                # send email to organization team
+                PerlDance::Routes::send_email(
+                    template => "email/generic",
+                    tokens   => {
+                        preamble => "User ". $user->username . " just registered.",
+                        link => uri_for( 'admin/users/edit/' . $user->id ),
+                    },
+                    to      => setting('conference_email'),
+                    subject => "Registration for the " . setting("conference_name"),
+                );
+
                 flash success => "Welcome to the " . setting('conference_name');
             }
             else {
