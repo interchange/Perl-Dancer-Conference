@@ -222,19 +222,9 @@ get '/paypal/getrequest' => sub {
         return redirect "/profile/orders/" . $order->order_number;
     }
 
-    # show error
-    my $form = form('payment');
-
-    return template 'checkout_confirm', {
-        paypal_user => config->{email_id},
-        form => $form,
-        # bounce the error from the remote server into the form
-        payment_error => "Payment error.",
-        paypal_email => config->{paypal}->{email_id},
-        paypal_return_url => request->base . 'paypal-complete',
-        paypal_notify_url => request->base . 'paypal-notify',
-        expand_credit_card_tab => undef,
-    };
+    flash error => "Sorry: the PayPal payment failed. Please contact us and we will do our best to help.";
+    warning "PayPal error: ", \%details;
+    redirect '/cart';
 };
 
 post '/paypal/maintenance' => sub {
