@@ -51,6 +51,8 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
             join => 'conferences_attended',
         }
     );
+    send_error( "Not found.", 404 ) if !$user;
+
     $tokens->{user} = $user;
 
     $tokens->{attending} =
@@ -60,12 +62,6 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
       ->order_by('talk.title');
 
     my $address = $user->addresses->first;
-
-    if ( !$tokens->{user} ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
 
     my $talks = $tokens->{user}->search_related(
         'talks_authored',

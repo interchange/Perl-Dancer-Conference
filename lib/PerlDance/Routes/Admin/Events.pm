@@ -135,11 +135,7 @@ get '/edit/:id' => require_role admin => sub {
 
     my $event = rset('Event')->find( param('id') );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found", 404 ) if !$event;
 
     my $form   = form('update-create-event');
     $form->reset;
@@ -176,11 +172,7 @@ post '/edit/:id' => require_role admin => sub {
 
     my $event = rset('Event')->find( param('id') );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found", 404 ) if !$event;
 
     my $form = form('update-create-event');
     my $data = validator( $form->values, "update-create-event" );

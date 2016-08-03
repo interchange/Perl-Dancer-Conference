@@ -668,9 +668,7 @@ get '/talk/:id' => sub {
         template 'profile/create_update_talk', $tokens;
     }
     else {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        template '404', $tokens;
+        send_error( "Talk not found.", 404 );
     }
 };
 
@@ -752,9 +750,7 @@ post '/talk/:id' => sub {
         template 'profile/create_update_talk', $tokens;
     }
     else {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        template '404', $tokens;
+        send_error( "Talk not found.", 404 );
     }
 };
 

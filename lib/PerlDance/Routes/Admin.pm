@@ -185,11 +185,7 @@ get '/admin/news/edit/:id' => require_role admin => sub {
 
     my $news = rset('Message')->find( param('id') );
 
-    if ( !$news ) {
-        $tokens->{title} = "News Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "News item not found.", 404 ) if !$news;
 
     my $form = form('update_create_news');
     $form->reset;
@@ -215,11 +211,7 @@ post '/admin/news/edit/:id' => require_role admin => sub {
 
     my $news = rset('Message')->find( param('id') );
 
-    if ( !$news ) {
-        $tokens->{title} = "News Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "News item not found.", 404 ) if !$news;
 
     my $form   = form('update_create_news');
     my %values = %{ $form->values };

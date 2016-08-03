@@ -132,11 +132,7 @@ get '/admin/users/edit/:id' => require_role admin => sub {
 
     my $user = rset('User')->find( param('id') );
 
-    if ( !$user ) {
-        $tokens->{title} = "Users Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "User not found", 404 ) if !$user;
 
     # countries dropdown
     $tokens->{countries} = [
@@ -209,11 +205,7 @@ post '/admin/users/edit/:id' => require_role admin => sub {
 
     my $user = rset('User')->find( param('id') );
 
-    if ( !$user ) {
-        $tokens->{title} = "User Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "User not found", 404 ) if !$user;
 
     my $form   = form('update_create_users');
     my %values = %{ $form->values };

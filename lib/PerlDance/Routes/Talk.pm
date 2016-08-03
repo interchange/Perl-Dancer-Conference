@@ -9,6 +9,7 @@ PerlDance::Routes::Talk - Talk/Event routes for PerlDance conference application
 use Dancer2 appname => 'PerlDance';
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Deferred;
 use DateTime;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
@@ -34,11 +35,7 @@ get qr{/events/(?<id>\d+).*} => sub {
         },
     );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found.", 404 ) if !$event;
 
     $tokens->{event} = $event;
     $tokens->{title} = $event->title;
@@ -69,18 +66,12 @@ get '/talks/archive/:year' => sub {
 
     my $year = param 'year';
 
-    if ( $year !~ /^\d\d\d\d$/ ) {
-        status 'not_found';
-        return template '404', { title => 'Not Found' };
-    }
+    send_error( "Not found.", 404 ) if $year !~ /^\d\d\d\d$/;
 
     my $conference =
       rset('Conference')->find( { name => "Perl Dancer Conference $year" } );
 
-    if ( !$conference ) {
-        status 'not_found';
-        return template '404', { title => 'Not Found' };
-    }
+    send_error( "Not found.", 404 ) if !$conference;
 
     var conferences_id => $conference->id;
     var uri => request->path;
@@ -186,9 +177,7 @@ get '/talks/schedule' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     my $dt    = $conference->start_date->clone;
@@ -212,11 +201,7 @@ get '/talks/schedule/:date' => sub {
     my $tokens = {};
 
     my $date = param 'date';
-    if ( $date !~ m/^(\d+)-(\d+)-(\d+)$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Not found.", 404 ) if $date !~ m/^(\d+)-(\d+)-(\d+)$/;
 
     my $dt_date = DateTime->new( year => $1, month => $2, day => $3 );
     my $conference = rset('Conference')->find( setting('conferences_id') );
@@ -234,9 +219,7 @@ get '/talks/schedule/:date' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     # days token
@@ -603,11 +586,7 @@ get qr{/talks/(?<id>\d+).*} => sub {
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
     );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     $tokens->{talk}          = $talk;
     $tokens->{title}         = $talk->title;

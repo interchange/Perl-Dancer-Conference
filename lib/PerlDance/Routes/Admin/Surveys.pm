@@ -130,11 +130,7 @@ get '/edit/:id' => require_role admin => sub {
 
     my $survey = rset('Survey')->find( param('id') );
 
-    if ( !$survey ) {
-        $tokens->{title} = "Survey Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Survey not found.", 404 ) if !$survey;
 
     my $form   = form('create-update-survey');
     $form->reset;
@@ -165,11 +161,7 @@ post '/edit/:id' => require_role admin => sub {
 
     my $survey = rset('Survey')->find( param('id') );
 
-    if ( !$survey ) {
-        $tokens->{title} = "Survey Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Survey not found.", 404 ) if !$survey;
 
     my $form = form('create-update-survey');
     my $data = validator( $form->values, "create-update-survey" );

@@ -37,11 +37,7 @@ get '/wiki/diff/*/**' => sub {
 
     my ( $version, $splat ) = splat;
 
-    if ( $version !~ /^\d+$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Not found.", 404 ) if $version !~ /^\d+$/;
 
     my $title = join( '/', @$splat );
 
@@ -63,9 +59,7 @@ get '/wiki/diff/*/**' => sub {
     my $second = $rset->next;
 
     if ( !$first && !$second ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     $first  = $first->content;
@@ -412,11 +406,7 @@ get '/wiki/version/*/**' => sub {
 
     my ( $version, $splat ) = splat;
 
-    if ( $version !~ /^\d+$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Not found.", 404 ) if $version !~ /^\d+$/;
 
     my $title = join( '/', @$splat );
 

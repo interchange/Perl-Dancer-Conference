@@ -122,11 +122,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
 
     my $talk = rset('Talk')->find( param('id') );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     my $form = form('create-update-talk');
     $form->reset;
@@ -166,11 +162,7 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
 
     my $talk = rset('Talk')->find( param('id') );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     my $form = form('create-update-talk');
     my $data = validator( $form->values, 'create-update-talk' );

@@ -64,10 +64,7 @@ post '/surveys' => require_login sub {
         }
     )->next;
 
-    if ( !$survey ) {
-        status 'not_found';
-        return template '404';
-    }
+    send_error( "Survey not found.", 404 ) if !$survey;
 
     # clean up params
     delete $params->{xsrf_token};
