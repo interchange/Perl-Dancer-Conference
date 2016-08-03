@@ -298,36 +298,37 @@ sub send_email {
     my %args = @_;
 
     try {
-    my $template = delete $args{template};
-    die "template not supplied to send_email" unless $template;
+        my $template = delete $args{template};
+        die "template not supplied to send_email" unless $template;
 
-    my $tokens = delete $args{tokens};
-    die "tokens hashref not supplied to send_email"
-      unless ref($tokens) eq 'HASH';
+        my $tokens = delete $args{tokens};
+        die "tokens hashref not supplied to send_email"
+          unless ref($tokens) eq 'HASH';
 
-    $tokens->{"conference-logo"} =
-      uri_for(
-        shop_schema->resultset('Media')->search( { label => "email-logo" } )
-          ->first->uri );
-    debug "Rendering mail $template";
-    my $html = template $template, $tokens, { layout => 'email' };
+        $tokens->{"conference-logo"} =
+          uri_for( shop_schema->resultset('Media')
+              ->search( { label => "email-logo" } )->first->uri );
 
-    my $f    = HTML::FormatText::WithLinks->new;
-    my $text = $f->parse($html);
-    # the dumper shows \x{20ac}, so html and text are decoded.
-    email {
-        %args,
-        body => encode('UTF-8', $text),
-        type => 'text',
-        attach => {
-            Data     => encode('UTF-8', $html),
-            Encoding => "quoted-printable",
-            Type     => "text/html"
-        },
-        multipart => 'alternative',
-    };
-   }
-   catch { error "Could not send email: $_"; };
+        debug "Rendering mail $template";
+        my $html = template $template, $tokens, { layout => 'email' };
+
+        my $f    = HTML::FormatText::WithLinks->new;
+        my $text = $f->parse($html);
+
+        # the dumper shows \x{20ac}, so html and text are decoded.
+        email {
+            %args,
+              body   => encode( 'UTF-8', $text ),
+              type   => 'text',
+              attach => {
+                Data     => encode( 'UTF-8', $html ),
+                Encoding => "quoted-printable",
+                Type     => "text/html"
+              },
+              multipart => 'alternative',
+        };
+    }
+    catch { error "Could not send email: $_"; };
 }
 
 true;
