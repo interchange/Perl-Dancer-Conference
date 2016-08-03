@@ -217,22 +217,6 @@ L<Dancer::Plugin::Interchange6::Routes/shop_setup_routes>
 
 shop_setup_routes;
 
-=head2 not_found
-
-404
-
-=cut
-
-any qr{.*} => sub {
-    my $tokens = {};
-
-    $tokens->{title} = "Not Found";
-    $tokens->{description} = "404 - Page not Found";
-
-    status 'not_found';
-    template '404', $tokens;
-};
-
 =head1 METHODS
 
 =head2 add_javascript($tokens, @js_urls);
