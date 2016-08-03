@@ -14,7 +14,6 @@ use Dancer2::Plugin::Deferred;
 use Dancer2::Plugin::Interchange6;
 use Dancer2::Plugin::Interchange6::Routes;
 use PerlDance::Routes;
-use Try::Tiny;
 
 our $VERSION = '0.1';
 
@@ -132,24 +131,10 @@ hook 'before_layout_render' => sub {
       setting('conference_name') . ". " . ( $tokens->{description} || '' );
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
-    # FIXME: we use Dancer2::Plugin::Deferred now
-    # flash alerts
-    #my $flash = flash_flush;
-    #foreach my $key ( keys %$flash ) {
-    #    foreach my $message ( @{$flash->{$key}} ) {
-    #        push @{$tokens->{alerts}->{$key}}, { message => $message };
-    #    }
-    #}
-
     # display sidebar?
     if ( request->path =~ m{^/($|events|speakers|talks|tickets|users/)} ) {
         $tokens->{show_sidebar} = 1;
     }
-};
-
-hook after_layout_render => sub {
-    # FIXME: we use Dancer2::Plugin::Deferred now
-    #flash_flush;
 };
 
 =head1 ROUTES
