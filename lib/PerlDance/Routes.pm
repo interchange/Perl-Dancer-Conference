@@ -204,7 +204,7 @@ get '/tickets' => sub {
         $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
         $ticket->{tickets_left} = $ticket->{inventory}->{quantity};
     }
-    # debug to_dumper($tokens->{tickets});
+
     template 'tickets', $tokens;
 };
 
