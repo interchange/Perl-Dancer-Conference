@@ -7,6 +7,7 @@ PerlDance::Routes::Survey
 =cut
 
 use Dancer2 appname => 'PerlDance';
+use Carp;
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Deferred;
@@ -98,7 +99,7 @@ post '/surveys' => require_login sub {
                     my $question = $2;
 
                     if ( !grep { $_ == $question } @questions ) {
-                        die "Question $question not valid";
+                        croak "Question $question not valid";
                     }
 
                     my $response = rset('SurveyResponse')->find_or_create(

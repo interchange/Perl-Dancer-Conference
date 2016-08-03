@@ -7,6 +7,7 @@ PerlDance::Routes - routes for PerlDance conference application
 =cut
 
 use Dancer2 appname => 'PerlDance';
+use Carp;
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::Email;
@@ -299,10 +300,10 @@ sub send_email {
 
     try {
         my $template = delete $args{template};
-        die "template not supplied to send_email" unless $template;
+        croak "template not supplied to send_email" unless $template;
 
         my $tokens = delete $args{tokens};
-        die "tokens hashref not supplied to send_email"
+        croak "tokens hashref not supplied to send_email"
           unless ref($tokens) eq 'HASH';
 
         $tokens->{"conference-logo"} =

@@ -7,6 +7,7 @@ PerlDance::Routes::Profile - account routes such as login, edit profile, ...
 =cut
 
 use Dancer2 appname => 'PerlDance';
+use Carp;
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DataTransposeValidator;
 use Dancer2::Plugin::DBIC;
@@ -457,14 +458,14 @@ post '/photo/crop' => sub {
     my $ft = File::Type->new;
     my $mime_type = $ft->checktype_filename($file);
 
-    die "Not an image" unless $mime_type =~ /^image\//;
+    croak "Not an image" unless $mime_type =~ /^image\//;
 
     ( my $type = $mime_type ) =~ s/^.+?\///;
     $type = 'png' if lc($type) eq 'x-png';
 
     my $img = Imager->new;
     $img->read( file => $file )
-      or die "Cannot read photo $file: ", $img->errstr;
+      or croak "Cannot read photo $file: ", $img->errstr;
 
     debug "cropping photo";
 
@@ -473,12 +474,12 @@ post '/photo/crop' => sub {
         top    => param('y'),
         width  => param('w'),
         height => param('h')
-    ) or die "image crop failure: ", $img->errstr;
+    ) or croak "image crop failure: ", $img->errstr;
 
     debug "scaling image";
 
     $img = $img->scale( xpixels => 300, ypixels => 300 )
-      or die "image scale failure: ", $img->errstr;
+      or croak "image scale failure: ", $img->errstr;
 
     my %options = ( file => $file, type => $type );
 
@@ -486,7 +487,7 @@ post '/photo/crop' => sub {
 
     debug "saving image";
 
-    $img->write( %options ) or die "image write failed: ", $img->errstr;
+    $img->write( %options ) or croak "image write failed: ", $img->errstr;
 
     ( my $file_ext = $file ) =~ s/^.+\.//;
 
@@ -505,7 +506,7 @@ post '/photo/crop' => sub {
                 uri            => "/$target",
                 mime_type      => $mime_type,
             }
-        ) or die "failed to update photo record in database";
+        ) or croak "failed to update photo record in database";
     }
     else {
 
@@ -519,7 +520,7 @@ post '/photo/crop' => sub {
                 mime_type      => $mime_type,
                 media_types_id => $media_type_image->id,
             }
-        ) or die "failed to create photo record in database";
+        ) or croak "failed to create photo record in database";
         $user->update({ media_id => $photo->id });
     }
 
