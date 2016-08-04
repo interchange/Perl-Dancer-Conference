@@ -118,7 +118,7 @@ post '/paypal/setrequest' => sub {
 
 get '/paypal/getrequest' => sub {
     my $ppapi = paypal_api(config->{paypal});
-    my $pptoken = session->{paypaltoken};
+    my $pptoken = session('paypaltoken');
     my %details = $ppapi->GetExpressCheckoutDetails($pptoken);
 
     debug "Details for $pptoken: ", \%details;

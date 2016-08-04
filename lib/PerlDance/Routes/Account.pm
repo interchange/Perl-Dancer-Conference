@@ -52,9 +52,8 @@ get '/register' => sub {
     my $form = form('register-reset');
     $form->reset;
 
-    my $data = session("data_register");
+    my $data = session->delete("data_register");
     if ( $data ) {
-        session "data_register" => undef;
         $form->fill($data->{values});
     }
 
@@ -80,9 +79,8 @@ get '/reset_password' => sub {
     my $form = form('register-reset');
     $form->reset;
 
-    my $data = session("data_reset_password");
+    my $data = session->delete("data_reset_password");
     if ( $data ) {
-        session "data_reset_password" => undef;
         $form->fill($data->{values});
     }
 

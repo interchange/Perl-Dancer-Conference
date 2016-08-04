@@ -796,15 +796,14 @@ get '/orders/:order_number' => sub {
     my $tokens = {order => $order};
 
     # check whether this is a receipt for recent order
-    if (defined session->{order_receipt}
-            && session->{order_receipt} eq $order_number) {
-        $tokens->{receipt} = session->{order_receipt};
+    if ( my $order_receipt = session->delete('order_receipt') ) {
+        if ( $order_receipt eq $order_number ) {
+            $tokens->{receipt} = $order_receipt;
 
-        # send email receipt
-        order_receipt($order);
+            # send email receipt
+            order_receipt($order);
+        }
     }
-
-    session order_receipt => undef;
 
     template 'profile/order', $tokens;
 };
