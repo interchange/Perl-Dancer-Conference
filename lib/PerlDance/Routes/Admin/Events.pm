@@ -81,7 +81,7 @@ post '/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form = form('update-create-event');
-    my $data = validator( $form->values, "update-create-event" );
+    my $data = validator( $form->values->as_hashref, "update-create-event" );
 
     if ($data->{valid}) {
         $form->reset;
@@ -175,7 +175,7 @@ post '/edit/:id' => require_role admin => sub {
     send_error( "Event not found", 404 ) if !$event;
 
     my $form = form('update-create-event');
-    my $data = validator( $form->values, "update-create-event" );
+    my $data = validator( $form->values->as_hashref, "update-create-event" );
 
     if ( $data->{valid} ) {
         $form->reset;

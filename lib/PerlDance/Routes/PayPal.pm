@@ -229,7 +229,7 @@ get '/paypal/getrequest' => sub {
 
 post '/paypal/maintenance' => sub {
     my $form = form('paypal-maintenance');
-    my $data = validator( $form->values, 'email-valid' );
+    my $data = validator( $form->values->as_hashref, 'email-valid' );
 
     if ( $data->{valid} ) {
 

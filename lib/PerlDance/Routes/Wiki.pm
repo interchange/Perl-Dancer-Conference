@@ -257,10 +257,10 @@ any [ 'get', 'post' ] => '/wiki/recent' => sub {
     my $values;
 
     if ( request->is_post ) {
-        $values = $form->values;
+        $values = $form->values->as_hashref;
     }
     else {
-        $values = $form->values('session');
+        $values = $form->values('session')->as_hashref;
     }
 
     my $days = $values->{period};

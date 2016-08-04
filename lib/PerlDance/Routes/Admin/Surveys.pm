@@ -76,7 +76,7 @@ post '/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form = form('create-update-survey');
-    my $data = validator( $form->values, "create-update-survey" );
+    my $data = validator( $form->values->as_hashref, "create-update-survey" );
 
     if ($data->{valid}) {
         $form->reset;
@@ -164,7 +164,7 @@ post '/edit/:id' => require_role admin => sub {
     send_error( "Survey not found.", 404 ) if !$survey;
 
     my $form = form('create-update-survey');
-    my $data = validator( $form->values, "create-update-survey" );
+    my $data = validator( $form->values->as_hashref, "create-update-survey" );
 
     if ( $data->{valid} ) {
         $form->reset;

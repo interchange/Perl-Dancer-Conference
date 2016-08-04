@@ -563,7 +563,7 @@ post '/talk/create' => sub {
     my $tokens = {};
 
     my $form = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
     my $user = schema->current_user;
 
     if ($data->{valid}) {
@@ -692,7 +692,7 @@ post '/talk/:id' => sub {
         # all good so validate
 
         my $form = form('create-update-talk');
-        my $data = validator( $form->values, 'create-update-talk' );
+        my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
         if ($data->{valid}) {
 

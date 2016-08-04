@@ -69,7 +69,7 @@ post '/admin/talks/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form   = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
     if ( $data->{valid} ) {
         my %values = %{ $data->{values} };
@@ -165,7 +165,7 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
     send_error( "Talk not found.", 404 ) if !$talk;
 
     my $form = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
     if ( $data->{valid} ) {
         my %values = %{ $data->{values} };
