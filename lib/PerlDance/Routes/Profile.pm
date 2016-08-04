@@ -641,7 +641,7 @@ get '/talk/:id' => sub {
     my $form = form('create-update-talk');
     $form->reset;
 
-    my $talk = schema->resultset('Talk')->find( route_parametere->get('id') );
+    my $talk = schema->resultset('Talk')->find( route_parameters->get('id') );
     my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
