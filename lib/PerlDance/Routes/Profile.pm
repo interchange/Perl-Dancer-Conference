@@ -365,7 +365,7 @@ post '/password' => sub {
 
     my $form = form('change-password');
     my $user = schema->current_user;
-    my $data = validator( $form->values, 'change-password', $user );
+    my $data = validator( $form->values->as_hashref, 'change-password', $user );
 
     # we don't want form data to leak into the session
     $form->reset;
