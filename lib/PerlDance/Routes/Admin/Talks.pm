@@ -141,8 +141,10 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             confirmed       => $talk->confirmed,
             lightning       => $talk->lightning,
             scheduled       => $talk->scheduled,
-            start_time      => $talk->start_time,
-            room            => $talk->room
+            room            => $talk->room,
+            $talk->start_time
+            ? ( start_time  => $talk->start_time->datetime )
+            : (),
         }
     );
     $tokens->{authors} = [ rset('User')->all ];

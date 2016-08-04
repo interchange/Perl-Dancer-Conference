@@ -147,8 +147,10 @@ get '/edit/:id' => require_role admin => sub {
             abstract   => $event->abstract,
             url        => $event->url,
             scheduled  => $event->scheduled,
-            start_time => $event->start_time,
-            room       => $event->room
+            room       => $event->room,
+            $event->start_time
+            ? ( start_time => $event->start_time->datetime )
+            : (),
         }
     );
     $tokens->{form}    = $form;
