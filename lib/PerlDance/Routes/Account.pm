@@ -228,9 +228,8 @@ any [ 'get', 'post' ] => qr{
 
     if ( request->is_post ) {
 
-        my %params = body_parameters->as_hashref;
-
-        my $data = validator( \%params, 'password-reset', $user->username );
+        my $data = validator( body_parameters->as_hashref,
+            'password-reset', $user->username );
 
         if ( $data->{valid} ) {
 
