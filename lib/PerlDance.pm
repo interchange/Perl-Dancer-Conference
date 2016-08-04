@@ -65,6 +65,17 @@ hook 'before_cart_display' => sub {
     }
 };
 
+=head2 before_error_init
+
+On error set the var 'hide_sidebar' to truthy value. This can then be checked
+in L</before_layout_render> hook to make sure the sidebar is not displayed.
+
+=cut
+
+hook before_error_init => sub {
+    var hide_sidebar => 1;
+};
+
 =head2 before_template_render
 
 =cut
@@ -132,7 +143,9 @@ hook 'before_layout_render' => sub {
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
     # display sidebar?
-    if ( request->path =~ m{^/($|events|speakers|talks|tickets|users/)} ) {
+    if ( !var('hide_sidebar')
+        && request->path =~ m{^/($|events|speakers|talks|tickets|users/)} )
+    {
         $tokens->{show_sidebar} = 1;
     }
 };
