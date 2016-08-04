@@ -44,7 +44,7 @@ get qr {^/surveys/?$} => require_login sub {
 };
 
 post '/surveys' => require_login sub {
-    my $params = params('body');
+    my $params = body_parameters->as_hashref;
 
     my $survey_id = delete $params->{survey_id};
     my $user      = schema->current_user;
@@ -169,7 +169,7 @@ post '/surveys' => require_login sub {
 
 get '/surveys/:id' => require_login sub {
     my $tokens = {};
-    my $id     = param('id');
+    my $id     = route_parameters->get('id');
 
     if ( $id !~ /^\d+$/ ) {
 
@@ -277,7 +277,7 @@ get qr {^/survey-results/?$} => sub {
 
 get '/survey-results/:id' => sub {
     my $tokens = {};
-    my $id     = param('id');
+    my $id     = route_parameters->get('id');
 
     if ( $id !~ /^\d+$/ ) {
 

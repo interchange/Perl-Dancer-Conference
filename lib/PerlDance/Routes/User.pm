@@ -182,7 +182,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     unshift @{ $tokens->{monger_groups} },
       { value => undef, label => 'Any' };
 
-    my %values = %{ params() };
+    my %values = %{ request->parameters->as_hashref };
     if ( %values ) {
 
         $form->fill(\%values);

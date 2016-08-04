@@ -31,8 +31,8 @@ get '/login' => sub {
     };
 
     # DPIC6 uses session return_url in post /login
-    if ( param('return_url') ) {
-        session return_url =>  param('return_url');
+    if ( body_parameters->get('return_url') ) {
+        session return_url =>  body_parameters->get('return_url');
     }
 
     if ( var 'login_failed' ) {
@@ -106,7 +106,7 @@ Register of request password reset.
 =cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
-    my $email    = param('username');
+    my $email    = body_parameters->get('username');
     my $captures = captures;
     my $action   = $$captures{action};
     my $username = lc($email);
@@ -228,7 +228,7 @@ any [ 'get', 'post' ] => qr{
 
     if ( request->is_post ) {
 
-        my %params = params('body');
+        my %params = body_parameters->as_hashref;
 
         my $data = validator( \%params, 'password-reset', $user->username );
 

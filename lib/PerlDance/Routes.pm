@@ -151,7 +151,7 @@ Specific news item
 =cut
 
 get '/news/:uri' => sub {
-    var uri => param('uri');
+    var uri => route_parameters->get('uri');
     forward '/news';
 };
 

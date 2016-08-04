@@ -112,7 +112,7 @@ post '/admin/talks/create' => require_role admin => sub {
 
 get '/admin/talks/delete/:id' => require_role admin => sub {
     try {
-        rset('Talk')->find( param('id') )->delete;
+        rset('Talk')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/talks';
 };
@@ -120,7 +120,7 @@ get '/admin/talks/delete/:id' => require_role admin => sub {
 get '/admin/talks/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $talk = rset('Talk')->find( param('id') );
+    my $talk = rset('Talk')->find( route_parameters->get('id') );
 
     send_error( "Talk not found.", 404 ) if !$talk;
 
@@ -160,7 +160,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
 post '/admin/talks/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $talk = rset('Talk')->find( param('id') );
+    my $talk = rset('Talk')->find( route_parameters->get('id') );
 
     send_error( "Talk not found.", 404 ) if !$talk;
 

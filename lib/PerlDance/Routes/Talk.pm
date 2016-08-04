@@ -50,8 +50,8 @@ Tag cloud links in /talks
 =cut
 
 get '/talks/archive/:year/tag/:tag' => sub {
-    var tag => param 'tag';
-    my $year = param 'year';
+    var tag => route_parameters->get('tag');
+    my $year = route_parameters->get('year');
     forward "/talks/archive/$year";
 };
 
@@ -64,7 +64,7 @@ Talks from previous conference
 get '/talks/archive/:year' => sub {
     my $tokens = {};
 
-    my $year = param 'year';
+    my $year = route_parameters->get('year');
 
     send_error( "Not found.", 404 ) if $year !~ /^\d\d\d\d$/;
 
@@ -194,13 +194,13 @@ get '/talks/schedule' => sub {
 
 get '/myschedule/:date' => require_login sub {
     var myschedule => 1;
-    forward path( '/talks/schedule', param('date') );
+    forward path( '/talks/schedule', route_parameters->get('date') );
 };
 
 get '/talks/schedule/:date' => sub {
     my $tokens = {};
 
-    my $date = param 'date';
+    my $date = route_parameters->get('date');
     send_error( "Not found.", 404 ) if $date !~ m/^(\d+)-(\d+)-(\d+)$/;
 
     my $dt_date = DateTime->new( year => $1, month => $2, day => $3 );
@@ -475,7 +475,7 @@ Tag cloud links in /talks
 =cut
 
 get '/talks/tag/:tag' => sub {
-    var tag => param('tag');
+    var tag => route_parameters->get('tag');
     forward '/talks';
 };
 
@@ -489,8 +489,8 @@ get '/talks/:action/:id' => require_login sub {
 
     content_type 'application/json';
 
-    my $action   = param 'action';
-    my $talks_id = param 'id';
+    my $action   = route_parameters->get('action');
+    my $talks_id = route_parameters->get('id');
     my $json     = { result => "fail" };
 
     if ( $action =~ /^(add|remove)$/ ) {

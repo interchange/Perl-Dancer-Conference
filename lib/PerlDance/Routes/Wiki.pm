@@ -130,16 +130,16 @@ post '/wiki/edit/**' => require_login sub {
     my ($splat) = splat;
     my $title = join( '/', @$splat );
 
-    my $content = param('content');
+    my $content = body_parameters->get('content');
     $content =~ s(\[user:(.+?)\])(translate_wiki_user($1))gie;
     $content =~ s(\[me\])(translate_wiki_user('me'))gie;
 
-    if ( param('preview') ) {
+    if ( body_parameters->get('preview') ) {
 
         # back to the edit page with a preview shown above
         $tokens->{content} = $content;
         $tokens->{preview} = $content;
-        $tokens->{tags}    = param('tags');
+        $tokens->{tags}    = body_parameters->get('tags');
         $tokens->{title}   = "Wiki - editing $title";
         $tokens->{uri}     = $title;
 
@@ -151,7 +151,7 @@ post '/wiki/edit/**' => require_login sub {
 
         $content =~ s/\r\n/\n/g;
 
-        my $tags = param('tags');
+        my $tags = body_parameters->get('tags');
         $tags =~ s/(^\s+|\s+$)//g;
 
         rset('Message')->create(
@@ -366,7 +366,7 @@ List of pages with this tag
 get '/wiki/tags/:tag' => sub {
     my $tokens = {};
 
-    my $tag = param 'tag';
+    my $tag = route_parameters->get('tag');
 
     my $rset = rset('Message')->search(
         {

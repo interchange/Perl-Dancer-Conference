@@ -328,7 +328,7 @@ Ajax route to geocode address data
 =cut
 
 post '/geocode' => sub {
-    my $address = param 'address';
+    my $address = body_parameters->get('address');
 
     debug "geocoding $address";
 
@@ -470,10 +470,10 @@ post '/photo/crop' => sub {
     debug "cropping photo";
 
     $img = $img->crop(
-        left   => param('x'),
-        top    => param('y'),
-        width  => param('w'),
-        height => param('h')
+        left   => body_parametere->get('x'),
+        top    => body_parametere->get('y'),
+        width  => body_parametere->get('w'),
+        height => body_parametere->get('h')
     ) or croak "image crop failure: ", $img->errstr;
 
     debug "scaling image";
@@ -639,7 +639,7 @@ get '/talk/:id' => sub {
     my $form = form('create-update-talk');
     $form->reset;
 
-    my $talk = shop_schema->resultset('Talk')->find(param('id'));
+    my $talk = schema->resultset('Talk')->find( route_parametere->get('id') );
     my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
@@ -679,7 +679,7 @@ get '/talk/:id' => sub {
 post '/talk/:id' => sub {
     my $tokens = {};
 
-    my $talk = shop_schema->resultset('Talk')->find( param('id') );
+    my $talk = schema->resultset('Talk')->find( route_parameters->get('id') );
     my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
@@ -774,7 +774,7 @@ get '/orders/:order_number' => sub {
     my $profile_url = uri_for('profile');
 
     # verify if order exists and belongs to current user
-    my $order_number = param('order_number');
+    my $order_number = route_parameters->get('order_number');
     my $order = schema->resultset('Order')->find({
         order_number => $order_number,
     });

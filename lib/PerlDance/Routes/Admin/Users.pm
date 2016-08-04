@@ -122,7 +122,7 @@ post '/admin/users/create' => require_role admin => sub {
 
 get '/admin/users/delete/:id' => require_role admin => sub {
     try {
-        rset('User')->find( param('id') )->delete;
+        rset('User')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/users';
 };
@@ -130,7 +130,7 @@ get '/admin/users/delete/:id' => require_role admin => sub {
 get '/admin/users/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $user = rset('User')->find( param('id') );
+    my $user = rset('User')->find( route_parameters->get('id') );
 
     send_error( "User not found", 404 ) if !$user;
 
@@ -203,7 +203,7 @@ get '/admin/users/edit/:id' => require_role admin => sub {
 post '/admin/users/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $user = rset('User')->find( param('id') );
+    my $user = rset('User')->find( route_parameters->get('id') );
 
     send_error( "User not found", 404 ) if !$user;
 

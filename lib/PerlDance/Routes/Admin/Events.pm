@@ -121,7 +121,7 @@ post '/create' => require_role admin => sub {
 
 get '/delete/:id' => require_role admin => sub {
     try {
-        rset('Event')->find( param('id') )->delete;
+        rset('Event')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/events';
 };
@@ -133,7 +133,7 @@ get '/delete/:id' => require_role admin => sub {
 get '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $event = rset('Event')->find( param('id') );
+    my $event = rset('Event')->find( route_parameters->get('id') );
 
     send_error( "Event not found", 404 ) if !$event;
 
@@ -170,7 +170,7 @@ get '/edit/:id' => require_role admin => sub {
 post '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $event = rset('Event')->find( param('id') );
+    my $event = rset('Event')->find( route_parameters->get('id') );
 
     send_error( "Event not found", 404 ) if !$event;
 

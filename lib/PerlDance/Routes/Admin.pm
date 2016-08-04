@@ -175,7 +175,7 @@ post '/admin/news/create' => require_role admin => sub {
 
 get '/admin/news/delete/:id' => require_role admin => sub {
     try {
-        rset('Message')->find( param('id') )->delete;
+        rset('Message')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/news';
 };
@@ -183,7 +183,7 @@ get '/admin/news/delete/:id' => require_role admin => sub {
 get '/admin/news/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $news = rset('Message')->find( param('id') );
+    my $news = rset('Message')->find( route_parameters->get('id') );
 
     send_error( "News item not found.", 404 ) if !$news;
 
@@ -209,7 +209,7 @@ get '/admin/news/edit/:id' => require_role admin => sub {
 post '/admin/news/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $news = rset('Message')->find( param('id') );
+    my $news = rset('Message')->find( route_parameters->get('id') );
 
     send_error( "News item not found.", 404 ) if !$news;
 

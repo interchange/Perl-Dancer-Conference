@@ -116,7 +116,7 @@ post '/create' => require_role admin => sub {
 
 get '/delete/:id' => require_role admin => sub {
     try {
-        rset('Survey')->find( param('id') )->delete;
+        rset('Survey')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/surveys';
 };
@@ -128,7 +128,7 @@ get '/delete/:id' => require_role admin => sub {
 get '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $survey = rset('Survey')->find( param('id') );
+    my $survey = rset('Survey')->find( route_parameters->get('id') );
 
     send_error( "Survey not found.", 404 ) if !$survey;
 
@@ -159,7 +159,7 @@ get '/edit/:id' => require_role admin => sub {
 post '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $survey = rset('Survey')->find( param('id') );
+    my $survey = rset('Survey')->find( route_parameters->get('id') );
 
     send_error( "Survey not found.", 404 ) if !$survey;
 
