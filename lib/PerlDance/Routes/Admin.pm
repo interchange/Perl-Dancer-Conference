@@ -220,7 +220,6 @@ post '/admin/news/edit/:id' => require_role admin => sub {
     # TODO: validate values and if OK then try update
     $news->update(
         {
-            author_users_id => schema->current_user->id,
             public          => $values{public} || 0,
             title           => $values{title},
             uri             => $values{uri} || undef,
