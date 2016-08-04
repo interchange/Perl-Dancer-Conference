@@ -31,7 +31,7 @@ WriteMakefile(
         'Dancer2::Plugin::Deferred'         => '0.007016',
         'Dancer2::Plugin::Email'            => '0.0002',
         'Dancer2::Plugin::Interchange6'     => '0.203',
-        'Dancer2::Plugin::TemplateFlute'    => '0.200',
+        'Dancer2::Plugin::TemplateFlute'    => '0.202',
         'Dancer2::Session::DBIC'            => '0.102',
         'Dancer2::Template::TemplateFlute'  => '0.200',
         'DateTime::Format::ISO8601'        => 0,
