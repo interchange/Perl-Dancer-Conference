@@ -29,7 +29,7 @@ WriteMakefile(
         'Dancer2::Plugin::DataTransposeValidator' => '0.009',
         'Dancer2::Plugin::DBIC'             => '0.0013',
         'Dancer2::Plugin::Deferred'         => '0.007016',
-        'Dancer2::Plugin::Email'            => '0.0002',
+        'Dancer2::Plugin::Email'            => '0.0004',
         'Dancer2::Plugin::Interchange6'     => '0.203',
         'Dancer2::Plugin::TemplateFlute'    => '0.202',
         'Dancer2::Session::DBIC'            => '0.102',
