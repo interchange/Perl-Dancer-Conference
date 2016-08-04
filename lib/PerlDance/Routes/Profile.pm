@@ -425,7 +425,9 @@ post '/photo/upload' => sub {
         my $file = upload('photo');
 
         # copy file to uploads dir
-        my $upload_dir = path( setting('public'), 'img', 'uploads' );
+        my $upload_dir = path( config->{'public_dir'}, 'img', 'uploads' );
+
+        debug "set image uploads directory to $upload_dir";
 
         my ( undef, undef, $tempname ) =
           File::Spec->splitpath( $file->tempname );
@@ -470,10 +472,10 @@ post '/photo/crop' => sub {
     debug "cropping photo";
 
     $img = $img->crop(
-        left   => body_parametere->get('x'),
-        top    => body_parametere->get('y'),
-        width  => body_parametere->get('w'),
-        height => body_parametere->get('h')
+        left   => body_parameters->get('x'),
+        top    => body_parameters->get('y'),
+        width  => body_parameters->get('w'),
+        height => body_parameters->get('h')
     ) or croak "image crop failure: ", $img->errstr;
 
     debug "scaling image";
@@ -524,7 +526,7 @@ post '/photo/crop' => sub {
         $user->update({ media_id => $photo->id });
     }
 
-    my $fullpath = path( setting('public'), $target );
+    my $fullpath = path( config->{'public_dir'}, $target );
 
     debug "moving temp file to: $fullpath";
 
