@@ -166,6 +166,13 @@ get '/sponsors' => sub {
 
     add_navigation_tokens( $tokens );
 
+    # get list of sponsors
+    my $levels_rs = schema->resultset('Navigation')->find(
+        {uri => 'sponsors'})->children->active->prefetch({
+            'navigation_messages' => {'message' => {'media_messages' => 'media'}}});
+
+    $tokens->{levels} = [$levels_rs->all];
+
     template 'sponsors', $tokens;
 };
 
