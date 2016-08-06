@@ -170,6 +170,7 @@ post '/admin/news/create' => require_role admin => sub {
             uri             => $values{uri} || undef,
             summary         => $values{summary},
             content         => $values{content},
+            tags            => $values{tags},
         }
     );
     return redirect '/admin/news';
@@ -200,6 +201,7 @@ get '/admin/news/edit/:id' => require_role admin => sub {
             uri         => $news->uri,
             summary     => $news->summary,
             content     => $news->content,
+            tags        => $news->tags,
         }
     );
 
@@ -227,6 +229,7 @@ post '/admin/news/edit/:id' => require_role admin => sub {
             title           => $values{title},
             uri             => $values{uri} || undef,
             content         => $values{content},
+            tags            => $values{tags},
         }
     );
     return redirect '/admin/news';

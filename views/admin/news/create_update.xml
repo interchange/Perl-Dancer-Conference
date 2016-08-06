@@ -6,5 +6,6 @@
     <field name="summary"/>
     <field name="public"/>
     <field name="content"/>
+    <field name="tags"/>
   </form>
 </specification>
