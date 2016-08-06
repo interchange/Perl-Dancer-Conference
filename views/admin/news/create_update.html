@@ -30,6 +30,14 @@
     </div>
 
     <div class="form-group">
+      <label for="inputContent" class="col-sm-2 control-label">Content</label>
+      <div class="col-sm-10">
+        <textarea rows="5" class="form-control" id="inputContent" name="content" placeholder="Content" required></textarea>
+        <span class="help-block">Content should be written in Markdown</span>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="inputPublic" class="col-sm-2 control-label">Public</label>
       <div class="col-sm-10">
         <label class="radio-inline">
@@ -38,14 +46,6 @@
         <label class="radio-inline">
           <input type="radio" name="public" class="public" value="0">No
         </label>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="inputContent" class="col-sm-2 control-label">Content</label>
-      <div class="col-sm-10">
-        <textarea rows="5" class="form-control" id="inputContent" name="content" placeholder="Content" required></textarea>
-        <span class="help-block">Content should be written in Markdown</span>
       </div>
     </div>
 
