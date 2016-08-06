@@ -173,7 +173,7 @@ hook 'before_layout_render' => sub {
         $tokens->{show_sidebar} = 1;
 
         # add sponsor tokens
-        $tokens->{levels} = [schema->resultset('Navigation')->find({uri => 'sponsors'})->children->active->prefetch({'navigation_messages' => {'message' => {'media_messages' => 'media'}}})->all ];
+        $tokens->{levels} = [schema->resultset('Navigation')->find({uri => 'sponsors'})->children->active->order_by({-desc => 'me.priority'})->prefetch({'navigation_messages' => {'message' => {'media_messages' => 'media'}}})->all ];
     }
 };
 

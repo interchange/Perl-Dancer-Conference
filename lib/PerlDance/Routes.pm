@@ -168,7 +168,7 @@ get '/sponsors' => sub {
 
     # get list of sponsors
     my $levels_rs = schema->resultset('Navigation')->find(
-        {uri => 'sponsors'})->children->active->prefetch({
+        {uri => 'sponsors'})->children->active->order_by({-desc => 'me.priority'})->prefetch({
             'navigation_messages' => {'message' => {'media_messages' => 'media'}}});
 
     $tokens->{levels} = [$levels_rs->all];
