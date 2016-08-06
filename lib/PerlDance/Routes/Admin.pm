@@ -154,6 +154,7 @@ post '/admin/news/create' => require_role admin => sub {
     my $user   = schema->current_user;
     my $form   = form('update_create_news');
     my %values = %{ $form->values };
+    $values{summary} =~ s/\r\n/\n/g;
     $values{content} =~ s/\r\n/\n/g;
     $values{type}            = "news_item";
     $values{author_users_id} = $user->id;
@@ -167,6 +168,7 @@ post '/admin/news/create' => require_role admin => sub {
             public          => $values{public} || 0,
             title           => $values{title},
             uri             => $values{uri} || undef,
+            summary         => $values{summary},
             content         => $values{content},
         }
     );
