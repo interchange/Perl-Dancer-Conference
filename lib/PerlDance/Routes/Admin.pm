@@ -229,6 +229,7 @@ post '/admin/news/edit/:id' => require_role admin => sub {
             title           => $values{title},
             uri             => $values{uri} || undef,
             content         => $values{content},
+            summary         => $values{summary},
             tags            => $values{tags},
         }
     );
