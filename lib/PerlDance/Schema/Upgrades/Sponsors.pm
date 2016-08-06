@@ -64,17 +64,6 @@ has sponsor_levels => (
                     },
                 ],
             },
-            {
-                name => 'Special Sponsor',
-                uri => 'sponsors/special',
-                priority => 10,
-                sponsors => [
-                    {
-                        title => 'Jovial',
-                        uri => 'https://www.jovial.org/',
-                    },
-                ],
-            }
         ];
     }
 );
