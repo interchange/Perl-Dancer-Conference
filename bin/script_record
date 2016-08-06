@@ -1,0 +1,59 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use lib 'lib';
+
+use Data::Dumper;
+use PerlDance::Schema;
+
+# commandline like that
+# Message uri=sponsors/geekuni/2016
+
+my ($rs_name, $search) = @ARGV;
+
+my $schema = PerlDance::Schema->connect('PerlDance');
+
+# break up search
+my ($col, $val) = split(/=/, $search);
+
+my $rs = $schema->resultset($rs_name)->search({
+    $col => $val
+});
+
+my @pcols = $rs->result_source->primary_columns;
+my @results = $rs->hri->all;
+
+while (my $href = shift @results) {
+    for my $pcol (@pcols) {
+        delete $href->{$pcol};
+    }
+
+    print _create_record_snippet($rs_name, $href);
+}
+
+sub _create_record_snippet {
+    my ($rs_name, $href) = @_;
+
+    $Data::Dumper::Terse = 1;
+
+    my $data = Dumper($href);
+
+    return <<EOS;
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use lib 'lib';
+
+use PerlDance::Schema;
+
+my \$schema = PerlDance::Schema->connect('PerlDance');
+
+\$schema->resultset('$rs_name')->create($data);
+
+EOS
+}
+
