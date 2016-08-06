@@ -6,11 +6,11 @@ PerlDance::Routes::Admin::Events - /admin/events routes
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES 
@@ -81,7 +81,7 @@ post '/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form = form('update-create-event');
-    my $data = validator( $form->values, "update-create-event" );
+    my $data = validator( $form->values->as_hashref, "update-create-event" );
 
     if ($data->{valid}) {
         $form->reset;
@@ -121,7 +121,7 @@ post '/create' => require_role admin => sub {
 
 get '/delete/:id' => require_role admin => sub {
     try {
-        rset('Event')->find( param('id') )->delete;
+        rset('Event')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/events';
 };
@@ -133,13 +133,9 @@ get '/delete/:id' => require_role admin => sub {
 get '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $event = rset('Event')->find( param('id') );
+    my $event = rset('Event')->find( route_parameters->get('id') );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found", 404 ) if !$event;
 
     my $form   = form('update-create-event');
     $form->reset;
@@ -151,8 +147,10 @@ get '/edit/:id' => require_role admin => sub {
             abstract   => $event->abstract,
             url        => $event->url,
             scheduled  => $event->scheduled,
-            start_time => $event->start_time,
-            room       => $event->room
+            room       => $event->room,
+            $event->start_time
+            ? ( start_time => $event->start_time->datetime )
+            : (),
         }
     );
     $tokens->{form}    = $form;
@@ -174,16 +172,12 @@ get '/edit/:id' => require_role admin => sub {
 post '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $event = rset('Event')->find( param('id') );
+    my $event = rset('Event')->find( route_parameters->get('id') );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found", 404 ) if !$event;
 
     my $form = form('update-create-event');
-    my $data = validator( $form->values, "update-create-event" );
+    my $data = validator( $form->values->as_hashref, "update-create-event" );
 
     if ( $data->{valid} ) {
         $form->reset;

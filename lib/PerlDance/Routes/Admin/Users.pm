@@ -6,10 +6,10 @@ PerlDance::Routes::Admin::User - admin routes for users
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES
@@ -122,7 +122,7 @@ post '/admin/users/create' => require_role admin => sub {
 
 get '/admin/users/delete/:id' => require_role admin => sub {
     try {
-        rset('User')->find( param('id') )->delete;
+        rset('User')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/users';
 };
@@ -130,13 +130,9 @@ get '/admin/users/delete/:id' => require_role admin => sub {
 get '/admin/users/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $user = rset('User')->find( param('id') );
+    my $user = rset('User')->find( route_parameters->get('id') );
 
-    if ( !$user ) {
-        $tokens->{title} = "Users Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "User not found", 404 ) if !$user;
 
     # countries dropdown
     $tokens->{countries} = [
@@ -207,13 +203,9 @@ get '/admin/users/edit/:id' => require_role admin => sub {
 post '/admin/users/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $user = rset('User')->find( param('id') );
+    my $user = rset('User')->find( route_parameters->get('id') );
 
-    if ( !$user ) {
-        $tokens->{title} = "User Item Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "User not found", 404 ) if !$user;
 
     my $form   = form('update_create_users');
     my %values = %{ $form->values };

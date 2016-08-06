@@ -6,13 +6,14 @@ PerlDance::Routes - routes for PerlDance conference application
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Email;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
-use Dancer::Plugin::Interchange6::Routes;
+use Dancer2 appname => 'PerlDance';
+use Carp;
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Email;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::Interchange6::Routes;
+use Dancer2::Plugin::TemplateFlute;
 use DateTime;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
@@ -30,10 +31,15 @@ use Encode qw/encode/;
 
 =head1 ROUTES
 
-See also: L<PerlDance::Routes::Account>, L<PerlDance::Routes::Admin>, 
+See also:
+L<PerlDance::Routes::Account>,
+L<PerlDance::Routes::Admin>, 
 L<PerlDance::Routes::Data>,
-L<PerlDance::Routes::PayPal>, L<PerlDance::Routes::Profile>,
-L<PerlDance::Routes::Talk>, L<PerlDance::Routes::User>,
+L<PerlDance::Routes::PayPal>,
+L<PerlDance::Routes::Profile>,
+L<PerlDance::Routes::Survey>, 
+L<PerlDance::Routes::Talk>,
+L<PerlDance::Routes::User>,
 L<PerlDance::Routes::Wiki>
 
 =head2 get /
@@ -145,7 +151,7 @@ Specific news item
 =cut
 
 get '/news/:uri' => sub {
-    var uri => param('uri');
+    var uri => route_parameters->get('uri');
     forward '/news';
 };
 
@@ -198,7 +204,7 @@ get '/tickets' => sub {
         $ticket->{cart_uri} = uri_for('cart', {sku => $ticket->{sku}});
         $ticket->{tickets_left} = $ticket->{inventory}->{quantity};
     }
-    # debug to_dumper($tokens->{tickets});
+
     template 'tickets', $tokens;
 };
 
@@ -210,22 +216,6 @@ L<Dancer::Plugin::Interchange6::Routes/shop_setup_routes>
 =cut
 
 shop_setup_routes;
-
-=head2 not_found
-
-404
-
-=cut
-
-any qr{.*} => sub {
-    my $tokens = {};
-
-    $tokens->{title} = "Not Found";
-    $tokens->{description} = "404 - Page not Found";
-
-    status 'not_found';
-    template '404', $tokens;
-};
 
 =head1 METHODS
 
@@ -298,36 +288,37 @@ sub send_email {
     my %args = @_;
 
     try {
-    my $template = delete $args{template};
-    die "template not supplied to send_email" unless $template;
+        my $template = delete $args{template};
+        croak "template not supplied to send_email" unless $template;
 
-    my $tokens = delete $args{tokens};
-    die "tokens hashref not supplied to send_email"
-      unless ref($tokens) eq 'HASH';
+        my $tokens = delete $args{tokens};
+        croak "tokens hashref not supplied to send_email"
+          unless ref($tokens) eq 'HASH';
 
-    $tokens->{"conference-logo"} =
-      uri_for(
-        shop_schema->resultset('Media')->search( { label => "email-logo" } )
-          ->first->uri );
-    debug "Rendering mail $template";
-    my $html = template $template, $tokens, { layout => 'email' };
+        $tokens->{"conference-logo"} =
+          uri_for( shop_schema->resultset('Media')
+              ->search( { label => "email-logo" } )->first->uri );
 
-    my $f    = HTML::FormatText::WithLinks->new;
-    my $text = $f->parse($html);
-    # the dumper shows \x{20ac}, so html and text are decoded.
-    email {
-        %args,
-        body => encode('UTF-8', $text),
-        type => 'text',
-        attach => {
-            Data     => encode('UTF-8', $html),
-            Encoding => "quoted-printable",
-            Type     => "text/html"
-        },
-        multipart => 'alternative',
-    };
-   }
-   catch { error "Could not send email: $_"; };
+        debug "Rendering mail $template";
+        my $html = template $template, $tokens, { layout => 'email' };
+
+        my $f    = HTML::FormatText::WithLinks->new;
+        my $text = $f->parse($html);
+
+        # the dumper shows \x{20ac}, so html and text are decoded.
+        email {
+            %args,
+              body   => encode( 'UTF-8', $text ),
+              type   => 'text',
+              attach => {
+                Data     => encode( 'UTF-8', $html ),
+                Encoding => "quoted-printable",
+                Type     => "text/html"
+              },
+              multipart => 'alternative',
+        };
+    }
+    catch { error "Could not send email: $_"; };
 }
 
 true;

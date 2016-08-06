@@ -6,11 +6,11 @@ PerlDance::Routes::Admin::Survey - /admin/surveys
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES 
@@ -76,7 +76,7 @@ post '/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form = form('create-update-survey');
-    my $data = validator( $form->values, "create-update-survey" );
+    my $data = validator( $form->values->as_hashref, "create-update-survey" );
 
     if ($data->{valid}) {
         $form->reset;
@@ -116,7 +116,7 @@ post '/create' => require_role admin => sub {
 
 get '/delete/:id' => require_role admin => sub {
     try {
-        rset('Survey')->find( param('id') )->delete;
+        rset('Survey')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/surveys';
 };
@@ -128,13 +128,9 @@ get '/delete/:id' => require_role admin => sub {
 get '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $survey = rset('Survey')->find( param('id') );
+    my $survey = rset('Survey')->find( route_parameters->get('id') );
 
-    if ( !$survey ) {
-        $tokens->{title} = "Survey Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Survey not found.", 404 ) if !$survey;
 
     my $form   = form('create-update-survey');
     $form->reset;
@@ -163,16 +159,12 @@ get '/edit/:id' => require_role admin => sub {
 post '/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $survey = rset('Survey')->find( param('id') );
+    my $survey = rset('Survey')->find( route_parameters->get('id') );
 
-    if ( !$survey ) {
-        $tokens->{title} = "Survey Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Survey not found.", 404 ) if !$survey;
 
     my $form = form('create-update-survey');
-    my $data = validator( $form->values, "create-update-survey" );
+    my $data = validator( $form->values->as_hashref, "create-update-survey" );
 
     if ( $data->{valid} ) {
         $form->reset;

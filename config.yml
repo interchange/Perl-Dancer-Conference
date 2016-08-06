@@ -4,6 +4,7 @@
 
 server_tokens: 0
 require_environment: 1
+session: DBIC
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2016"
 conference_email: "2016@perl.dance"
@@ -56,39 +57,44 @@ logger_format: "%t [%P] %L @%D> %m in %f l. %l"
 template: "template_flute"
 
 engines:
-  JSON:
-    allow_blessed: '1'
-  template_flute:
-    filters:
-      boolean:
-        class: "PerlDance::Filter::Boolean"
-      currency:
-        options:
-          int_curr_symbol: "€"
-      date:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%x %R'
-          strict:
-            empty: 0
-      date_only:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%x'
-          strict:
-            empty: 0
-      markdown:
-        class: "PerlDance::Filter::Markdown"
-      monger_groups:
-        class: "PerlDance::Filter::MongerGroups"
-      time_only:
-        class: "Template::Flute::Filter::Date"
-        options:
-          format: '%R'
-          strict:
-            empty: 0
-      wiki:
-        class: "PerlDance::Filter::Wiki"
+  serializer:
+    JSON:
+      allow_blessed: '1'
+  session:
+    DBIC:
+      db_connection_name: default
+  template:
+    template_flute:
+      filters:
+        boolean:
+          class: "PerlDance::Filter::Boolean"
+        currency:
+          options:
+            int_curr_symbol: "€"
+        date:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%x %R'
+            strict:
+              empty: 0
+        date_only:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%x'
+            strict:
+              empty: 0
+        markdown:
+          class: "PerlDance::Filter::Markdown"
+        monger_groups:
+          class: "PerlDance::Filter::MongerGroups"
+        time_only:
+          class: "Template::Flute::Filter::Date"
+          options:
+            format: '%R'
+            strict:
+              empty: 0
+        wiki:
+          class: "PerlDance::Filter::Wiki"
 plugins:
   Auth::Extensible:
     disable_roles: 0
@@ -104,18 +110,18 @@ plugins:
         provider: 'DBIC'
         db_connection_name: 'default'
         users_resultset: User
+        roles_resultset: Role
+        user_roles_resultset: UserRole
         roles_relationship: roles
-        role_column: name
-        username_column: username
-        password_column: password
-        password_check: check_password
+        roles_role_column: name
+        users_username_column: username
+        users_password_column: password
+        users_password_check: check_password
   DBIC:
     default:
       dsn: dbi:Pg:dbname=perldance
       schema_class: PerlDance::Schema
       options:
-        RaiseError: 1
-        PrintError: 1
         on_connect_do: 'SET client_min_messages=WARNING;'
         pg_enable_utf8: 1
         quote_names: 1

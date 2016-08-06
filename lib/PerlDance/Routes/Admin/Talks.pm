@@ -6,11 +6,11 @@ PerlDance::Routes::Admin::Talks - /admin/talks routes
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES 
@@ -69,7 +69,7 @@ post '/admin/talks/create' => require_role admin => sub {
     my $tokens = {};
 
     my $form   = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
     if ( $data->{valid} ) {
         my %values = %{ $data->{values} };
@@ -112,7 +112,7 @@ post '/admin/talks/create' => require_role admin => sub {
 
 get '/admin/talks/delete/:id' => require_role admin => sub {
     try {
-        rset('Talk')->find( param('id') )->delete;
+        rset('Talk')->find( route_parameters->get('id') )->delete;
     };
     redirect '/admin/talks';
 };
@@ -120,13 +120,9 @@ get '/admin/talks/delete/:id' => require_role admin => sub {
 get '/admin/talks/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $talk = rset('Talk')->find( param('id') );
+    my $talk = rset('Talk')->find( route_parameters->get('id') );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     my $form = form('create-update-talk');
     $form->reset;
@@ -145,8 +141,10 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             confirmed       => $talk->confirmed,
             lightning       => $talk->lightning,
             scheduled       => $talk->scheduled,
-            start_time      => $talk->start_time,
-            room            => $talk->room
+            room            => $talk->room,
+            $talk->start_time
+            ? ( start_time  => $talk->start_time->datetime )
+            : (),
         }
     );
     $tokens->{authors} = [ rset('User')->all ];
@@ -164,16 +162,12 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
 post '/admin/talks/edit/:id' => require_role admin => sub {
     my $tokens = {};
 
-    my $talk = rset('Talk')->find( param('id') );
+    my $talk = rset('Talk')->find( route_parameters->get('id') );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     my $form = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
     if ( $data->{valid} ) {
         my %values = %{ $data->{values} };

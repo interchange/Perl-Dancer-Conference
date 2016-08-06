@@ -6,10 +6,10 @@ PerlDance::Routes::Admin::Navigation - admin routes for navigation
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use Try::Tiny;
 
 =head1 ROUTES
@@ -54,8 +54,8 @@ Move :source nav to be a child of :target
 =cut
 
 get '/admin/navigation/move/:source/:target' => require_role admin => sub {
-    my $source = param 'source';
-    my $target = param 'target';
+    my $source = route_parameters->get('source');
+    my $target = route_parameters->get('target');
     my $response = 0;
 
     my $parent = rset('Navigation')->find($target);
@@ -72,18 +72,21 @@ get '/admin/navigation/move/:source/:target' => require_role admin => sub {
 =cut
 
 post '/admin/navigation/create' => require_role admin => sub {
+
     try {
         rset('Navigation')->create(
             {
-                uri         => param('uri')         || undef,
-                type        => param('type')        || '',
-                scope       => param('scope')       || '',
-                name        => param('name')        || '',
-                description => param('description') || '',
-                alias       => param('alias')       || undef,
-                parent_id   => param('parent_id')   || undef,
-                priority    => param('priority')    || 0,
-                active => defined param('active') ? param('active') : 1,
+                uri         => body_parameters->get('uri')         || undef,
+                type        => body_parameters->get('type')        || '',
+                scope       => body_parameters->get('scope')       || '',
+                name        => body_parameters->get('name')        || '',
+                description => body_parameters->get('description') || '',
+                alias       => body_parameters->get('alias')       || undef,
+                parent_id   => body_parameters->get('parent_id')   || undef,
+                priority    => body_parameters->get('priority')    || 0,
+                active      => defined body_parameters->get('active')
+                               ? body_parameters->get('active')
+                               : 1,
             }
         );
     }
@@ -98,7 +101,7 @@ post '/admin/navigation/create' => require_role admin => sub {
 =cut
 
 get '/admin/navigation/delete/:id' => require_role admin => sub {
-    my $id = param 'id';
+    my $id = route_parameters->get('id');
     my $nav = rset('Navigation')->find($id);
     $nav->delete if $nav;
     redirect '/admin/navigation';
@@ -109,20 +112,22 @@ get '/admin/navigation/delete/:id' => require_role admin => sub {
 =cut
 
 post '/admin/navigation/edit' => require_role admin => sub {
-    my $nav = rset('Navigation')->find( param('navigation_id') );
+    my $nav = rset('Navigation')->find( body_parameters->get('navigation_id') );
     if ($nav) {
         try {
             $nav->update(
                 {
-                    uri         => param('uri')         || undef,
-                    type        => param('type')        || '',
-                    scope       => param('scope')       || '',
-                    name        => param('name')        || '',
-                    description => param('description') || '',
-                    alias       => param('alias')       || undef,
-                    parent_id   => param('parent_id')   || undef,
-                    priority    => param('priority')    || 0,
-                    active => defined param('active') ? param('active') : 1,
+                    uri         => body_parameters->get('uri')         || undef,
+                    type        => body_parameters->get('type')        || '',
+                    scope       => body_parameters->get('scope')       || '',
+                    name        => body_parameters->get('name')        || '',
+                    description => body_parameters->get('description') || '',
+                    alias       => body_parameters->get('alias')       || undef,
+                    parent_id   => body_parameters->get('parent_id')   || undef,
+                    priority    => body_parameters->get('priority')    || 0,
+                    active      => defined body_parameters->get('active')
+                                   ? body_parameters->get('active')
+                                   : 1,
                 }
             );
         }

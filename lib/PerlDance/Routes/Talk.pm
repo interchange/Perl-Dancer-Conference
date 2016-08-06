@@ -6,9 +6,10 @@ PerlDance::Routes::Talk - Talk/Event routes for PerlDance conference application
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Deferred;
 use DateTime;
 use HTML::FormatText::WithLinks;
 use HTML::TagCloud;
@@ -34,11 +35,7 @@ get qr{/events/(?<id>\d+).*} => sub {
         },
     );
 
-    if ( !$event ) {
-        $tokens->{title} = "Event Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Event not found.", 404 ) if !$event;
 
     $tokens->{event} = $event;
     $tokens->{title} = $event->title;
@@ -53,8 +50,8 @@ Tag cloud links in /talks
 =cut
 
 get '/talks/archive/:year/tag/:tag' => sub {
-    var tag => param 'tag';
-    my $year = param 'year';
+    var tag => route_parameters->get('tag');
+    my $year = route_parameters->get('year');
     forward "/talks/archive/$year";
 };
 
@@ -67,20 +64,14 @@ Talks from previous conference
 get '/talks/archive/:year' => sub {
     my $tokens = {};
 
-    my $year = param 'year';
+    my $year = route_parameters->get('year');
 
-    if ( $year !~ /^\d\d\d\d$/ ) {
-        status 'not_found';
-        return template '404', { title => 'Not Found' };
-    }
+    send_error( "Not found.", 404 ) if $year !~ /^\d\d\d\d$/;
 
     my $conference =
       rset('Conference')->find( { name => "Perl Dancer Conference $year" } );
 
-    if ( !$conference ) {
-        status 'not_found';
-        return template '404', { title => 'Not Found' };
-    }
+    send_error( "Not found.", 404 ) if !$conference;
 
     var conferences_id => $conference->id;
     var uri => request->path;
@@ -154,7 +145,7 @@ get '/talks' => sub {
         }
     }
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
         $talks = $talks->with_attendee_status( $user->id );
     }
 
@@ -186,9 +177,7 @@ get '/talks/schedule' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     my $dt    = $conference->start_date->clone;
@@ -205,18 +194,14 @@ get '/talks/schedule' => sub {
 
 get '/myschedule/:date' => require_login sub {
     var myschedule => 1;
-    forward path( '/talks/schedule', param('date') );
+    forward path( '/talks/schedule', route_parameters->get('date') );
 };
 
 get '/talks/schedule/:date' => sub {
     my $tokens = {};
 
-    my $date = param 'date';
-    if ( $date !~ m/^(\d+)-(\d+)-(\d+)$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    my $date = route_parameters->get('date');
+    send_error( "Not found.", 404 ) if $date !~ m/^(\d+)-(\d+)-(\d+)$/;
 
     my $dt_date = DateTime->new( year => $1, month => $2, day => $3 );
     my $conference = rset('Conference')->find( setting('conferences_id') );
@@ -234,9 +219,7 @@ get '/talks/schedule/:date' => sub {
         || $conference->end_date < $conference->start_date )
     {
         warning "Conference record missing or start/end dates missing/broken";
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     # days token
@@ -292,7 +275,7 @@ get '/talks/schedule/:date' => sub {
         }
     )->with_attendee_count;
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
 
         $talks = $talks->with_attendee_status( $user->id );
 
@@ -301,7 +284,7 @@ get '/talks/schedule/:date' => sub {
             # personal schedule (forwarded from /myschedule/:date)
             $talks = $talks->search(
                 {
-                    'attendee_talks.users_id' => logged_in_user->id,
+                    'attendee_talks.users_id' => $user->id,
                 },
                 {
                     join => 'attendee_talks',
@@ -454,7 +437,7 @@ get '/talks/schedule/:date' => sub {
                             $data->{id}              = $e->id;
                             $data->{url}             = $e->url;
                             $data->{video_url}       = $e->video_url;
-                            if (logged_in_user) {
+                            if (schema->current_user) {
                                 $data->{attendee_status} = $e->attendee_status;
                             }
                         }
@@ -492,7 +475,7 @@ Tag cloud links in /talks
 =cut
 
 get '/talks/tag/:tag' => sub {
-    var tag => param('tag');
+    var tag => route_parameters->get('tag');
     forward '/talks';
 };
 
@@ -506,13 +489,13 @@ get '/talks/:action/:id' => require_login sub {
 
     content_type 'application/json';
 
-    my $action   = param 'action';
-    my $talks_id = param 'id';
+    my $action   = route_parameters->get('action');
+    my $talks_id = route_parameters->get('id');
     my $json     = { result => "fail" };
 
     if ( $action =~ /^(add|remove)$/ ) {
         if ( my $talk = rset('Talk')->find($talks_id) ) {
-            my $users_id = logged_in_user->id;
+            my $users_id = schema->current_user->id;
             if ( $action eq 'add' ) {
                 try {
                     $talk->create_related( 'attendee_talks',
@@ -603,17 +586,13 @@ get qr{/talks/(?<id>\d+).*} => sub {
         { prefetch => [ 'author', { attendee_talks => 'user' } ], }
     );
 
-    if ( !$talk ) {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Talk not found.", 404 ) if !$talk;
 
     $tokens->{talk}          = $talk;
     $tokens->{title}         = $talk->title;
     $tokens->{has_attendees} = $talk->attendee_talks->count;
 
-    if ( my $user = logged_in_user ) {
+    if ( my $user = schema->current_user ) {
         $tokens->{attendee_status} = $talk->attendee_status( $user->id );
     }
 

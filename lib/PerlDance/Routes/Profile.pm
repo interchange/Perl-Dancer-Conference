@@ -6,14 +6,15 @@ PerlDance::Routes::Profile - account routes such as login, edit profile, ...
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Email;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
+use Dancer2 appname => 'PerlDance';
+use Carp;
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Email;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::TemplateFlute;
 use File::Copy;
 use File::Spec;
 use File::Type;
@@ -60,7 +61,7 @@ Profile update top-level page showing available options.
 get '/' => sub {
     my $nav = shop_navigation( { uri => 'profile' } );
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $talks = [
         $user->talks_authored->search(
             { conferences_id => setting('conferences_id') }
@@ -130,7 +131,7 @@ get '/edit' => sub {
           ->hri->all
     ];
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my %values = (
         first_name    => $user->first_name,
         last_name     => $user->last_name,
@@ -252,7 +253,7 @@ post '/edit' => sub {
     $values{bio} =~ s/\r\n/\n/g;
     $values{nickname} = undef unless $values{nickname} =~ /\S/;
 
-    my $user = logged_in_user;
+    my $user = schema->current_user;
 
     # TODO: validate values and if OK then try update
     $user->update(
@@ -315,7 +316,7 @@ post '/edit' => sub {
         }
     }
 
-    flash success => "Profile updated.";
+    deferred success => "Profile updated.";
     $form->reset;
     redirect '/profile';
 };
@@ -327,7 +328,7 @@ Ajax route to geocode address data
 =cut
 
 post '/geocode' => sub {
-    my $address = param 'address';
+    my $address = body_parameters->get('address');
 
     debug "geocoding $address";
 
@@ -363,14 +364,15 @@ get '/password' => sub {
 post '/password' => sub {
 
     my $form = form('change-password');
-    my $data = validator( $form->values, 'change-password', logged_in_user );
+    my $user = schema->current_user;
+    my $data = validator( $form->values->as_hashref, 'change-password', $user );
 
     # we don't want form data to leak into the session
     $form->reset;
 
     if ( $data->{valid} ) {
-        logged_in_user->update( { password => $data->{values}->{password} } );
-        flash success => "Password changed.";
+        $user->update( { password => $data->{values}->{password} } );
+        deferred success => "Password changed.";
         redirect '/profile';
     }
     else {
@@ -391,7 +393,8 @@ get '/photo' => sub {
 
     PerlDance::Routes::add_javascript( $tokens, '/js/profile-photo.js' );
 
-    my $photo = logged_in_user->photo;
+    my $user = schema->current_user;
+    my $photo = $user->photo;
 
     debug "User already has photo with id: ", $photo->id if $photo;
 
@@ -422,7 +425,9 @@ post '/photo/upload' => sub {
         my $file = upload('photo');
 
         # copy file to uploads dir
-        my $upload_dir = path( setting('public'), 'img', 'uploads' );
+        my $upload_dir = path( config->{'public_dir'}, 'img', 'uploads' );
+
+        debug "set image uploads directory to $upload_dir";
 
         my ( undef, undef, $tempname ) =
           File::Spec->splitpath( $file->tempname );
@@ -450,33 +455,33 @@ post '/photo/upload' => sub {
 post '/photo/crop' => sub {
     use Imager;
     my $file = session('new_photo');
-    my $user = logged_in_user;
+    my $user = schema->current_user;
 
     my $ft = File::Type->new;
     my $mime_type = $ft->checktype_filename($file);
 
-    die "Not an image" unless $mime_type =~ /^image\//;
+    croak "Not an image" unless $mime_type =~ /^image\//;
 
     ( my $type = $mime_type ) =~ s/^.+?\///;
     $type = 'png' if lc($type) eq 'x-png';
 
     my $img = Imager->new;
     $img->read( file => $file )
-      or die "Cannot read photo $file: ", $img->errstr;
+      or croak "Cannot read photo $file: ", $img->errstr;
 
     debug "cropping photo";
 
     $img = $img->crop(
-        left   => param('x'),
-        top    => param('y'),
-        width  => param('w'),
-        height => param('h')
-    ) or die "image crop failure: ", $img->errstr;
+        left   => body_parameters->get('x'),
+        top    => body_parameters->get('y'),
+        width  => body_parameters->get('w'),
+        height => body_parameters->get('h')
+    ) or croak "image crop failure: ", $img->errstr;
 
     debug "scaling image";
 
     $img = $img->scale( xpixels => 300, ypixels => 300 )
-      or die "image scale failure: ", $img->errstr;
+      or croak "image scale failure: ", $img->errstr;
 
     my %options = ( file => $file, type => $type );
 
@@ -484,7 +489,7 @@ post '/photo/crop' => sub {
 
     debug "saving image";
 
-    $img->write( %options ) or die "image write failed: ", $img->errstr;
+    $img->write( %options ) or croak "image write failed: ", $img->errstr;
 
     ( my $file_ext = $file ) =~ s/^.+\.//;
 
@@ -503,7 +508,7 @@ post '/photo/crop' => sub {
                 uri            => "/$target",
                 mime_type      => $mime_type,
             }
-        ) or die "failed to update photo record in database";
+        ) or croak "failed to update photo record in database";
     }
     else {
 
@@ -517,11 +522,11 @@ post '/photo/crop' => sub {
                 mime_type      => $mime_type,
                 media_types_id => $media_type_image->id,
             }
-        ) or die "failed to create photo record in database";
+        ) or croak "failed to create photo record in database";
         $user->update({ media_id => $photo->id });
     }
 
-    my $fullpath = path( setting('public'), $target );
+    my $fullpath = path( config->{'public_dir'}, $target );
 
     debug "moving temp file to: $fullpath";
 
@@ -558,7 +563,8 @@ post '/talk/create' => sub {
     my $tokens = {};
 
     my $form = form('create-update-talk');
-    my $data = validator( $form->values, 'create-update-talk' );
+    my $data = validator( $form->values->as_hashref, 'create-update-talk' );
+    my $user = schema->current_user;
 
     if ($data->{valid}) {
 
@@ -576,7 +582,7 @@ post '/talk/create' => sub {
         try {
             my $talk = shop_schema->resultset('Talk')->create(
                 {
-                    author_id      => logged_in_user->id,
+                    author_id      => $user->id,
                     conferences_id => setting('conferences_id'),
                     title          => $data->{values}->{title},
                     abstract       => $abstract,
@@ -593,7 +599,7 @@ post '/talk/create' => sub {
                 template => '/email/talk_submitted',
                 tokens   => {
                     %{ $data->{values} },
-                    logged_in_user => logged_in_user,
+                    logged_in_user => $user,
                     talk           => $talk,
                 },
                 subject => setting("conference_name") . " talk submitted",
@@ -602,7 +608,7 @@ post '/talk/create' => sub {
             debug "sent email/talk_submitted";
 
             $form->reset;
-            flash success => "Thank you for submitting your talk. We will be in contact soon";
+            deferred success => "Thank you for submitting your talk. We will be in contact soon";
             $success = 1;
         }
         catch {
@@ -635,12 +641,13 @@ get '/talk/:id' => sub {
     my $form = form('create-update-talk');
     $form->reset;
 
-    my $talk = shop_schema->resultset('Talk')->find(param('id'));
+    my $talk = schema->resultset('Talk')->find( route_parameters->get('id') );
+    my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
     if (   $talk
         && $talk->conferences_id == setting('conferences_id')
-        && $talk->author->id == logged_in_user->id )
+        && $talk->author->id == $user->id )
     {
         # all good
 
@@ -663,9 +670,7 @@ get '/talk/:id' => sub {
         template 'profile/create_update_talk', $tokens;
     }
     else {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        template '404', $tokens;
+        send_error( "Talk not found.", 404 );
     }
 };
 
@@ -676,17 +681,18 @@ get '/talk/:id' => sub {
 post '/talk/:id' => sub {
     my $tokens = {};
 
-    my $talk = shop_schema->resultset('Talk')->find( param('id') );
+    my $talk = schema->resultset('Talk')->find( route_parameters->get('id') );
+    my $user = schema->current_user;
 
     # check we have a talk for this conference owned by this user
     if (   $talk
         && $talk->conferences_id == setting('conferences_id')
-        && $talk->author->id == logged_in_user->id )
+        && $talk->author->id == $user->id )
     {
         # all good so validate
 
         my $form = form('create-update-talk');
-        my $data = validator( $form->values, 'create-update-talk' );
+        my $data = validator( $form->values->as_hashref, 'create-update-talk' );
 
         if ($data->{valid}) {
 
@@ -718,7 +724,7 @@ post '/talk/:id' => sub {
                     template => '/email/talk_submitted',
                     tokens   => {
                         %{ $data->{values} },
-                        logged_in_user => logged_in_user,
+                        logged_in_user => $user,
                         talk           => $talk,
                     },
                     subject => setting("conference_name") . " talk updated",
@@ -729,7 +735,7 @@ post '/talk/:id' => sub {
             }
             catch {
                 error "Talk update error: $_";
-                flash error => "Talk update error: $_";
+                deferred error => "Talk update error: $_";
             };
         }
         else {
@@ -746,9 +752,7 @@ post '/talk/:id' => sub {
         template 'profile/create_update_talk', $tokens;
     }
     else {
-        $tokens->{title} = "Talk Not Found";
-        status 'not_found';
-        template '404', $tokens;
+        send_error( "Talk not found.", 404 );
     }
 };
 
@@ -757,7 +761,8 @@ post '/talk/:id' => sub {
 =cut
 
 get '/orders' => sub {
-    my $orders = logged_in_user->orders->order_by('!order_date');
+    my $user = schema->current_user;
+    my $orders = $user->orders->order_by('!order_date');
     template '/profile/orders', { title => "Your Orders", orders => $orders };
 };
 
@@ -771,7 +776,7 @@ get '/orders/:order_number' => sub {
     my $profile_url = uri_for('profile');
 
     # verify if order exists and belongs to current user
-    my $order_number = param('order_number');
+    my $order_number = route_parameters->get('order_number');
     my $order = schema->resultset('Order')->find({
         order_number => $order_number,
     });
@@ -781,7 +786,7 @@ get '/orders/:order_number' => sub {
     }
 
     my $order_user = $order->user;
-    my $current_user = logged_in_user;
+    my $current_user = schema->current_user;
 
     if ($order_user->id != $current_user->id) {
         # order belongs to other customer
@@ -791,15 +796,14 @@ get '/orders/:order_number' => sub {
     my $tokens = {order => $order};
 
     # check whether this is a receipt for recent order
-    if (defined session->{order_receipt}
-            && session->{order_receipt} eq $order_number) {
-        $tokens->{receipt} = session->{order_receipt};
+    if ( my $order_receipt = session->delete('order_receipt') ) {
+        if ( $order_receipt eq $order_number ) {
+            $tokens->{receipt} = $order_receipt;
 
-        # send email receipt
-        order_receipt($order);
+            # send email receipt
+            order_receipt($order);
+        }
     }
-
-    session order_receipt => undef;
 
     template 'profile/order', $tokens;
 };
@@ -873,7 +877,7 @@ sub user_can_unregister {
     my ($user, $order_rs, $talks) = @_;
     my $conference_id = setting('conferences_id');
 
-    $user ||= logged_in_user;
+    $user ||= schema->current_user;
     return 0 unless $user;
     return 0 unless user_is_registered($user);
     unless ($order_rs) {
@@ -898,41 +902,41 @@ sub user_can_unregister {
 }
 
 get '/unregister' => sub {
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $conference_id = setting('conferences_id');
     if (user_can_unregister($user)) {
         if (my $record = user_is_registered($user)) {
             $record->delete;
-            flash success => "You unregistered from the conference!";
+            deferred success => "You unregistered from the conference!";
         }
         else {
             # shouldn't happen, though
-            flash error => "You are already unregistered!";
+            deferred error => "You are already unregistered!";
         }
     }
     else {
-        flash error => "You can't unregister!";
+        deferred error => "You can't unregister!";
     }
     return redirect '/profile';
 };
 
 get '/register' => sub {
-    my $user = logged_in_user;
+    my $user = schema->current_user;
     my $conference_id = setting('conferences_id');
     if (user_is_registered($user)) {
-        flash error => "You are already registered!";
+        deferred error => "You are already registered!";
     }
     else {
         $user->conferences_attended
           ->update_or_create({ conferences_id => $conference_id });
-        flash success => "You are registered now!";
+        deferred success => "You are registered now!";
     }
     return redirect '/profile';
 };
 
 
 sub user_is_registered {
-    my $user = shift || logged_in_user;
+    my $user = shift || schema->current_user;
     return unless $user;
     my $conference_id = setting('conferences_id');
     # debug "Checking " . $user->username . " for $conference_id";

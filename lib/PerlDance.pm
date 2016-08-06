@@ -2,22 +2,20 @@ package PerlDance;
 
 =head1 NAME
 
-PerlDance - Perl Dancer 2015 conference site
+PerlDance - Perl Dancer 2016 conference site
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Interchange6;
-use Dancer::Plugin::Interchange6::Routes;
+use Dancer2;
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::Debugger;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::Interchange6;
+use Dancer2::Plugin::Interchange6::Routes;
 use PerlDance::Routes;
-use Try::Tiny;
 
 our $VERSION = '0.1';
-
-set session => 'DBIC';
-set session_options => { schema => shop_schema };
 
 set conferences_id => shop_schema->resultset('Conference')
   ->find( { name => setting 'conference_name' } )->id;
@@ -42,14 +40,11 @@ hook 'before_cart_display' => sub {
 
     if ( request->is_ajax ) {
 
-        content_type 'application/json';
-
         my $html = template( "/fragments/cart", $tokens, { layout => undef } );
         $html =~ s/^.*?body>//;
         $html =~ s/<\/body.*?$//;
 
-        Dancer::Continuation::Route::Templated->new(
-            return_value => to_json( { html => $html } ) )->throw;
+        send_as JSON => +{ html => $html };
     }
     elsif ( request->is_post ) {
 
@@ -70,13 +65,30 @@ hook 'before_cart_display' => sub {
     }
 };
 
+=head2 before_error_init
+
+On error set the var 'hide_sidebar' to truthy value. This can then be checked
+in L</before_layout_render> hook to make sure the sidebar is not displayed.
+
+=cut
+
+hook before_error_init => sub {
+    var hide_sidebar => 1;
+};
+
 =head2 before_template_render
 
 =cut
 
 hook 'before_template_render' => sub {
     my $tokens = shift;
-    $tokens->{logged_in_user}  = logged_in_user;
+
+    if ( my $user = logged_in_user ) {
+        # D2PAE::Provider::DBIC returns a hashref not a row obj so to save
+        # us having to change code elsewhere get ourselves an object
+        $tokens->{logged_in_user} = schema->current_user;
+    }
+
     $tokens->{conference_name} = setting('conference_name');
 };
 
@@ -130,22 +142,12 @@ hook 'before_layout_render' => sub {
       setting('conference_name') . ". " . ( $tokens->{description} || '' );
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
-    # flash alerts
-    my $flash = flash_flush;
-    foreach my $key ( keys %$flash ) {
-        foreach my $message ( @{$flash->{$key}} ) {
-            push @{$tokens->{alerts}->{$key}}, { message => $message };
-        }
-    }
-
     # display sidebar?
-    if ( request->path =~ m{^/($|events|speakers|talks|tickets|users/)} ) {
+    if ( !var('hide_sidebar')
+        && request->path =~ m{^/($|events|speakers|talks|tickets|users/)} )
+    {
         $tokens->{show_sidebar} = 1;
     }
-};
-
-hook after_layout_render => sub {
-    flash_flush;
 };
 
 =head1 ROUTES

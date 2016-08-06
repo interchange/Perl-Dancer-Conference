@@ -1,17 +1,13 @@
 #!/usr/bin/env perl
-use Plack::Builder;
-use Dancer;
-use PerlDance;
-use lib 'lib';
 
-my $app = sub {
-    load_app "PerlDance";
-    Dancer::App->set_running_app("PerlDance");
-    my $env = shift;
-    Dancer::Handler->init_request_headers($env);
-    my $req = Dancer::Request->new( env => $env );
-    Dancer->dance($req);
-};
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use Plack::Builder;
+use PerlDance;
+my $app = PerlDance->to_app;
 
 builder {
     enable 'Session';

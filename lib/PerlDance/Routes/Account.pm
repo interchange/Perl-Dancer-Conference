@@ -6,12 +6,12 @@ PerlDance::Routes::Account - account routes such as login, register, reset pwd
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DataTransposeValidator;
-use Dancer::Plugin::FlashNote;
-use Dancer::Plugin::Form;
-use Dancer::Plugin::Interchange6;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DataTransposeValidator;
+use Dancer2::Plugin::Deferred;
+use Dancer2::Plugin::TemplateFlute;
+use Dancer2::Plugin::Interchange6;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
@@ -19,7 +19,7 @@ use Try::Tiny;
 
 =head2 get /login
 
-post is handled by L<Dancer::Plugin::Interchange6>
+post is handled by L<Dancer2::Plugin::Interchange6>
 
 =cut
 
@@ -31,8 +31,8 @@ get '/login' => sub {
     };
 
     # DPIC6 uses session return_url in post /login
-    if ( param('return_url') ) {
-        session return_url =>  param('return_url');
+    if ( body_parameters->get('return_url') ) {
+        session return_url =>  body_parameters->get('return_url');
     }
 
     if ( var 'login_failed' ) {
@@ -52,9 +52,8 @@ get '/register' => sub {
     my $form = form('register-reset');
     $form->reset;
 
-    my $data = session("data_register");
+    my $data = session->delete("data_register");
     if ( $data ) {
-        session "data_register" => undef;
         $form->fill($data->{values});
     }
 
@@ -80,9 +79,8 @@ get '/reset_password' => sub {
     my $form = form('register-reset');
     $form->reset;
 
-    my $data = session("data_reset_password");
+    my $data = session->delete("data_reset_password");
     if ( $data ) {
-        session "data_reset_password" => undef;
         $form->fill($data->{values});
     }
 
@@ -106,13 +104,14 @@ Register of request password reset.
 =cut
 
 post qr{ /(?<action> register | reset_password )$ }x => sub {
-    my $email    = param('username');
+    my $email    = body_parameters->get('username');
     my $captures = captures;
     my $action   = $$captures{action};
     my $username = lc($email);
 
-    my $form = form('register-reset');
-    my $data = validator( $form->values, 'email-valid' );
+    my $form = form('register-reset', source => 'body' );
+    # validator currently only supports hashrefs
+    my $data = validator( $form->values->as_hashref, 'email-valid' );
 
     if ( $data->{valid} ) {
 
@@ -227,9 +226,8 @@ any [ 'get', 'post' ] => qr{
 
     if ( request->is_post ) {
 
-        my %params = params('body');
-
-        my $data = validator( \%params, 'password-reset', $user->username );
+        my $data = validator( body_parameters->as_hashref,
+            'password-reset', $user->username );
 
         if ( $data->{valid} ) {
 
@@ -260,10 +258,10 @@ any [ 'get', 'post' ] => qr{
                     subject => "Registration for the " . setting("conference_name"),
                 );
 
-                flash success => "Welcome to the " . setting('conference_name');
+                deferred success => "Welcome to the " . setting('conference_name');
             }
             else {
-                flash success => "Password changed";
+                deferred success => "Password changed";
             }
 
             return redirect '/profile';

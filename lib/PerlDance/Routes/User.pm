@@ -6,10 +6,10 @@ PerlDance::Routes::User - user/speaker pages
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 
 =head1 ROUTES
 
@@ -51,6 +51,8 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
             join => 'conferences_attended',
         }
     );
+    send_error( "Not found.", 404 ) if !$user;
+
     $tokens->{user} = $user;
 
     $tokens->{attending} =
@@ -60,12 +62,6 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
       ->order_by('talk.title');
 
     my $address = $user->addresses->first;
-
-    if ( !$tokens->{user} ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
 
     my $talks = $tokens->{user}->search_related(
         'talks_authored',
@@ -79,7 +75,7 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
 
         $tokens->{has_talks} = 1;
 
-        if ( my $user = logged_in_user ) {
+        if ( my $user = schema->current_user ) {
             $talks = $talks->with_attendee_status( $user->id );
         }
 
@@ -186,7 +182,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     unshift @{ $tokens->{monger_groups} },
       { value => undef, label => 'Any' };
 
-    my %values = %{ params() };
+    my %values = %{ request->parameters->as_hashref };
     if ( %values ) {
 
         $form->fill(\%values);

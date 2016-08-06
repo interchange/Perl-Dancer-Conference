@@ -50,18 +50,18 @@
     </list>
   </list>
 
-  <list name="alerts-success" iterator="alerts.success">
-    <param name="message" op="hook"/>
-  </list>
-  <list name="alerts-info" iterator="alerts.info">
-    <param name="message" op="hook"/>
-  </list>
-  <list name="alerts-warning" iterator="alerts.warning">
-    <param name="message" op="hook"/>
-  </list>
-  <list name="alerts-error" iterator="alerts.error">
-    <param name="message" op="hook"/>
-  </list>
+  <container name="alerts-success" value="deferred.success">
+    <value name="deferred-success" op="hook" field="deferred.success"/>
+  </container>
+  <container name="alerts-info" value="deferred.info">
+    <value name="deferred-info" op="hook" field="deferred.info"/>
+  </container>
+  <container name="alerts-warning" value="deferred.warning">
+    <value name="deferred-warning" op="hook" field="deferred.warning"/>
+  </container>
+  <container name="alerts-error" value="deferred.error">
+    <value name="deferred-error" op="hook" field="deferred.error"/>
+  </container>
 
   <list name="extra-js" iterator="extra-js">
     <param name="src" target="src"/>

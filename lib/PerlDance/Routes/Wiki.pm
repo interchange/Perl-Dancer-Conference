@@ -6,10 +6,10 @@ PerlDance::Routes::Wiki
 
 =cut
 
-use Dancer ':syntax';
-use Dancer::Plugin::Auth::Extensible;
-use Dancer::Plugin::DBIC;
-use Dancer::Plugin::Form;
+use Dancer2 appname => 'PerlDance';
+use Dancer2::Plugin::Auth::Extensible;
+use Dancer2::Plugin::DBIC;
+use Dancer2::Plugin::TemplateFlute;
 use DateTime;
 use HTML::TagCloud;
 use Text::Diff 'diff';
@@ -37,11 +37,7 @@ get '/wiki/diff/*/**' => sub {
 
     my ( $version, $splat ) = splat;
 
-    if ( $version !~ /^\d+$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Not found.", 404 ) if $version !~ /^\d+$/;
 
     my $title = join( '/', @$splat );
 
@@ -63,9 +59,7 @@ get '/wiki/diff/*/**' => sub {
     my $second = $rset->next;
 
     if ( !$first && !$second ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
+        send_error( "Not found.", 404 );
     }
 
     $first  = $first->content;
@@ -136,18 +130,16 @@ post '/wiki/edit/**' => require_login sub {
     my ($splat) = splat;
     my $title = join( '/', @$splat );
 
-    my $user_id = logged_in_user->id;
-
-    my $content = param('content');
+    my $content = body_parameters->get('content');
     $content =~ s(\[user:(.+?)\])(translate_wiki_user($1))gie;
     $content =~ s(\[me\])(translate_wiki_user('me'))gie;
 
-    if ( param('preview') ) {
+    if ( body_parameters->get('preview') ) {
 
         # back to the edit page with a preview shown above
         $tokens->{content} = $content;
         $tokens->{preview} = $content;
-        $tokens->{tags}    = param('tags');
+        $tokens->{tags}    = body_parameters->get('tags');
         $tokens->{title}   = "Wiki - editing $title";
         $tokens->{uri}     = $title;
 
@@ -159,7 +151,7 @@ post '/wiki/edit/**' => require_login sub {
 
         $content =~ s/\r\n/\n/g;
 
-        my $tags = param('tags');
+        my $tags = body_parameters->get('tags');
         $tags =~ s/(^\s+|\s+$)//g;
 
         rset('Message')->create(
@@ -168,7 +160,7 @@ post '/wiki/edit/**' => require_login sub {
                 content         => $content,
                 type            => 'wiki_node',
                 format          => 'markdown',
-                author_users_id => logged_in_user->id,
+                author_users_id => schema->current_user->id,
                 tags            => $tags,
             }
         );
@@ -265,10 +257,10 @@ any [ 'get', 'post' ] => '/wiki/recent' => sub {
     my $values;
 
     if ( request->is_post ) {
-        $values = $form->values;
+        $values = $form->values->as_hashref;
     }
     else {
-        $values = $form->values('session');
+        $values = $form->values('session')->as_hashref;
     }
 
     my $days = $values->{period};
@@ -374,7 +366,7 @@ List of pages with this tag
 get '/wiki/tags/:tag' => sub {
     my $tokens = {};
 
-    my $tag = param 'tag';
+    my $tag = route_parameters->get('tag');
 
     my $rset = rset('Message')->search(
         {
@@ -414,11 +406,7 @@ get '/wiki/version/*/**' => sub {
 
     my ( $version, $splat ) = splat;
 
-    if ( $version !~ /^\d+$/ ) {
-        $tokens->{title} = "Not Found";
-        status 'not_found';
-        return template '404', $tokens;
-    }
+    send_error( "Not found.", 404 ) if $version !~ /^\d+$/;
 
     my $title = join( '/', @$splat );
 
@@ -468,7 +456,7 @@ sub translate_wiki_user {
     my $arg = shift;
     my $user;
     if ( $arg eq 'me' ) {
-        $user = logged_in_user;
+        $user = schema->current_user;
     }
     else {
         if ( $arg =~ /.+\@.+/ ) {
