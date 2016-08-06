@@ -20,6 +20,29 @@ our $VERSION = '0.1';
 set conferences_id => shop_schema->resultset('Conference')
   ->find( { name => setting 'conference_name' } )->id;
 
+=head1 INSTALLATION
+
+=head2 LIBRARIES
+
+Before you start with the installation, you need to install
+a number of development packages for libraries to get the
+full functionality of this application.
+
+=head3 IMAGER
+
+In order to support all common image formats, you need to
+install the development packages before installing L<Imager>.
+
+On Debian, you can install them as follows:
+
+   apt-get install libjpeg-dev libpng-dev libgif-dev libtiff-dev libfreetype6-dev
+
+=head3 GEO-IP
+
+On Debian, install as follows:
+
+   apt-get install geoip-bin libgeoip-dev geoip-database-contrib
+
 =head1 HOOKS
 
 =head2 before_cart_display
