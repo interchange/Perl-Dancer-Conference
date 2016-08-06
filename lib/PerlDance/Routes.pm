@@ -318,6 +318,7 @@ sub send_email {
               body   => encode( 'UTF-8', $text ),
               type   => 'text',
               attach => {
+                Charset  => 'utf-8',
                 Data     => encode( 'UTF-8', $html ),
                 Encoding => "quoted-printable",
                 Type     => "text/html"
