@@ -198,6 +198,7 @@ get '/admin/news/edit/:id' => require_role admin => sub {
             title       => $news->title,
             public      => $news->public,
             uri         => $news->uri,
+            summary     => $news->summary,
             content     => $news->content,
         }
     );
