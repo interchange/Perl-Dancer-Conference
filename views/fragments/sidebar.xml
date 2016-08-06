@@ -1,2 +1,23 @@
 <specification>
+  <list name="levels" class="company-level-box" iterator="levels">
+    <container name="company-level-box" value="navigation_messages.count"/>
+      <param name="name" class="company-level"/>
+      <list name="sponsors" class="company-details"
+            iterator="navigation_messages">
+        <!-- this doesn't work as expected
+        <container name="company-name" field="message.media_messages.first">
+          <param name="name" class="company-name" field="message.title"/>
+        </container>
+        -->
+        <param name="teaser" class="company-teaser" field="message.summary"/>
+        <param name="link" class="company-link" field="message.uri"
+             target="href"/>
+        <param name="logo" class="company-logo"
+               field="message.media_messages.first.media.file"
+               target="src"
+               op="append"
+               />
+
+      </list>
+  </list>
 </specification>

@@ -1,0 +1,16 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+use lib 'lib';
+
+use PerlDance::Schema;
+use PerlDance::Schema::Upgrades::Sponsors;
+
+my $schema = PerlDance::Schema->connect('PerlDance');
+my $upgrade = PerlDance::Schema::Upgrades::Sponsors->new
+    (schema => $schema);
+
+$upgrade->clear;
+$upgrade->upgrade;
+

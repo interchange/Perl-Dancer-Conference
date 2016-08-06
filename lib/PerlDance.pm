@@ -13,6 +13,7 @@ use Dancer2::Plugin::Debugger;
 use Dancer2::Plugin::Deferred;
 use Dancer2::Plugin::Interchange6;
 use Dancer2::Plugin::Interchange6::Routes;
+
 use PerlDance::Routes;
 
 our $VERSION = '0.1';
@@ -170,6 +171,9 @@ hook 'before_layout_render' => sub {
         && request->path =~ m{^/($|events|speakers|talks|tickets|users/)} )
     {
         $tokens->{show_sidebar} = 1;
+
+        # add sponsor tokens
+        $tokens->{levels} = [schema->resultset('Navigation')->find({uri => 'sponsors'})->children->active->prefetch({'navigation_messages' => {'message' => {'media_messages' => 'media'}}})->all ];
     }
 };
 
