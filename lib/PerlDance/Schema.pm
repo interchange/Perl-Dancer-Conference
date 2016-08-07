@@ -139,6 +139,17 @@ sub uri {
     return join('-', $self->id, uri_escape_utf8($name));
 }
 
+sub name_with_nickname {
+    my $self = shift;
+    my $long_name = $self->name;
+
+    if ($self->nickname) {
+        $long_name .= ' (' . $self->nickname . ')';
+    }
+
+    return $long_name;
+}
+
 =head2 RELATIONS
 
 =head3 talks_authored
