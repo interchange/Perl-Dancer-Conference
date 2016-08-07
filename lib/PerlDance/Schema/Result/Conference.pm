@@ -45,7 +45,6 @@ Canonical Link to conference such as "https://www.perl.dance/"
 column uri => {
     data_type   => "varchar",
     size        => 255,
-    is_nullable => 1,
 };
 
 =head2 logo
@@ -57,7 +56,6 @@ Conference logo such as "img/perl-dancer-2016-logo.png".
 column logo => {
     data_type   => "varchar",
     size        => 255,
-    is_nullable => 1,
 };
 
 =head2 email
@@ -69,7 +67,6 @@ Canonical conference email address such as "2016@perl.dance".
 column email => {
     data_type   => "varchar",
     size        => 255,
-    is_nullable => 1,
 };
 
 =head2 start_date
