@@ -5,7 +5,8 @@
   <container name="has_city" value="user.addresses.first.city"/>
   <container name="has_country" value="user.addresses.first.country"/>
   <container name="has_pause_id" value="user.pause_id"/>
-  <container name="has_talks" value="has_talks"/>
+  <container name="has_talks" value="talks"/>
+  <container name="has_previous_talks" value="previous_talks.has_rows"/>
   <container name="has_monger_groups" value="user.monger_groups"/>
   <container name="show-stars" value="logged_in_user"/>
 
@@ -39,5 +40,10 @@
   <list name="attending" iterator="attending">
     <param name="title" class="link"/>
     <param name="seo_uri" class="link" target="href" op="append"/>
+  </list>
+  <list name="previous_talks" iterator="previous_talks">
+    <param name="talk-link" target="href" op="append" field="seo_uri"/>
+    <param name="title" class="talk-link"/>
+    <param name="conference" field="conference.name"/>
   </list>
 </specification>

@@ -67,13 +67,11 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
         'talks_authored',
         {
             conferences_id => setting('conferences_id'),
-            accepted       => 1,
+            -bool          => 'accepted',
         }
     );
 
     if ( $talks->has_rows ) {
-
-        $tokens->{has_talks} = 1;
 
         if ( my $user = schema->current_user ) {
             $talks = $talks->with_attendee_status( $user->id );
@@ -81,6 +79,26 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
 
         $tokens->{talks} = $talks;
     }
+
+    $tokens->{previous_talks} = $tokens->{user}->search_related(
+        'talks_authored',
+        {
+            'me.conferences_id' => { '!=', setting('conferences_id') },
+            -bool               => 'accepted',
+            -bool               => 'scheduled',
+            start_time          => [
+                -and => { '!=', undef },
+                { '<=', schema->format_datetime( DateTime->now ) }
+            ],
+        },
+        {
+            columns => [ 'talks_id', 'title' ],
+            order_by   => { -desc => 'start_time' },
+            '+columns' => ['conference.name'],
+            join       => 'conference',
+            collapse   => 1,
+        }
+    );
 
     $tokens->{title} = $tokens->{user}->name;
     if ( $address ) {
