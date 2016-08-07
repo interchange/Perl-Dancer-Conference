@@ -8,6 +8,7 @@ session: DBIC
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2016"
 conference_email: "2016@perl.dance"
+conference_uri: "https://www.perl.dance"
 guru_min_level_auto_speaker: 80
 
 t_shirt_sizes:
