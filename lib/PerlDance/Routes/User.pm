@@ -306,6 +306,11 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     $tokens->{form} = $form;
     $tokens->{title} = "User Search";
 
+    if ($tokens->{no_results}) {
+        # prevent "Soft 404"
+        status 404;
+    }
+
     template 'users/search', $tokens;
 };
 
