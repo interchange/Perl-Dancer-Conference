@@ -145,6 +145,7 @@ get '/news' => sub {
 
             # create structured data object - which might failed because of missing data
             my %ld_data;
+            my $ld_output;
 
             try {
                 %ld_data = (
@@ -162,13 +163,14 @@ get '/news' => sub {
 
                 my $ld = PerlDance::StructuredData->new(%ld_data);
 
-                debug "LD: ", $ld->out;
+                $ld_output = $ld->out;
             }
             catch {
                 error "crashed while creating structured data: $_, data: ", \%ld_data;
             };
 
             $tokens->{title} = $tokens->{news}->first->title;
+            $tokens->{structured_data} = $ld_output;
             $tokens->{news}->reset;
         }
         else {

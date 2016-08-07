@@ -13,6 +13,7 @@
 
   <value name="head-title"/>
   <value name="meta-description" target="content"/>
+  <value name="structured_data" id="structured-data"/>
   <value name="content" class="content" op="hook"/>
 
   <list name="menu-login" iterator="nav-top-login">
