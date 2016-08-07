@@ -365,17 +365,18 @@ Returns hash used to produce structured data for the website.
 sub structured_data_hash {
     my ($self, $settings) = @_;
 
-    my $image_path = join('/', 'img', 'uploads', 'user-' . $self->author->uri . '.jpg');
+    my $image_path = $self->author->photo_uri;
+    $image_path =~ s%/%%;
 
     my %sd_hash = (
         uri => $self->seo_uri,
         type => 'Article',
         author => $self->author->name_with_nickname,
         headline => $self->title,
-        image_uri => join('/', $settings->{'conference_uri'}, $image_path),
+        image_uri => $self->conference->uri . $image_path,
         image_path => join('/', $settings->{'public_dir'}, $image_path),
-        logo_uri => join('/', $settings->{'conference_uri'}, $settings->{'conference_logo'}),
-        logo_path => join('/', $settings->{'public_dir'}, $settings->{'conference_logo'}),
+        logo_uri => $self->conference->uri . $self->conference->logo,
+        logo_path => join('/', $settings->{'public_dir'}, $self->conference->logo),
         date_published => DateTime->now,
         publisher => 'Perl Dancer Conference',
     );

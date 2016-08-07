@@ -604,14 +604,8 @@ get qr{/talks/(?<id>\d+).*} => sub {
 
     # create structured data object - which might failed because of missing data
     try {
-        %ld_data = (
-            conference_uri => setting('conference_uri'),
-            conference_logo => setting('conference_logo'),
-            public_dir => config->{public_dir},
-        );
-
-        my $sdh = $talk->structured_data_hash(\%ld_data);
-        my $ld = PerlDance::StructuredData->new(%$ret);
+        my $sdh = $talk->structured_data_hash( { public_dir => config->{public_dir} });
+        my $ld = PerlDance::StructuredData->new(%$sdh);
 
         $ld_output = $ld->out;
     }
