@@ -18,6 +18,7 @@ use DateTime;
 use HTML::FormatText::WithLinks;
 use Try::Tiny;
 
+use PerlDance::StructuredData;
 use PerlDance::Routes::Account;
 use PerlDance::Routes::Admin;
 use PerlDance::Routes::Data;
@@ -130,7 +131,46 @@ get '/news' => sub {
 
     if ( $tokens->{news}->has_rows ) {
         if ( var('uri') ) {
+            my $news = $tokens->{news}->first;
+            my $image_path;
+
+            # check whether we got a picture inside the news
+            if ($news->content =~ m%<img src="/(.*)"%) {
+                debug "Picture is $1.";
+                $image_path = $1;
+            }
+            else {
+                # standard picture
+            }
+
+            # create structured data object - which might failed because of missing data
+            my %ld_data;
+            my $ld_output;
+
+            try {
+                %ld_data = (
+                    uri => var('uri'),
+                    author => $news->author->name_with_nickname,
+                    headline => $news->title,
+                    image_uri => join('/', setting('conference_uri'), $image_path),
+                    image_path => join('/', config->{public_dir}, $image_path),
+                    logo_uri => join('/', setting('conference_uri'), setting('conference_logo')),
+                    logo_path => join('/', config->{public_dir}, setting('conference_logo')),
+                    date_published => $news->created,
+                    date_modified => $news->last_modified,
+                    publisher => 'Perl Dancer Conference',
+                );
+
+                my $ld = PerlDance::StructuredData->new(%ld_data);
+
+                $ld_output = $ld->out;
+            }
+            catch {
+                error "crashed while creating structured data: $_, data: ", \%ld_data;
+            };
+
             $tokens->{title} = $tokens->{news}->first->title;
+            $tokens->{structured_data} = $ld_output;
             $tokens->{news}->reset;
         }
         else {

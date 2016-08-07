@@ -8,32 +8,8 @@ session: DBIC
 session_name: perldance.session
 conference_name: "Perl Dancer Conference 2016"
 conference_email: "2016@perl.dance"
-guru_min_level_auto_speaker: 80
-
-t_shirt_sizes:
-  - 'XS'
-  - 'XS (W)'
-  - 'S'
-  - 'S (W)'
-  - 'M'
-  - 'M (W)'
-  - 'L'
-  - 'L (W)'
-  - 'XL'
-  - 'XL (W)'
-  - 'XLT'
-  - 'XXL'
-  - 'XXL (W)'
-  - 'XXLT'
-  - 'XXXL'
-  - '4XL'
-  - '5XL'
-  - '6XL'
-
-geoip_database:
-  city: /usr/share/GeoIP/GeoLiteCity.dat
-  country4: /usr/share/GeoIP/GeoIP.dat
-  country6: /usr/share/GeoIP/GeoIPv6.dat
+conference_uri: "https://www.perl.dance"
+conference_logo: "img/perl-dancer-2016-logo.png"
 
 # Your application's name
 appname: "PerlDance"
