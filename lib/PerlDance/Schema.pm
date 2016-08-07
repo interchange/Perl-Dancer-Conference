@@ -1,6 +1,6 @@
 package PerlDance::Schema;
 
-our $VERSION = 25;
+our $VERSION = 27;
 
 use Interchange6::Schema::Result::Address;
 package Interchange6::Schema::Result::Address;

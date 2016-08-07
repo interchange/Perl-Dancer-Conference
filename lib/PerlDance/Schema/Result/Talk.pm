@@ -202,6 +202,31 @@ column room => {
     default_value => "",
 };
 
+=head2 created
+
+Date and time when this record was created returned as L<DateTime> object.
+Value is auto-set on insert.
+
+=cut
+
+column created => {
+    data_type         => "datetime",
+    set_on_create     => 1,
+};
+
+=head2 last_modified
+
+Date and time when this record was last modified returned as L<DateTime> object.
+Value is auto-set on insert and update.
+
+=cut
+
+column last_modified => {
+    data_type         => "datetime",
+    set_on_create     => 1,
+    set_on_update     => 1,
+};
+
 =head2 survey_id
 
 Nullable FK on L<PerlDance::Schema::Result::Survey/survey_id>
