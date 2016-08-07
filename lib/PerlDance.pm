@@ -44,6 +44,15 @@ On Debian, install as follows:
 
    apt-get install geoip-bin libgeoip-dev geoip-database-contrib
 
+If you use other locations for the GeoIP databases, please copy the following
+snippet from F<config.yml> to your environment configuration file and
+adjust it accordingly:
+
+  geoip_database:
+    city: /usr/share/GeoIP/GeoLiteCity.dat
+    country4: /usr/share/GeoIP/GeoIP.dat
+    country6: /usr/share/GeoIP/GeoIPv6.dat
+
 =head1 HOOKS
 
 =head2 before_cart_display
