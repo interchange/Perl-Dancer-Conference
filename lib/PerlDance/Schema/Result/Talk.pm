@@ -377,7 +377,8 @@ sub structured_data_hash {
         image_path => join('/', $settings->{'public_dir'}, $image_path),
         logo_uri => $self->conference->uri . $self->conference->logo,
         logo_path => join('/', $settings->{'public_dir'}, $self->conference->logo),
-        date_published => DateTime->now,
+        date_published => $self->created,
+        date_modified => $self->last_modified,
         publisher => 'Perl Dancer Conference',
     );
 
