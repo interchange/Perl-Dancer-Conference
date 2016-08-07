@@ -171,8 +171,7 @@ hook 'before_layout_render' => sub {
 
     $tokens->{"head-title"} =
       setting('conference_name') . " | " . ( $tokens->{title} || '' );
-    $tokens->{"meta-description"} =
-      setting('conference_name') . ". " . ( $tokens->{description} || '' );
+    $tokens->{"meta-description"} = $tokens->{description};
     $tokens->{title_wrapper} = 1 unless var('no_title_wrapper');
 
     # display sidebar?
