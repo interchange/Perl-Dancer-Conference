@@ -212,7 +212,6 @@ Value is auto-set on insert.
 column created => {
     data_type         => "datetime",
     set_on_create     => 1,
-    is_nullable       => 1,
 };
 
 =head2 last_modified
@@ -226,7 +225,6 @@ column last_modified => {
     data_type         => "datetime",
     set_on_create     => 1,
     set_on_update     => 1,
-    is_nullable       => 1,
 };
 
 =head2 survey_id
