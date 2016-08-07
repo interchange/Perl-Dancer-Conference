@@ -596,6 +596,37 @@ get qr{/talks/(?<id>\d+).*} => sub {
         $tokens->{attendee_status} = $talk->attendee_status( $user->id );
     }
 
+    # add structured data
+    my %ld_data;
+    my $ld_output;
+
+    my $image_path = join('/', 'img', 'uploads', 'user-' . $talk->author->uri . '.jpg');
+
+    # create structured data object - which might failed because of missing data
+    try {
+        %ld_data = (
+            uri => var('uri'),
+            type => 'Article',
+            author => $talk->author->name_with_nickname,
+            headline => $talk->title,
+            image_uri => join('/', setting('conference_uri'), $image_path),
+            image_path => join('/', config->{public_dir}, $image_path),
+            logo_uri => join('/', setting('conference_uri'), setting('conference_logo')),
+            logo_path => join('/', config->{public_dir}, setting('conference_logo')),
+            date_published => DateTime->now,
+            publisher => 'Perl Dancer Conference',
+        );
+
+        my $ld = PerlDance::StructuredData->new(%ld_data);
+
+        $ld_output = $ld->out;
+    }
+        catch {
+            error "crashed while creating structured data: $_, data: ", \%ld_data;
+        };
+
+    $tokens->{structured_data} = $ld_output;
+
     template 'talk', $tokens;
 };
 
