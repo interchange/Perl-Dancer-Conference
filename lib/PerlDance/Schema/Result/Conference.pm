@@ -36,6 +36,39 @@ unique_column name => {
     size      => 128,
 };
 
+=head2 uri
+
+Canonical Link to conference such as "https://www.perl.dance/"
+
+=cut
+
+column uri => {
+    data_type   => "varchar",
+    size        => 255,
+};
+
+=head2 logo
+
+Conference logo such as "img/perl-dancer-2016-logo.png".
+
+=cut
+
+column logo => {
+    data_type   => "varchar",
+    size        => 255,
+};
+
+=head2 email
+
+Canonical conference email address such as "2016@perl.dance".
+
+=cut
+
+column email => {
+    data_type   => "varchar",
+    size        => 255,
+};
+
 =head2 start_date
 
 Start date of conference
