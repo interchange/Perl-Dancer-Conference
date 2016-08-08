@@ -139,7 +139,7 @@ sub image_dimensions {
     my ($self, $image_path) = @_;
 
     my $imager = Imager->new( file => $image_path)
-        or die Imager->errstr();
+        or die "File: $image_path, " . Imager->errstr();
 
     my %results;
 
