@@ -171,7 +171,8 @@ get '/paypal/getrequest' => sub {
 
         if ($payinfo{Ack} eq 'Failure') {
             # handle unexpected failure
-            session cart_paypal_error => 1;
+            my $conf_email = config->{conference_email};
+
             warning "PayPal money transfer failed: ", \%payinfo;
 
             # send email to organization
@@ -183,6 +184,10 @@ get '/paypal/getrequest' => sub {
                 },
                 subject => "PayPal money transfer failed",
             );
+
+            # setting user visible error message, this needs to be done *after* sending the email
+            # otherwise it won't show up
+            deferred error => qq{Payment with PayPal failed. Please contact <a href="mailto:$conf_email">$conf_email</a> for assistance.};
 
             return redirect uri_for('cart');
         }
