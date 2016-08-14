@@ -173,6 +173,17 @@ get '/paypal/getrequest' => sub {
             # handle unexpected failure
             session cart_paypal_error => 1;
             warning "PayPal money transfer failed: ", \%payinfo;
+
+            # send email to organization
+            PerlDance::Routes::send_email(
+                template => "email/paypal_failure",
+                tokens   => {
+                    failure => Dumper(\%payinfo),
+                    cart => shop_cart(),
+                },
+                subject => "PayPal money transfer failed",
+            );
+
             return redirect uri_for('cart');
         }
 
