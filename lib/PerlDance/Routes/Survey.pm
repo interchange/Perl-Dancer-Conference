@@ -359,7 +359,7 @@ get '/survey-results/:id' => sub {
     my $no_response =
       scalar grep { $_->{completed} == 0 } @{ $survey->{user_surveys} };
     my $total             = $responded + $no_response;
-    my $percent_responded = int( $responded / $total * 100 + 0.5 );
+    my $percent_responded = $total ? int( $responded / $total * 100 + 0.5 ) : 0;
 
     unshift @{ $survey->{sections} }, {
         title => 'Responses',
