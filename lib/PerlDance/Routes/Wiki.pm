@@ -253,15 +253,12 @@ Recent changes
 any [ 'get', 'post' ] => '/wiki/recent' => sub {
     my $tokens = {};
 
-    my $form = form('wiki-recent');
-    my $values;
+    my $form = form(
+        name   => 'wiki-recent',
+        source => request->is_post ? 'body' : 'session'
+    );
 
-    if ( request->is_post ) {
-        $values = $form->values->as_hashref;
-    }
-    else {
-        $values = $form->values('session')->as_hashref;
-    }
+    my $values = $form->values->as_hashref;
 
     my $days = $values->{period};
     $days = 7 unless ( $days && $days =~ /^\d+$/ );
