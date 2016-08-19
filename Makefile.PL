@@ -48,6 +48,7 @@ WriteMakefile(
         'Imager'                           => 0,
         'Interchange6'                     => '0.110',
         'Interchange6::Schema'             => '0.130',
+        'List::MoreUtils'                  => 0,
         'Number::Format'                   => 0,
         'Plack::Middleware::XForwardedFor' => 0,
         'Plack::Middleware::XSRFBlock'     => 0,

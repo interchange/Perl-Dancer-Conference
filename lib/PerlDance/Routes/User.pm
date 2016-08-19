@@ -10,6 +10,7 @@ use Dancer2 appname => 'PerlDance';
 use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::TemplateFlute;
+use List::MoreUtils 'uniq';
 
 =head1 ROUTES
 
@@ -190,6 +191,7 @@ any [ 'get', 'post' ] => '/users/search' => sub {
     # monger_groups dropdown
     $tokens->{monger_groups} = [
         map { { value => $_, label => $_ } }
+          uniq map { lc($_) }
           split(
             /[,\s]+/,
             join( " ",
@@ -265,10 +267,13 @@ any [ 'get', 'post' ] => '/users/search' => sub {
 
         if ( $values{monger_group} ) {
             $users = $users->search(
-                {
-                    'me.monger_groups' =>
-                      { like => '%' . $values{monger_group} . '%' }
-                }
+                \[
+                    'LOWER(me.monger_groups) LIKE ?',
+                    [
+                        { dbic_colname => 'me.monger_groups' },
+                        '%' . lc($values{monger_group}) . '%'
+                    ]
+                ]
             );
         }
 
@@ -355,7 +360,7 @@ get '/users/statistics' => sub {
     ];
 
     my ( %groups, @groups );
-    map { $groups{$_}++ } split(
+    map { $groups{lc($_)}++ } split(
         /[,\s]+/,
         join( " ",
             $users->search( { monger_groups => { '!=' => '' } } )
