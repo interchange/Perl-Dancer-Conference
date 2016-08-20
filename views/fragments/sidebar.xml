@@ -9,7 +9,8 @@
           <param name="name" class="company-name" field="message.title"/>
         </container>
         -->
-        <param name="teaser" class="company-teaser" field="message.summary"/>
+        <param name="teaser" class="company-teaser" field="message.summary"
+               filter="markdown" op="hook"/>
         <param name="link" class="company-link" field="message.uri"
              target="href"/>
         <param name="logo" class="company-logo"
