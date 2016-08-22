@@ -202,12 +202,12 @@ __PACKAGE__->has_many(
 User attends many conferences.
 
 Type: many_to_many with L<PerlDance::Schema::Result::Conference>
-via L</conference_attendees>
+via L</conferences_attendeed>
 
 =cut
 
 __PACKAGE__->many_to_many(
-    'conferences' => "conference_attendees",
+    'conferences' => "conferences_attended",
     "conference"
 );
 
