@@ -150,6 +150,40 @@ sub name_with_nickname {
     return $long_name;
 }
 
+=head2 structured_data_hash
+
+Returns hash used to produce structured data for the website.
+
+=cut
+
+sub structured_data_hash {
+    my ($self, $settings) = @_;
+
+    my $image_path = $self->photo_uri;
+    $image_path =~ s%/%%;
+
+    # get conference
+    my $conference = $self->conferences->search({}, {
+        order_by => { -desc => 'start_date' },
+    })->first;
+
+    my %sd_hash = (
+        uri => $self->uri,
+        type => 'Article',
+        author => $self->name_with_nickname,
+        headline => 'User ' . $self->name_with_nickname,
+        image_uri => $conference->uri . $image_path,
+        image_path => join('/', $settings->{'public_dir'}, $image_path),
+        logo_uri => $conference->uri . $conference->logo,
+        logo_path => join('/', $settings->{'public_dir'}, $conference->logo),
+        date_published => $self->created,
+        date_modified => $self->last_modified,
+        publisher => 'Perl Dancer Conference',
+    );
+
+    return \%sd_hash;
+}
+
 =head2 RELATIONS
 
 =head3 talks_authored
