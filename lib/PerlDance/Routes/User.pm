@@ -11,6 +11,7 @@ use Dancer2::Plugin::Auth::Extensible;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::TemplateFlute;
 use List::MoreUtils 'uniq';
+use Try::Tiny;
 
 =head1 ROUTES
 
@@ -108,6 +109,25 @@ get qr{/(speakers|users)/(?<id>\d+).*} => sub {
         $tokens->{description} .= $address->city . ', ' if $address->city;
         $tokens->{description} .= $address->country->name;
     }
+
+    # create structured data object - which might failed because of missing data
+    my $sdh;
+    my $ld_output;
+
+    try {
+        $sdh = $user->structured_data_hash( {
+            public_dir => config->{public_dir},
+        });
+
+        my $ld = PerlDance::StructuredData->new(%$sdh);
+
+        $ld_output = $ld->out;
+    }
+    catch {
+        error "crashed while creating structured data: $_, data: ", $sdh;
+    };
+
+    $tokens->{structured_data} = $ld_output;
 
     template 'speaker', $tokens;
 };
