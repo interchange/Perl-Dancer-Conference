@@ -415,21 +415,22 @@ sub add_speakers_tokens {
             'addresses.type' => 'primary',
             'conferences_attended.conferences_id' => setting('conferences_id'),
             -or                                   => {
-                'talks_authored.accepted'  => 1,
-                'talks_authored.confirmed' => 1,
-                'me.guru_level' => {
-                    '>=', setting('guru_min_level_auto_speaker')},
-                -and                       => {
-                    'attribute.name' => 'speaker',
-                    'attribute.type' => 'boolean',
+                -and => {
+                    'talks_authored.conferences_id' =>
+                      setting('conferences_id'),
+                    -or => {
+                        'talks_authored.accepted'  => 1,
+                        'talks_authored.confirmed' => 1,
+                    },
                 },
+                'me.guru_level' =>
+                  { '>=', setting('guru_min_level_auto_speaker') },
             },
         },
         {
             prefetch => [ { addresses => 'country', }, 'photo' ],
             join     => [
                 'conferences_attended', 'talks_authored',
-                { user_attributes => 'attribute' }
             ],
             order_by => { -desc => 'guru_level' },
         }
