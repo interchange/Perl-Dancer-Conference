@@ -139,6 +139,19 @@ sub uri {
     return join('-', $self->id, uri_escape_utf8($name));
 }
 
+=head3 last_conference_attended
+
+Returns the last conference this user has attended or undef.
+
+=cut
+
+sub last_conference_attended {
+    my $self = shift;
+    my $conference = $self->conferences->search({}, {
+        order_by => { -desc => 'start_date' },
+    })->first;
+}
+
 sub name_with_nickname {
     my $self = shift;
     my $long_name = $self->name;
@@ -163,9 +176,7 @@ sub structured_data_hash {
     $image_path =~ s%/%%;
 
     # get conference
-    my $conference = $self->conferences->search({}, {
-        order_by => { -desc => 'start_date' },
-    })->first;
+    my $conference = $self->last_conference_attended;
 
     my %sd_hash = (
         uri => $self->uri,
