@@ -133,6 +133,18 @@ column comments => {
     default_value => '',
 };
 
+=head2 organiser_notes
+
+Notes from the organisers for the attendees.
+
+=cut
+
+column organiser_notes => {
+    data_type     => "varchar",
+    size          => 2048,
+    default_value => '',
+};
+
 =head2 accepted
 
 Whether talk has been accepted.
