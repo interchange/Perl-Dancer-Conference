@@ -7,10 +7,12 @@
   <container name="add_talk" value="!attendee_status"/>
   <container name="talk-uri-container" value="talk.url"/>
   <container name="talk-video-container" value="talk.video_url"/>
+  <container name="organiser-notes" value="talk.organiser_notes"/>
   <value name="picked" field="talk.id" target="href" op="append"/>
   <value name="unpicked" field="talk.id" target="href" op="append"/>
   <value name="title" class="panel-title" field="talk.title"/>
   <value name="abstract" field="talk.abstract" op="hook" filter="markdown"/>
+  <value name="organiser-notes" field="talk.organiser_notes" op="hook" filter="markdown"/>
   <value name="talk-uri" field="talk.url" target="href"/>
   <value name="video-uri" field="talk.video_url" target="href"/>
   <value name="photo-link" target="href" op="append" field="talk.author.uri"/>

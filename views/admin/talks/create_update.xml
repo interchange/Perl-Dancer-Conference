@@ -7,6 +7,7 @@
     <field name="title"/>
     <field name="tags"/>
     <field name="abstract"/>
+    <field name="organiser_notes"/>
     <field name="url"/>
     <field name="video_url"/>
     <field name="comments"/>
@@ -33,6 +34,9 @@
   <value name="abstract_input" field="data.css.abstract" target="class"
     op="append" joiner=" "/>
   <value name="abstract_error" field="data.errors.abstract"/>
+  <value name="organiser_notes_input" field="data.css.organiser_notes" target="class"
+    op="append" joiner=" "/>
+  <value name="organiser_notes_error" field="data.errors.organiser_notes"/>
   <value name="url_input" field="data.css.url" target="class"
     op="append" joiner=" "/>
   <value name="url_error" field="data.errors.url"/>

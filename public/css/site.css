@@ -277,6 +277,9 @@ h4.subscribe {
   color: #8b8b8b;
   padding: 20px 0;
 }
+.organiser-notes {
+  font-weight: bold;
+}
 /* countdown */
 .countdown-timer {
   margin: 20px 0;

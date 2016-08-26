@@ -74,6 +74,7 @@ post '/admin/talks/create' => require_role admin => sub {
     if ( $data->{valid} ) {
         my %values = %{ $data->{values} };
         $values{abstract} =~ s/\r\n/\n/g;
+        $values{organiser_notes} =~ s/\r\n/\n/g;
 
         rset('Talk')->create(
             {
@@ -83,6 +84,7 @@ post '/admin/talks/create' => require_role admin => sub {
                 title          => $values{title},
                 tags           => $values{tags} || '',
                 abstract       => $values{abstract} || '',
+                organiser_notes => $values{organiser_notes} || '',
                 url            => $values{url} || '',
                 video_url      => $values{video_url} || '',
                 comments       => $values{comments} || '',
@@ -134,6 +136,7 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             title           => $talk->title,
             tags            => $talk->tags,
             abstract        => $talk->abstract,
+            organiser_notes => $talk->organiser_notes,
             url             => $talk->url,
             video_url       => $talk->video_url,
             comments        => $talk->comments,
@@ -173,6 +176,7 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
         my %values = %{ $data->{values} };
 
         $values{abstract} =~ s/\r\n/\n/g;
+        $values{organiser_notes} =~ s/\r\n/\n/g;
 
         $talk->update(
             {
@@ -181,6 +185,7 @@ post '/admin/talks/edit/:id' => require_role admin => sub {
                 title      => $values{title},
                 tags       => $values{tags} || '',
                 abstract   => $values{abstract} || '',
+                organiser_notes => $values{organiser_notes} || '',
                 url        => $values{url} || '',
                 video_url  => $values{video_url} || '',
                 comments   => $values{comments} || '',
