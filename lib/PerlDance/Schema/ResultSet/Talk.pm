@@ -60,4 +60,30 @@ sub with_attendee_status {
     );
 }
 
+=head2 scheduled_for
+
+Limits resultset to talks scheduled for a given date.
+
+=cut
+
+sub scheduled_for {
+    my ( $self, $dt_date ) = @_;
+
+    $self->throw_exception("scheduled_for required arg dt_date missing")
+        unless defined $dt_date;
+
+    my $schema = $self->result_source->schema;
+
+    $self->search(
+        {
+            start_time     => {
+                '!=' => undef,
+                '>=' => $schema->format_datetime($dt_date),
+                '<=' =>
+                    $schema->format_datetime( $dt_date->clone->add( days => 1 ) )
+                },
+        }
+    );
+}
+
 1;

@@ -262,18 +262,12 @@ get '/talks/schedule/:date' => sub {
             accepted       => 1,
             conferences_id => setting('conferences_id'),
             room           => { '!=' => '' },
-            start_time     => {
-                '!=' => undef,
-                '>=' => $schema->format_datetime($dt_date),
-                '<=' =>
-                  $schema->format_datetime( $dt_date->clone->add( days => 1 ) )
-            },
         },
         {
             order_by => 'start_time',
             prefetch => 'author',
         }
-    )->with_attendee_count;
+    )->scheduled_for($dt_date)->with_attendee_count;
 
     if ( my $user = schema->current_user ) {
 
