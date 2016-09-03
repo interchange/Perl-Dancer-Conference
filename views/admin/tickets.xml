@@ -3,6 +3,7 @@
     <param name="orders_id"/>
     <param name="order_date" filter="date_only"/>
     <param name="name" field="user.name"/>
+    <param name="uri" class="name-link" target="href" field="user.uri" op="append"/>
     <param name="email"/>
     <param name="subtotal" filter="currency"/>
   </list>
