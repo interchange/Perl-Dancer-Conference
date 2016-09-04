@@ -6,6 +6,7 @@
     <param name="confirmed" filter="boolean"/>
     <param name="scheduled" filter="boolean"/>
     <param name="start_time" filter="date"/>
+    <param name="schedule_link" class="schedule-link" field="start_time.ymd" target="href" op="append"/>
     <param name="room"/>
     <param name="author" field="author.name"/>
     <param name="edit" field="talks_id" target="href" op="append"/>
