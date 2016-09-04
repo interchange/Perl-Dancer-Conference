@@ -34,9 +34,12 @@ get '/login' => sub {
     if ( body_parameters->get('return_url') ) {
         session return_url =>  body_parameters->get('return_url');
     }
+    # Redirect from protected route
+    elsif ( query_parameters->get('return_url') ) {
+        session return_url =>  query_parameters->get('return_url');
+    }
 
     if ( var 'login_failed' ) {
-
         # var added by DPAE's post /login route
         $tokens->{login_input} = "has-error";
         $tokens->{login_error} = "Username or password incorrect";
