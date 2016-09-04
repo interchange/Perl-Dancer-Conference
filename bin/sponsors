@@ -5,10 +5,10 @@ use warnings;
 use lib 'lib';
 
 use PerlDance::Schema;
-use PerlDance::Schema::Upgrades::Sponsors;
+use PerlDance::Schema::Upgrades::SponsorsBookingEvozon;
 
 my $schema = PerlDance::Schema->connect('PerlDance');
-my $upgrade = PerlDance::Schema::Upgrades::Sponsors->new
+my $upgrade = PerlDance::Schema::Upgrades::SponsorsBookingEvozon->new
     (schema => $schema);
 
 $upgrade->clear;
