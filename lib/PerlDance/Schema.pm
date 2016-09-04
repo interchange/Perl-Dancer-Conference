@@ -155,8 +155,9 @@ sub last_conference_attended {
 sub name_with_nickname {
     my $self = shift;
     my $long_name = $self->name;
+    my $nick_name = $self->nickname;
 
-    if ($self->nickname) {
+    if ($nick_name && $nick_name ne $long_name) {
         $long_name .= ' (' . $self->nickname . ')';
     }
 
