@@ -26,12 +26,12 @@ has sponsor_levels => (
                 priority => 40,
                 sponsors => [
                     {
-                        title => 'Jovial',
-                        summary => '[Jovial Org](http://www.jovial.org)',
-                        uri => 'Jovial.org ',
+                        title => 'Booking',
+                        summary => '[Booking](https://www.booking.com/)',
+                        uri => 'https://www.booking.com/',
                         media => {
-                            file => 'img/jovial-dark.png',
-                            mime_type => 'image/png',
+                            file => 'img/booking-logo.jpg',
+                            mime_type => 'image/jpg',
                         },
                     },
                 ],
