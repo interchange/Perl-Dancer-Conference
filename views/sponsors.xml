@@ -11,6 +11,8 @@
         -->
         <param name="teaser" class="company-teaser" field="message.summary"
                filter="markdown" op="hook"/>
+        <param name="content" class="company-content" field="message.content"
+               filter="markdown" op="hook"/>
         <param name="link" class="company-link" field="message.uri"
              target="href"/>
         <param name="logo" class="company-logo"
