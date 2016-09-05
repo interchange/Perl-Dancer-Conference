@@ -16,6 +16,18 @@ use Dancer2::Plugin::Interchange6::Routes;
 
 use PerlDance::Routes;
 
+# Start of DISGUSTING monkey-patch of D2
+use Dancer2::Core::Request;
+use Class::Method::Modifiers 'install_modifier';
+use Encode;
+install_modifier 'Dancer2::Core::Request', 'around', body_parameters => sub {
+    my $orig = shift;
+    my $self = shift;
+    $self->{'body_parameters'} ||=
+      Dancer2::Core::Request::_decode( $orig->( $self, @_ ) );
+};
+# end of monkey patch
+
 our $VERSION = '0.1';
 
 set conferences_id => shop_schema->resultset('Conference')
