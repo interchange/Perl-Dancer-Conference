@@ -55,7 +55,14 @@ get '/admin/talks/create' => require_role admin => sub {
         }
     );
     $tokens->{form} = $form;
-    $tokens->{authors} = [ rset('User')->all];
+    $tokens->{authors} = [ rset('User')->search(
+        {
+            first_name => { '!=' => '' },
+        },
+        {
+            order_by => [ 'last_name', 'first_name' ],
+        },
+    )->all ];
 
     my @js_urls = ('/js/bootstrap-datetimepicker.min.js',
         '/js/bootstrap-datetimepicker.config.js');
@@ -150,7 +157,15 @@ get '/admin/talks/edit/:id' => require_role admin => sub {
             : (),
         }
     );
-    $tokens->{authors} = [ rset('User')->all ];
+    $tokens->{authors} = [ rset('User')->search(
+        {
+            first_name => { '!=' => '' },
+        },
+        {
+            order_by => [ 'last_name', 'first_name' ],
+        },
+    )->all ];
+
     $tokens->{form}    = $form;
     $tokens->{title}   = "Edit Talk";
 
