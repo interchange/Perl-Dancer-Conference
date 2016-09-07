@@ -548,7 +548,7 @@ get '/talk/create' => sub {
 
     $tokens->{form} = form('create-update-talk');
     $tokens->{form}->reset;
-    $tokens->{form}->fill( duration => 40 );
+    $tokens->{form}->fill( duration => params->{lightning} ? 5 : 40 );
 
     add_durations_token($tokens);
 
@@ -590,6 +590,7 @@ post '/talk/create' => sub {
                     duration       => $data->{values}->{duration},
                     url            => $data->{values}->{url} || '',
                     comments       => $data->{values}->{comments} || '',
+                    lightning      => $data->{values}->{duration} == 5 ? 1 : 0,
                 }
             );
 
@@ -817,6 +818,10 @@ get '/orders/:order_number' => sub {
 sub add_durations_token {
     my $tokens = shift;
     $tokens->{durations} = [
+        {
+            value => 5,
+            label => "Lightning Talk (5 minutes)",
+        },
         {
             value => 20,
             label => "20 minutes",
