@@ -5,4 +5,7 @@ Disallow: /login
 Disallow: /logout
 Disallow: /register
 Disallow: /reset_password
+Disallow: /wiki/diff/
 Disallow: /wiki/edit/
+Disallow: /wiki/history/
+
