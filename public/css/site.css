@@ -448,3 +448,8 @@ span.tagcloud24 a {text-decoration: none;}
   margin-left: 1.5em;
   text-indent: -1.5em;
 }
+.news-container .content img {
+  dispay:block;
+  max-width:100%;
+  height:auto;
+}
