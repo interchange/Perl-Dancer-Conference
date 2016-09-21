@@ -148,6 +148,7 @@ Returns the last conference this user has attended or undef.
 sub last_conference_attended {
     my $self = shift;
     my $conference = $self->conferences->search({}, {
+        rows => 1,
         order_by => { -desc => 'start_date' },
     })->first;
 }
