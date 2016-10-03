@@ -1,0 +1,31 @@
+#! /usr/bin/env perl
+
+use warnings;
+use strict;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+
+use PerlDance::Schema;
+use Data::Fake::Names;
+
+my $schema = PerlDance::Schema->connect('PerlDanceDevel');
+
+my $users_rs = $schema->resultset('User')->search({});
+
+# set up generators for random data
+my @generators = (
+    { name => 'first_name', sub => fake_first_name },
+    { name => 'last_name', sub => fake_surname },
+);
+
+while (my $user = $users_rs->next) {
+    # create random data
+    my %data;
+
+    for my $gen (@generators) {
+        $data{$gen->{name}} = $gen->{sub}->();
+    }
+
+    $user->update(\%data);
+}
