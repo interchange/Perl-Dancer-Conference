@@ -28,6 +28,7 @@ my $mw = sub {
 my $app = $mw->( PerlDance->to_app );
 
 my $debugger = Dancer2::Debugger->new(
+    injector_ignore_status => 1,
     panels => [
         'Plack::Debugger::Panel::AJAX',
         'Plack::Debugger::Panel::Dancer2::Logger',

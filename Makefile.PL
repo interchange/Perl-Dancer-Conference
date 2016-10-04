@@ -24,7 +24,7 @@ WriteMakefile(
         'Type::Tiny'                       => '0.038',
         'Class::Method::Modifiers'         => '2.11',
         'Dancer2'                          => '0.166001_01',
-        'Dancer2::Debugger'                 => 0,
+        'Dancer2::Debugger'                 => '0.008', # injector_ignore_status
         'Dancer2::Plugin::Auth::Extensible' => '0.600',
         'Dancer2::Plugin::Auth::Extensible::Provider::DBIC' => '0.600',
         'Dancer2::Plugin::DataTransposeValidator' => '0.009',
