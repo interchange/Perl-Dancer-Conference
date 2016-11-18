@@ -98,14 +98,7 @@ engines:
           class: "PerlDance::Filter::Wiki"
 plugins:
   Auth::Extensible:
-    disable_roles: 0
-    exit_page: '/'
-    no_login_handler: 1
-    login_page: /login
-    logout_page: /logout
-    denied_page: /login/denied
-    no_default_pages: 1
-    no_api_change_warning: 1
+    login_without_redirect: 1
     realms:
       users:
         provider: 'DBIC'
