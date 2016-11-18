@@ -6,18 +6,17 @@
           Login
         </div>
         <div class="panel-body">
-          <form class="form-horizontal" action="/login" method="post">
-            <input type="hidden" class="return_url" name="return_url">
+          <form class="form-horizontal" method="post">
             <div class="form-group login_input">
               <label for="emailInput" class="col-sm-3 control-label">Email</label>
               <div class="col-sm-9">
-                <input type="email" class="form-control username" id="emailInput" required placeholder="Email" name="username">
+                <input type="email" class="form-control username" id="emailInput" required placeholder="Email" name="__auth_extensible_username">
               </div>
             </div>
             <div class="form-group login_input">
               <label for="emailPassword" class="col-sm-3 control-label">Password</label>
               <div class="col-sm-9">
-                <input type="password" class="form-control" id="emailPassword" required placeholder="Password" name="password">
+                <input type="password" class="form-control" id="emailPassword" required placeholder="Password" name="__auth_extensible_password">
                 <div class="help-block login_error"></div>
               </div>
             </div>
