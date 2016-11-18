@@ -17,36 +17,6 @@ use Try::Tiny;
 
 =head1 ROUTES 
 
-=head2 get /login
-
-post is handled by L<Dancer2::Plugin::Interchange6>
-
-=cut
-
-get '/login' => sub {
-    my $nav = shop_navigation->find( { uri => 'login' } );
-    my $tokens = {
-        title       => $nav->name,
-        description => $nav->description,
-    };
-
-    # DPIC6 uses session return_url in post /login
-    if ( body_parameters->get('return_url') ) {
-        session return_url =>  body_parameters->get('return_url');
-    }
-    # Redirect from protected route
-    elsif ( query_parameters->get('return_url') ) {
-        session return_url =>  query_parameters->get('return_url');
-    }
-
-    if ( var 'login_failed' ) {
-        # var added by DPAE's post /login route
-        $tokens->{login_input} = "has-error";
-        $tokens->{login_error} = "Username or password incorrect";
-    }
-    template 'login', $tokens;
-};
-
 =head2 get /register
 
 =cut
