@@ -153,7 +153,8 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
           {
             title       => "Thank you",
             description => "Email on its way",
-            username    => $email
+            username    => $email,
+            conference_name => setting("conference_name"),
           };
     }
     else {

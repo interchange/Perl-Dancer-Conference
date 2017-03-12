@@ -1,4 +1,5 @@
 <specification>
   <value name="title"/>
   <value name="username"/>
+  <value name="conference_name" class="conference-name"/>
 </specification>
