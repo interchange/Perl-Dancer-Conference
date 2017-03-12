@@ -302,4 +302,31 @@ Interchange6::Schema->load_namespaces(
     resultset_namespace     => [ 'ResultSet', '+PerlDance::Schema::ResultSet' ],
 );
 
+=head1 ATTRIBUTES
+
+=head2 current_conference
+
+This attribute can be used to stash the L<Interchange6::Schema::Result::Conference>
+object of the current conference.
+
+=over
+
+=item writer: set_current_conference
+
+=back
+
+=cut
+
+__PACKAGE__->mk_group_ro_accessors(
+    inherited => (
+        [ 'current_conference' => '_pd_current_conference' ],
+    )
+);
+
+__PACKAGE__->mk_group_wo_accessors(
+    inherited => (
+        [ 'set_current_conference' => '_pd_current_conference' ],
+    )
+);
+
 1;
