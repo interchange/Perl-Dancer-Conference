@@ -12,7 +12,7 @@ my $schema = PerlDance::Schema->connect('PerlDance');
 
 my $dh_cli = DBIx::Class::DeploymentHandler::CLI->new(
     schema => $schema,
-    databases => 'Pg',
+    databases => 'PostgreSQL',
     args => \@ARGV,
 );
 
