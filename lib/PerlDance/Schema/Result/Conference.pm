@@ -157,4 +157,16 @@ has_many
   conference_tickets => 'PerlDance::Schema::Result::ConferenceTicket',
   "conferences_id";
 
+=head2 messages
+
+Type: has_many
+
+Related object: L<PerlDance::Schema::Result::Conference>
+
+=cut
+
+has_many
+    messages => 'Interchange6::Schema::Result::Message',
+    "conferences_id";
+
 1;

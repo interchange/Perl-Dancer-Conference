@@ -24,7 +24,13 @@ use Interchange6::Schema::Result::Message;
 package Interchange6::Schema::Result::Message;
 
 __PACKAGE__->add_columns(
+    conferences_id => { data_type => "integer", is_nullable => 1 },
     tags => { data_type => "varchar", size => "256", default_value => '' },
+);
+
+__PACKAGE__->belongs_to(
+    conferences_id => "PerlDance::Schema::Result::Conference",
+    "conferences_id",
 );
 
 use Interchange6::Schema::Result::Product;
