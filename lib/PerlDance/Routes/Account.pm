@@ -82,6 +82,20 @@ post qr{ /(?<action> register | reset_password )$ }x => sub {
     my $action   = $$captures{action};
     my $username = lc($email);
 
+    my @bot_fields = (
+        body_parameters->get( 'noaccount' ),
+        body_parameters->get( 'nopass' ),
+    );
+
+    if (grep {$_} @bot_fields) {
+        info "Bot detected: ", \@bot_fields;
+        status 400;
+        return template "bot", {
+            action_name => "Bot detected.",
+            title_name => "Bot detected.",
+        };
+    }
+
     my $form = form('register-reset', source => 'body' );
     # validator currently only supports hashrefs
     my $data = validator( $form->values->as_hashref, 'email-valid' );
